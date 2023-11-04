@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "405490456112",
+    "project_id": "freshcard-f4915",
+    "storage_bucket": "freshcard-f4915.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:405490456112:android:d970b5cddb749a2e34bff5",
+        "android_client_info": {
+          "package_name": "com.example.freshcard"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfzH2Pml_UUvo28SP26yx-4x87GBMUniA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
