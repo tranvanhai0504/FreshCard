@@ -1,3 +1,3 @@
 package com.example.freshcard.Structure
 
-data class LearningTopic(val IdTopic: String, var IdChecked : ArrayList<String>, var IdLearning : ArrayList<String>, var IdLearned : ArrayList<String> ){}
+data class LearningTopic(val idTopic: String, var idChecked : ArrayList<String>, var idLearning : ArrayList<String>, var idLearned : ArrayList<String> ){}
