@@ -57,6 +57,11 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+
+        binding.fab.setOnClickListener{
+            v->
+            startActivity(Intent(this, AddTopic::class.java))
+        }
     }
 
     fun getUser(id : String){
