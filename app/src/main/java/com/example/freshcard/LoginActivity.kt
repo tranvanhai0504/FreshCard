@@ -30,6 +30,11 @@ class LoginActivity : AppCompatActivity() {
             startActivityForResult(intent, 0);
         }
 
+        binding.forgotPassword.setOnClickListener {
+            val intent = Intent(this, SendForgotPasswordEmailActivity::class.java)
+            startActivity(intent)
+        }
+
         binding.btnShowPassword.setOnClickListener{ e ->
             isShowPassword = !isShowPassword
             if(isShowPassword){
