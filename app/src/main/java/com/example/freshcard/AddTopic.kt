@@ -1,7 +1,5 @@
 package com.example.freshcard
 
-import android.content.Intent
-import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
@@ -9,8 +7,7 @@ import android.widget.ImageButton
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Recycler
-import com.example.freshcard.Adapter.CardAdapter
+import com.example.freshcard.adapters.CardAdapter
 import com.example.freshcard.Structure.TopicItem
 
 class AddTopic : AppCompatActivity() {
@@ -49,7 +46,7 @@ class AddTopic : AppCompatActivity() {
         adapterData.add(TopicItem("Orange", "Qua Cam", "Some fruit have to much vitamin C", "dlasn"))
         adapterData.add(TopicItem("Strawberry", "Qua Dau", "Some fruit with red skin", "dlasn"))
 
-        cardsRectyclerView.adapter =CardAdapter(adapterData, this)
+        cardsRectyclerView.adapter = CardAdapter(adapterData, this)
 
     }
 

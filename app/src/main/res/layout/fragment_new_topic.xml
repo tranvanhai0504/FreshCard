@@ -5,10 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".fragments.NewTopicFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="fragment home new topic" />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listNewTopicView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/card_new_topic"
+            />
+    </ScrollView>
 
 </FrameLayout>

@@ -1,33 +1,26 @@
 package com.example.freshcard.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.freshcard.R
+import com.example.freshcard.Structure.Topic
+import com.example.freshcard.Structure.TopicItem
+import com.example.freshcard.adapters.TopicNewHomeAdapter
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [NewTopicFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class NewTopicFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    lateinit var newTopicAdapter : TopicNewHomeAdapter
+    var newTopicList : ArrayList<Topic> = ArrayList<Topic>()
+    lateinit var cardRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -38,23 +31,15 @@ class NewTopicFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_new_topic, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment NewTopicFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            NewTopicFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        cardRecyclerView = this.requireView().findViewById(R.id.listNewTopicView)
+        cardRecyclerView.layoutManager = LinearLayoutManager(context)
+        newTopicList.add(Topic("-Nk-5J5lT1gXrDL1NAdQ", "Animals", ArrayList<TopicItem>(), true, ArrayList<String>()))
+
+        Log.i("listTopic", newTopicList.toString())
+        newTopicAdapter = TopicNewHomeAdapter(newTopicList, this)
+        cardRecyclerView.adapter = newTopicAdapter
     }
 }

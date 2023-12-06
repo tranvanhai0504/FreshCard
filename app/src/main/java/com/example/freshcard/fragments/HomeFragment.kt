@@ -1,6 +1,8 @@
 package com.example.freshcard.fragments
 
 import android.os.Bundle
+import android.provider.Settings.Global
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +13,11 @@ import com.google.android.material.tabs.TabLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.example.freshcard.DAO.UserDAO
 import com.example.freshcard.adapters.HomeAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass.

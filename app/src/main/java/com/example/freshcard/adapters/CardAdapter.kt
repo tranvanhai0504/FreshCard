@@ -1,4 +1,4 @@
-package com.example.freshcard.Adapter
+package com.example.freshcard.adapters
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -16,12 +16,12 @@ import com.example.freshcard.Structure.TopicItem
 import kotlin.random.Random
 
 class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context): RecyclerView.Adapter<CardAdapter.ViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         var view = LayoutInflater.from(parent.context).inflate(R.layout.card_view, parent, false)
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: CardAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var item = mList[position]
 
         val randomNumber = Random.nextInt(0, 3)
