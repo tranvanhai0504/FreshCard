@@ -35,6 +35,7 @@ class AddTopic : AppCompatActivity() {
     private lateinit var btnSaveTopicName: ImageButton
     private lateinit var btnAddCard: Button
     private lateinit var btnSubmitTopic: Button
+    private lateinit var btnImport: Button
     private lateinit var imageUri: Uri
 
     public var adapterData =  ArrayList<TopicItem>()
@@ -50,18 +51,24 @@ class AddTopic : AppCompatActivity() {
         btnSaveTopicName = findViewById(R.id.btnSaveTopicName)
         btnAddCard = findViewById(R.id. btnAddCard)
         btnSubmitTopic = findViewById(R.id.btnSubmitTopic)
+        btnImport = findViewById(R.id.btnImport)
         btnSaveTopicName.isVisible = false
 
         val sharedPreferences = applicationContext.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
         userId = sharedPreferences.getString("idUser", "undefined")!!
         currTopicId = "${getCurrentTimeInDecimal()}${userId}"
+        btnImport.setOnClickListener{
+            v->
+            pickFile.launch("*/*")
 
+        }
         btnAddCard.setOnClickListener{
             v->
             if(cardAdapter.isEditing) {
                 cardAdapter.confirmChange()
             }else {
                 cardAdapter.createEmptyCard()
+                Toast.makeText(this, "add", Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -134,12 +141,16 @@ class AddTopic : AppCompatActivity() {
             val contentResolver = contentResolver
             val inputStream = contentResolver.openInputStream(it)
             var handler = TopicDAO()
-                inputStream?.use { stream ->
-                    var lists = emptyList<TopicItem>()
-                    lists = readCsv(stream)
-                    //do something
+            inputStream?.use { stream ->
+                var lists = emptyList<TopicItem>()
+                lists = readCsv(stream)
+                for(item in lists) {
+                    item.id = "${currTopicId}<${adapterData.size}"
+                    adapterData.add(item)
                 }
-                Toast.makeText(this, "Import Students successfully", Toast.LENGTH_SHORT).show()
+                cardAdapter.updateData(adapterData)
+            }
+            Toast.makeText(this, "Import Students successfully", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -149,10 +160,10 @@ class AddTopic : AppCompatActivity() {
         }.build().parse(inputStream.reader()).drop(1) // Dropping the header
             .map {
                 TopicItem(
-                    id = it[0],
-                    en = it[1],
-                    vie = it[2],
-                    description = it[3],
+                    id = "",
+                    en = it[0],
+                    vie = it[1],
+                    description = it[2],
                     image = ""
                 );
             }

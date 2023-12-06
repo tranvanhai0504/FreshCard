@@ -29,6 +29,7 @@ import kotlin.random.Random
 class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val toppicId: String, val upImage: ()->Unit): RecyclerView.Adapter<CardAdapter.ViewHolder>() {
     public var isEditing = false
     public var isCreateNew = false
+    private var imagesMap = hashMapOf<String, Uri>()
     private var currImageName = ""
     val origin = context as Activity
     lateinit var  currHolder: CardAdapter.ViewHolder
@@ -77,7 +78,13 @@ class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val top
         if(item.image == "") {
             holder.image.isVisible = false
             isCreateNew = true
+        }else{
+            if(imagesMap.containsKey(item.id)) {
+                holder.image.setImageURI(imagesMap.get(item.id))
+                holder.image.isVisible = true
+            }
         }
+
         holder.btnCancle.setOnClickListener{
                 v->
             if(!isCreateNew) {
@@ -142,6 +149,11 @@ class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val top
         holder.txtVocab.requestFocus()
     }
 
+    fun updateData(list: ArrayList<TopicItem>) {
+        mList = list
+        notifyDataSetChanged()
+    }
+
     fun disableEdit(holder: CardAdapter.ViewHolder) {
         holder.txtVietnamese.isEnabled = false
         holder.txtVocab.isEnabled = false
@@ -167,6 +179,7 @@ class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val top
         currImageName = ""
         mList.removeAt(currHolder.absoluteAdapterPosition)
         mList.add(currHolder.absoluteAdapterPosition,topicItem)
+        disableEdit(currHolder)
         AddTopic().adapterData = mList
     }
 
@@ -183,7 +196,7 @@ class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val top
             .setPositiveButton("YES") {
                     dialog, which ->
                     handleSave()
-                Toast.makeText(context, "${currHolder.absoluteAdapterPosition}====xx", Toast.LENGTH_SHORT).show()
+
             }
             .setNegativeButton("NO") {
                     dialog, which ->
@@ -233,6 +246,7 @@ class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val top
         currHolder.image.setImageURI(imageUri)
         currImageName = name
         currHolder.image.isVisible = true
+        imagesMap.set(mList[currHolder.absoluteAdapterPosition].id, imageUri)
     }
 
 
