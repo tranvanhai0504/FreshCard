@@ -1,5 +1,6 @@
 package com.example.freshcard
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -41,6 +42,10 @@ class MainActivity : AppCompatActivity() {
         if (id != null) {
             //get user by id
             getUser(id)
+            val sharedPreferences = applicationContext.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putString("idUser", id)
+            editor.apply()
         }else{
             //get back to login activity
             var intent = Intent(this, LoginActivity::class.java)
