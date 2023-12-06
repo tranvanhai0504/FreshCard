@@ -49,7 +49,7 @@ class TopicNewHomeAdapter(var mList: ArrayList<Topic>, val context: NewTopicFrag
 
         holder.txtOwnerName.text = user.child("email").value.toString()
 
-        val newurl = URL(user.child("avatar").value.toString())
+//        val newurl = URL(user.child("avatar").value.toString())
 //        val mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream())
 //        holder.imageAvatar.setImageBitmap(mIcon_val)
     }

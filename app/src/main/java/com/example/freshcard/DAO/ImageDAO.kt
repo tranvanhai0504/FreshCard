@@ -44,7 +44,7 @@ class ImageDAO {
 
     public fun getImage(filename:String, imageView: ImageView) {
         var bitmap: Bitmap
-        var storageReference = FirebaseStorage.getInstance().getReference("images/$filename")
+        var storageReference = FirebaseStorage.getInstance().getReference("avatars/$filename")
         try {
             var file = File.createTempFile("tempFile", "jpg")
             storageReference.getFile(file)

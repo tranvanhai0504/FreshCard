@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
@@ -70,6 +71,7 @@ class AddTopic : AppCompatActivity() {
                 cardAdapter.createEmptyCard()
                 Toast.makeText(this, "add", Toast.LENGTH_SHORT).show()
             }
+
 
         }
         btnSubmitTopic.setOnClickListener{
