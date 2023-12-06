@@ -7,6 +7,7 @@ import com.example.freshcard.Structure.Database
 import com.example.freshcard.Structure.Topic
 import com.example.freshcard.Structure.TopicItem
 import com.example.freshcard.Structure.User
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -14,6 +15,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
 import java.time.LocalDateTime
 
 public class UserDAO() {
@@ -79,6 +81,11 @@ public class UserDAO() {
         } else {
             return false;
         }
+    }
+
+    suspend fun getUserInfor(id : String) : DataSnapshot{
+        val result = db.child(id).get().await()
+        return result
     }
 
     fun getDbUser(): DatabaseReference {
