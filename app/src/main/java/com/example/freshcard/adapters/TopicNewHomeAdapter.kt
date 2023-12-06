@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.freshcard.DAO.ImageDAO
 import com.example.freshcard.DAO.UserDAO
 import com.example.freshcard.R
 import com.example.freshcard.Structure.Topic
@@ -45,13 +46,8 @@ class TopicNewHomeAdapter(var mList: ArrayList<Topic>, val context: NewTopicFrag
             user = UserDAO().getUserInfor(item.owner)
         }
 
-        Log.i("user", user.toString())
-
         holder.txtOwnerName.text = user.child("email").value.toString()
-
-        val newurl = URL(user.child("avatar").value.toString())
-//        val mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream())
-//        holder.imageAvatar.setImageBitmap(mIcon_val)
+        ImageDAO().getImage(user.child("avatar").value.toString(), holder.imageAvatar, "avatars")
     }
 
     override fun getItemCount(): Int {

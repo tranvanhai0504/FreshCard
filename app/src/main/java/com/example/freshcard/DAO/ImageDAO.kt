@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import com.google.android.gms.tasks.OnFailureListener
@@ -42,9 +43,9 @@ class ImageDAO {
         return fileName
     }
 
-    public fun getImage(filename:String, imageView: ImageView) {
+    public fun getImage(filename:String, imageView: ImageView, path : String) {
         var bitmap: Bitmap
-        var storageReference = FirebaseStorage.getInstance().getReference("images/$filename")
+        var storageReference = FirebaseStorage.getInstance().getReference("$path/$filename")
         try {
             var file = File.createTempFile("tempFile", "jpg")
             storageReference.getFile(file)
