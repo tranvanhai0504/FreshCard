@@ -66,6 +66,7 @@ public class UserDAO() {
             }
         }
         query.addValueEventListener(valueEventListener)
+
     }
 
     fun register(email: String, password: String, name: String): Boolean {
