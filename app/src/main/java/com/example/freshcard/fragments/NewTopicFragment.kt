@@ -36,7 +36,7 @@ class NewTopicFragment : Fragment() {
 
         cardRecyclerView = this.requireView().findViewById(R.id.listNewTopicView)
         cardRecyclerView.layoutManager = LinearLayoutManager(context)
-        newTopicList.add(Topic("-Nk-5J5lT1gXrDL1NAdQ", "Animals", ArrayList<TopicItem>(), true, ArrayList<String>()))
+        newTopicList.add(Topic("id","-Nk-5J5lT1gXrDL1NAdQ", "Animals", ArrayList<TopicItem>(), true, ArrayList<String>()))
 
         Log.i("listTopic", newTopicList.toString())
         newTopicAdapter = TopicNewHomeAdapter(newTopicList, this)

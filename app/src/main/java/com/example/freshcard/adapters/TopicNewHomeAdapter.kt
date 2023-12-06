@@ -13,8 +13,10 @@ import com.example.freshcard.DAO.UserDAO
 import com.example.freshcard.R
 import com.example.freshcard.Structure.Topic
 import com.example.freshcard.fragments.NewTopicFragment
+import com.google.firebase.database.DataSnapshot
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.net.URL
 import kotlin.random.Random
 
@@ -38,15 +40,18 @@ class TopicNewHomeAdapter(var mList: ArrayList<Topic>, val context: NewTopicFrag
         holder.txtOwnerName.text = "hai"
         holder.txtPeopleLearned.text = item.learnedPeople.size.toString() + " learned"
 
-        //get user infor
-        GlobalScope.launch {
-            val user = UserDAO().getUserInfor(item.owner)
-            holder.txtOwnerName.text = user.child("email").value.toString()
-
-            val newurl = URL(user.child("avatar").value.toString())
-            val mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream())
-            holder.imageAvatar.setImageBitmap(mIcon_val)
+        var user : DataSnapshot
+        runBlocking {
+            user = UserDAO().getUserInfor(item.owner)
         }
+
+        Log.i("user", user.toString())
+
+        holder.txtOwnerName.text = user.child("email").value.toString()
+
+        val newurl = URL(user.child("avatar").value.toString())
+//        val mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream())
+//        holder.imageAvatar.setImageBitmap(mIcon_val)
     }
 
     override fun getItemCount(): Int {

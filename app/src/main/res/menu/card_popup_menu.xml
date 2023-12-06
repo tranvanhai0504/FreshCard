@@ -9,8 +9,5 @@
     <item android:title="Edit card"
         android:id="@+id/popupBtnEdit"
         />
-    <item
-        android:id="@+id/popupBtnAddImage"
-        android:title="Add image"
-        />
+
 </menu>
