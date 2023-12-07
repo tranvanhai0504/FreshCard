@@ -1,15 +1,9 @@
 package com.example.freshcard.Structure
 
-import java.util.Properties
-import javax.mail.Authenticator
-import javax.mail.Message
-import javax.mail.PasswordAuthentication
-import javax.mail.Session
-import javax.mail.Transport
-import javax.mail.internet.InternetAddress
-import javax.mail.internet.MimeMessage
-
-
+import com.sendgrid.*
+import com.sendgrid.helpers.mail.Mail
+import com.sendgrid.helpers.mail.objects.Content
+import com.sendgrid.helpers.mail.objects.Email
 
 class EmailSender(private val recipientEmail: String) {
 
@@ -27,33 +21,43 @@ class EmailSender(private val recipientEmail: String) {
     }
 
     fun send() {
+        try {
+            // Lấy giá trị API Key từ biến môi trường
+            val apiKey = "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"
+            if (apiKey == null || apiKey.isEmpty()) {
+                println("API Key is null or empty.")
+                return
+            }
 
-        // TODO: Implement actual email sending using an email library or API
-        // Example using JavaMailSender with Gmail SMTP server
-        val props: Properties = System.getProperties()
-        props.put("mail.smtp.host", "smtp.gmail.com")
-        props.put("mail.smtp.auth", "true")
-        props.put("mail.smtp.starttls.enable", "true")
-        props.put("mail.smtp.port", "465")
+            // Tạo đối tượng SendGrid
+            val sg = SendGrid(apiKey)
 
-        val session = Session.getInstance(props,
-            object : Authenticator() {
-                protected override fun getPasswordAuthentication(): PasswordAuthentication {
-                    val appPassword = "rngbcimomrdqbvzc"
-                    return PasswordAuthentication("freshcard01@gmail.com", appPassword)
-                }
+            // Tạo đối tượng Email từ và đến
+            val from = Email("Freshcard01@gmail.com")
+            val to = Email(recipientEmail)
 
-            })
+            // Tạo nội dung email
+            val content = Content("text/plain", body)
 
-        val message = MimeMessage(session)
-        message.addRecipient(Message.RecipientType.TO, InternetAddress(recipientEmail))
-        message.subject = subject
-        message.setContent(body, "text/html; charset=utf-8")
+            // Tạo đối tượng Mail
+            val mail = Mail(from, subject, to, content)
 
-        Transport.send(message)
+            // Tạo đối tượng Request
+            val request = Request()
 
-        // Replace with your preferred email sending implementation
-        println("Email sent to $recipientEmail with subject: $subject and body: $body")
+            // Cấu hình thông tin Request
+            request.method = Method.POST
+            request.endpoint = "mail/send"
+            request.body = mail.build()
+
+            // Gửi email và nhận Response
+            val response = sg.api(request)
+
+            // In log với thông tin Response
+            println("Email sent to $recipientEmail with subject: $subject and body: $body. Response: ${response.statusCode}")
+        } catch (e: Exception) {
+            // In log nếu có lỗi xảy ra
+            println("Error sending email: ${e.message}")
+        }
     }
 }
-

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SendForgotPasswordEmailActivity"
+    tools:context=".checkEmailOTPActivity"
     >
 
     <ScrollView
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="88dp"
                 android:gravity="center"
-                android:text="Enter your register email below to receive password reset instruction"
+                android:text="We have sent a code to reset your password"
                 android:textColor="@color/mediumGreen"
                 android:textSize="7pt"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -63,7 +63,7 @@
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Forgot password?"
+                android:text="Check your email"
                 android:textColor="@color/strongGreen"
                 android:textSize="12pt"
                 android:textStyle="bold"
@@ -75,12 +75,14 @@
                 app:layout_constraintVertical_bias="0.301" />
 
             <EditText
-                android:id="@+id/edit_email"
+                android:id="@+id/edit_otp"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:elevation="5dp"
                 android:layout_marginTop="40dp"
                 android:background="@drawable/login_input"
-                android:hint="Enter your email"
+                android:hint="Enter your OTP"
+                android:gravity="center"
                 android:paddingHorizontal="15dp"
                 android:textColor="@color/strongGreen"
                 android:textColorHint="@color/grayDefault"
@@ -88,6 +90,34 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@+id/edit_otp"
+                tools:layout_editor_absoluteX="43dp">
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="Did you don’t code? "
+                    android:textColor="@color/strongGreen"
+                    android:textSize="7pt" />
+
+                <TextView
+                    android:id="@+id/resend_otp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Resend OTP"
+                    android:textColor="@color/mediumGreen"
+                    android:textSize="7pt" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/alert_Email"
@@ -97,7 +127,7 @@
                 android:text=""
                 android:textColor="@color/warningRed"
                 android:textSize="7pt"
-                app:layout_constraintBottom_toTopOf="@+id/edit_email"
+                app:layout_constraintBottom_toTopOf="@+id/edit_otp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -106,14 +136,31 @@
                 android:id="@+id/btn_submit"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="124dp"
+                android:layout_marginTop="56dp"
                 android:background="@drawable/button"
                 android:backgroundTint="@color/mediumGreen"
-                android:text="Send"
+                android:text="Check"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_email" />
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+            <TextView
+                android:id="@+id/backtologin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="25dp"
+                android:text="Back to Lgoin"
+                android:textColor="@color/mediumGreen"
+                android:textSize="7pt"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.483"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_submit"
+                app:layout_constraintVertical_bias="0.627" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

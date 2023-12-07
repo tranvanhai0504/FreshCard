@@ -28,7 +28,7 @@ class SendForgotPasswordEmailActivity : AppCompatActivity() {
         }
 
         binding.btnSubmit.setOnClickListener {
-            val email = binding.editEmail.text.toString()
+            val email = binding.editEmail.text.toString().trim()
             var result = validate(email)
 
             if(result){
@@ -62,8 +62,10 @@ class SendForgotPasswordEmailActivity : AppCompatActivity() {
             if (it != null) {
                 //check state of login
                 if (it["state"] as Boolean) {
-                    Toast.makeText(this, "Please check your email to reset your password", Toast.LENGTH_SHORT).show()
-                    finish()
+                    Toast.makeText(this, "Please check your email to OTP reset your password", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, checkEmailOTPActivity::class.java)
+                    intent.putExtra("email", email)
+                    startActivity(intent)
                 } else {
                     Toast.makeText(this, it["message"].toString(), Toast.LENGTH_SHORT).show()
                 }

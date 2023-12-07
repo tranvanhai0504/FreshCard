@@ -99,17 +99,17 @@ public class UserDAO() {
                     )
                     userRef.updateChildren(dataToSave as Map<String, Any>)
 
-                    // Gửi mã OTP qua email
-                    val emailSender = EmailSender(email)
-                    emailSender.setSubject("FreshCard - Quên mật khẩu")
-                    emailSender.setBody("Mã OTP của bạn để đặt lại mật khẩu là: $otpCode")
-                    emailSender.send()
-
-                    // Schedule deletion after 2 seconds
+                    // Schedule deletion after 2 minutes
                     Handler(Looper.getMainLooper()).postDelayed({
                         userRef.child("forgotPasswordCode").removeValue()
                         userRef.child("forgotPasswordCodeTime").removeValue()
-                    }, 2000)
+                    }, 2 * 60 * 1000)
+
+                    // Gửi mã OTP qua email
+                    /*val emailSender = EmailSender(email)
+                    emailSender.setSubject("FreshCard - Quên mật khẩu")
+                    emailSender.setBody("Mã OTP của bạn để đặt lại mật khẩu là: $otpCode")
+                    emailSender.send()*/
 
                     // Trả về kết quả thành công
                     onResult(hashMapOf("state" to true, "message" to "Đã gửi mã OTP đến email của bạn"))
@@ -121,11 +121,13 @@ public class UserDAO() {
 
             override fun onCancelled(error: DatabaseError) {
                 // Lỗi database
-                onResult(hashMapOf("pair" to Pair(true, "Đã gửi mã OTP đến email của bạn")))
+                onResult(hashMapOf("state" to false, "message" to "Đã có lỗi xảy ra"))
             }
         }
+
         query.addListenerForSingleValueEvent(valueEventListener)
     }
+
 
     fun checkForgotPasswordCode(email: String, enteredCode: String, onResult: (HashMap<String, Any?>?) -> Unit) {
         val query = db.orderByChild("email").equalTo(email)
@@ -170,6 +172,39 @@ public class UserDAO() {
         }
         query.addListenerForSingleValueEvent(valueEventListener)
     }
+
+    fun resetPassword(email: String, newPassword: String, onResult: (HashMap<String, Any?>?) -> Unit) {
+        val query = db.orderByChild("email").equalTo(email)
+
+        val valueEventListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    // Lấy đối tượng User từ snapshot
+                    val userSnapshot = snapshot.children.iterator().next()
+                    val userRef = userSnapshot.ref
+
+                    // Hash mật khẩu mới trước khi lưu vào database
+                    val hashedPassword = BCrypt.withDefaults().hashToString(12, newPassword.toCharArray())
+
+                    // Lưu mật khẩu mới vào database
+                    userRef.child("password").setValue(hashedPassword)
+
+                    // Trả về kết quả thành công
+                    onResult(hashMapOf("state" to true, "message" to "Mật khẩu đã được thay đổi"))
+                } else {
+                    // Email không tồn tại
+                    onResult(hashMapOf("state" to false, "message" to "Email không tồn tại"))
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Lỗi từ database
+                onResult(hashMapOf("state" to false, "message" to "Lỗi database"))
+            }
+        }
+        query.addListenerForSingleValueEvent(valueEventListener)
+    }
+
 
 }
 
