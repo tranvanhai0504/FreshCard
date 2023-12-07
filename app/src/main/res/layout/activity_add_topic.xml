@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".AddTopic">
+        <ImageView
+            android:id="@+id/imgPanner"
+            android:layout_width="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rectangle_4048headerpanner"
+            />
+
+        <TextView
+            android:id="@+id/txtHeaderLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create new topic"
+            android:textStyle="bold"
+            android:textColor="#fff"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:textSize="23dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginLeft="28dp"
+            />
+
+
+        <EditText
+            android:id="@+id/inputTopicName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Topic name"
+            android:enabled="false"
+            android:textColor="#54B435"
+            app:layout_constraintTop_toBottomOf="@id/imgPanner"
+            app:layout_constraintLeft_toLeftOf="@id/txtHeaderLabel"
+            android:textStyle="bold"
+            android:background="#fff"
+            android:layout_marginTop="40dp"
+            android:minWidth="80dp"
+            />
+
+        <ImageButton
+            android:id="@+id/btnEditTopicName"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            app:layout_constraintTop_toTopOf="@id/inputTopicName"
+            app:layout_constraintBottom_toBottomOf="@id/inputTopicName"
+            app:layout_constraintLeft_toRightOf="@id/inputTopicName"
+            android:src="@drawable/edit_icon"
+            android:background="#fff"
+            android:layout_marginLeft="4dp"
+            />
+        <ImageButton
+            android:id="@+id/btnSaveTopicName"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            app:layout_constraintTop_toTopOf="@id/inputTopicName"
+            app:layout_constraintBottom_toBottomOf="@id/inputTopicName"
+            app:layout_constraintLeft_toRightOf="@id/inputTopicName"
+            android:src="@drawable/baseline_save_18"
+            android:background="#fff"
+            android:layout_marginLeft="4dp"
+            />
+
+        <ImageButton
+            android:id="@+id/btnBackToHome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/home_green_back"
+            android:backgroundTint="#fff"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+    android:layout_marginRight="18dp"
+            />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:paddingLeft="34dp"
+        android:paddingRight="34dp"
+        android:paddingBottom="34dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+        <TextView
+            android:id="@+id/txtCardsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cards"
+            android:textColor="#17594A"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            />
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/cardsReccylerView"
+            tools:listitem="@layout/card_view"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="-4dp"
+            android:layout_marginRight="-4dp"
+            />
+
+
+        <Button
+            android:id="@+id/btnAddCard"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:text="Add cards"
+            android:textColor="#fff"
+            android:background="@drawable/large_rounded_button"
+            android:textSize="13dp"
+            android:layout_marginBottom="4dp"
+            />
+
+        <Button
+            android:id="@+id/btnImport"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:text="Import CSV"
+            android:textColor="@color/mediumGreen"
+            android:background="@drawable/large_solid_button"
+            android:backgroundTint="#fff"
+            android:layout_marginBottom="4dp"
+
+            />
+
+        <Button
+            android:id="@+id/btnSubmitTopic"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:text="SAVE"
+            android:textColor="#fff"
+            android:background="@drawable/large_solid_button"
+            android:backgroundTint="#fff"
+            android:textSize="13dp"
+            />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
