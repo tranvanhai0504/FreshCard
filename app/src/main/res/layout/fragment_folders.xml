@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.FoldersFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="32dp"
+        android:orientation="vertical"
+        >
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnNewFolder"
+            android:drawableLeft="@drawable/add_round"
+            android:text="New Folder"
+            android:textColor="#fff"
+            android:gravity="center"
+            android:textAllCaps="false"
+            android:paddingLeft="100dp"
+            android:paddingRight="100dp"
+            />
+
+        <TextView
+            android:layout_marginTop="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recent"
+            android:textColor="@color/strongGreen"
+            android:textStyle="bold"
+
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="32dp"
+            app:spanCount="2"
+            tools:listitem="@layout/folder_item_card"
+            android:id="@+id/folderRecyclerView"/>
+
+    </LinearLayout>
+
+</FrameLayout>

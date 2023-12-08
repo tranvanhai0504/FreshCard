@@ -7,6 +7,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,6 +86,8 @@ class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val top
             }
         }
 
+        Log.e("hashmap", "${imagesMap}")
+
         holder.btnCancle.setOnClickListener{
                 v->
             if(!isCreateNew) {
@@ -133,7 +136,7 @@ class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val top
     }
 
     public fun createEmptyCard() {
-        mList.add(0,TopicItem("","", "", "", ""))
+        mList.add(0,TopicItem("${toppicId}<${mList.size}","", "", "", ""))
         notifyDataSetChanged()
     }
 
@@ -168,7 +171,7 @@ class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val top
     }
 
     fun handleSave() {
-        var topicItem = TopicItem("${toppicId}<${mList.size}", currHolder.txtVocab.text.toString(), currHolder.txtVietnamese.text.toString(), currHolder.txtDes.text.toString(), currImageName)
+        var topicItem = TopicItem("${mList[currHolder.absoluteAdapterPosition].id}", currHolder.txtVocab.text.toString(), currHolder.txtVietnamese.text.toString(), currHolder.txtDes.text.toString(), currImageName)
         if(!isCreateNew) {
             topicItem = mList[currHolder.absoluteAdapterPosition]
             topicItem.en =  currHolder.txtVocab.text.toString()
@@ -247,6 +250,7 @@ class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val top
         currImageName = name
         currHolder.image.isVisible = true
         imagesMap.set(mList[currHolder.absoluteAdapterPosition].id, imageUri)
+        Log.e("hashmap", (mList[currHolder.absoluteAdapterPosition].id))
     }
 
 

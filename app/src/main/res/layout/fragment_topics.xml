@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.FoldersFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="32dp"
+        android:orientation="vertical"
+        android:background="#ccc"
+        >
+
+
+        <Button
+            android:id="@+id/btnNewTopic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/add_round"
+            android:text="New Topic"
+            android:textColor="#fff"
+            android:gravity="center"
+            android:textAllCaps="false"
+            android:paddingLeft="100dp"
+            android:paddingRight="100dp"
+            />
+
+        <TextView
+            android:layout_marginTop="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recent"
+            android:textColor="@color/strongGreen"
+            android:textStyle="bold"
+
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/topicsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="32dp"
+            app:spanCount="2"
+            tools:listitem="@layout/topic_card"
+            />
+
+    </LinearLayout>
+
+</FrameLayout>

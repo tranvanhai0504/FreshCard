@@ -7,6 +7,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -21,6 +22,7 @@ import com.example.freshcard.Adapter.CardAdapter
 import com.example.freshcard.DAO.ImageDAO
 import com.example.freshcard.DAO.TopicDAO
 import com.example.freshcard.DAO.UserDAO
+import com.example.freshcard.Structure.LearningTopic
 import com.example.freshcard.Structure.Topic
 import com.example.freshcard.Structure.TopicItem
 import org.apache.commons.csv.CSVFormat
@@ -69,7 +71,6 @@ class AddTopic : AppCompatActivity() {
                 cardAdapter.confirmChange()
             }else {
                 cardAdapter.createEmptyCard()
-                Toast.makeText(this, "add", Toast.LENGTH_SHORT).show()
             }
 
 
@@ -113,8 +114,8 @@ class AddTopic : AppCompatActivity() {
     fun saveTopic() {
             var topic = Topic(currTopicId, userId, inputTopicName.text.toString(), adapterData, false, ArrayList(emptyList<String>()))
             UserDAO().pushTopic(topic)
+            UserDAO().pushLearningTopic(LearningTopic(idTopic = currTopicId, idLearning = ArrayList(emptyList<String>()), idLearned = ArrayList(emptyList<String>()), idChecked = ArrayList(emptyList<String>())), userId)
             finish()
-
     }
 
     fun getCurrentTimeInDecimal(): Int {
