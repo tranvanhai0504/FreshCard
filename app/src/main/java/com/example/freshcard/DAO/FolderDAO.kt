@@ -66,4 +66,9 @@ class FolderDAO() {
             }
         })
     }
+
+
+    fun removeFolder(id: String) {
+        folderRef.child(id).removeValue()
+    }
 }

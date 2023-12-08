@@ -132,7 +132,9 @@ private lateinit var currHolder:  FolderItemAdapter.ViewHolder
     }
 
     private fun handleRemove() {
+        var item = mList[currHolder.absoluteAdapterPosition]
         mList.removeAt(currHolder.absoluteAdapterPosition)
+        FolderDAO().removeFolder(item.id)
         notifyDataSetChanged()
     }
 
