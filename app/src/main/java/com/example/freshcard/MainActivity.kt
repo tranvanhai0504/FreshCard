@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import com.example.freshcard.DAO.UserDAO
+import com.example.freshcard.Structure.LearningTopic
 import com.example.freshcard.Structure.User
 import com.example.freshcard.databinding.ActivityMainBinding
 import com.example.freshcard.fragments.FolderFragment
@@ -71,7 +73,37 @@ class MainActivity : AppCompatActivity() {
 
     fun getUser(id : String){
         UserDAO().getDbUser().child(id).get().addOnSuccessListener {
-            user = it.getValue<User>()!!
+            Log.e("user", "${it}")
+            var pass = it.child("password").getValue(String::class.java)
+            var phoneNumber = it.child("phoneNumber").getValue(String::class.java)
+            var fullName = it.child("fullName").getValue(String::class.java)
+            var lastAccess = it.child("lastAccess").getValue(Long::class.java)
+            var avatar = it.child("avatar").getValue(String::class.java)
+            var email = it.child("email").getValue(String::class.java)
+            var bm = it.child("bookmarkedTopics").getValue()
+            var bookMarks:ArrayList<String>?  = bm  as? ArrayList<String>
+            var learningTopics = ArrayList(emptyList<LearningTopic>())
+            for( item in it.child("learningTopics").children) {
+                var idTopic = item.child("idTopic").getValue(String::class.java)
+                var idLearned1 = item.child("idLearned").getValue()
+                var idLearned:ArrayList<String>? = idLearned1 as? ArrayList<String>
+                var idLearning1 = item.child("idLearning").getValue()
+                var idLearning:ArrayList<String>? = idLearning1  as? ArrayList<String>
+                var idChecked1 = item.child("idChecked").getValue()
+                var idChecked:ArrayList<String>?  = idChecked1  as? ArrayList<String>
+                if(idLearned==null) {
+                    idLearned = ArrayList(emptyList<String>())
+                }
+                if(idLearning==null) {
+                    idLearning = ArrayList(emptyList<String>())
+                }
+                if(idChecked==null) {
+                    idChecked = ArrayList(emptyList<String>())
+                }
+
+                learningTopics.add(LearningTopic(idTopic!!, idChecked, idLearning, idLearned))
+            }
+            user = User(pass, fullName,avatar,email,phoneNumber,bookMarks,lastAccess)
         }
     }
 

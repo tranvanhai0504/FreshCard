@@ -19,13 +19,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HomeFragment : Fragment(R.layout.fragment_home) {
-    // TODO: Rename and change types of parameters
     lateinit var tabLayout : TabLayout
     lateinit var viewPager: ViewPager2
 
