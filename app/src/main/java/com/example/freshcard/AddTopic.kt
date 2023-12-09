@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Switch
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
@@ -45,13 +46,16 @@ class AddTopic : AppCompatActivity() {
     private lateinit var btnSubmitTopic: Button
     private lateinit var btnImport: Button
     private lateinit var imageUri: Uri
+    private lateinit var switchButton: Switch
 
     private var learnedPeoples = ArrayList<String>()
+    private var isPublic = false
     var adapterData =  ArrayList<TopicItem>()
     var currTopicId = ""
     var userId = ""
     var context = this
     var isEditing = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,8 +68,20 @@ class AddTopic : AppCompatActivity() {
         btnAddCard = findViewById(R.id. btnAddCard)
         btnSubmitTopic = findViewById(R.id.btnSubmitTopic)
         btnImport = findViewById(R.id.btnImport)
+        switchButton = findViewById(R.id.switchButton)
+
+        switchButton.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                switchButton.text = "Public"
+                isPublic=true
+            } else {
+                switchButton.text = "Private"
+                isPublic=false
+            }
+        }
         btnSaveTopicName.isVisible = false
         cardsRectyclerView.layoutManager = LinearLayoutManager(this)
+
 
         var topicId: String = intent.getStringExtra("edit")!!
         if(topicId != "false") {
@@ -138,7 +154,7 @@ class AddTopic : AppCompatActivity() {
     }
 
     fun saveTopic() {
-        var topic = Topic(currTopicId, userId, inputTopicName.text.toString(), adapterData, false, learnedPeoples, LocalDateTime.now().toEpochSecond(
+        var topic = Topic(currTopicId, userId, inputTopicName.text.toString(), adapterData, isPublic, learnedPeoples, LocalDateTime.now().toEpochSecond(
         ZoneOffset.UTC), 0)
         if(!isEditing) {
             MainActivity.Companion.user.learningTopics?.add(LearningTopic(idTopic = currTopicId, idLearning = ArrayList(emptyList<String>()), idLearned = ArrayList(emptyList<String>()), idChecked = ArrayList(emptyList<String>())))
