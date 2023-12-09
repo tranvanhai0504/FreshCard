@@ -24,6 +24,8 @@ import com.example.freshcard.Structure.Topic
 import com.example.freshcard.Structure.TopicItem
 import org.apache.commons.csv.CSVFormat
 import java.io.InputStream
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.Calendar
 
 class AddTopic : AppCompatActivity() {
@@ -109,10 +111,10 @@ class AddTopic : AppCompatActivity() {
     }
 
     fun saveTopic() {
-            var topic = Topic(currTopicId, userId, inputTopicName.text.toString(), adapterData, false, ArrayList(emptyList<String>()))
+            var topic = Topic(currTopicId, userId, inputTopicName.text.toString(), adapterData, false, ArrayList(emptyList<String>()), LocalDateTime.now().toEpochSecond(
+                ZoneOffset.UTC), 0)
             UserDAO().pushTopic(topic)
             finish()
-
     }
 
     fun getCurrentTimeInDecimal(): Int {

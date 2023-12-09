@@ -6,14 +6,17 @@
     tools:context=".fragments.NewTopicFragment">
 
     <ScrollView
+        android:paddingHorizontal="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingBottom="10dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listNewTopicView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:listitem="@layout/card_new_topic"
+            android:paddingBottom="70dp"
             />
     </ScrollView>
 
