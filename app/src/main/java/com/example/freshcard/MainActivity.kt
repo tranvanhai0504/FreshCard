@@ -76,21 +76,36 @@ class MainActivity : AppCompatActivity() {
 
     fun getUser(id : String){
         UserDAO().getDbUser().child(id).get().addOnSuccessListener {
-            var gti = object : GenericTypeIndicator<List<LearningTopic>>(){}
+            Log.e("user", "${it}")
+            var pass = it.child("password").getValue(String::class.java)
+            var phoneNumber = it.child("phoneNumber").getValue(String::class.java)
+            var fullName = it.child("fullName").getValue(String::class.java)
+            var lastAccess = it.child("lastAccess").getValue(Long::class.java)
+            var avatar = it.child("avatar").getValue(String::class.java)
+            var email = it.child("email").getValue(String::class.java)
+            var bookMarks = it.child("bookmarkedTopics").getValue() as MutableMap<String, Boolean>
+            var learningTopics = ArrayList(emptyList<LearningTopic>())
+            for( item in it.child("learningTopics").children) {
+                var idTopic = item.child("idTopic").getValue(String::class.java)
+                var idLearned1 = item.child("idLearned").getValue()
+                var idLearned:ArrayList<String>? = idLearned1 as? ArrayList<String>
+                var idLearning1 = item.child("idLearning").getValue()
+                var idLearning:ArrayList<String>? = idLearning1  as? ArrayList<String>
+                var idChecked1 = item.child("idChecked").getValue()
+                var idChecked:ArrayList<String>?  = idChecked1  as? ArrayList<String>
+                if(idLearned==null) {
+                    idLearned = ArrayList(emptyList<String>())
+                }
+                if(idLearning==null) {
+                    idLearning = ArrayList(emptyList<String>())
+                }
+                if(idChecked==null) {
+                    idChecked = ArrayList(emptyList<String>())
+                }
 
-            val password = it.child("password").value.toString()
-            val fullname = it.child("fullName").value.toString()
-            val avatar = it.child("avatar").value.toString()
-            val email = it.child("email").value.toString()
-            val phone = it.child("phoneNumber").value.toString()
-            val bookmarkTopics = it.child("bookmarkedTopics").value as MutableMap<String, Boolean>
-            var learningTopics = it.child("learningTopics").getValue(gti) as ArrayList<LearningTopic>?
-            if(learningTopics == null){
-                learningTopics = ArrayList<LearningTopic>()
+                learningTopics.add(LearningTopic(idTopic!!, idChecked, idLearning, idLearned))
             }
-            val lastAccess = it.child("lastAccess").value as Long
-
-            user = User(password, fullname, avatar, email, phone, bookmarkTopics, lastAccess, learningTopics)
+            user = User(pass, fullName,avatar,email,phoneNumber,bookMarks,lastAccess)
         }
     }
 

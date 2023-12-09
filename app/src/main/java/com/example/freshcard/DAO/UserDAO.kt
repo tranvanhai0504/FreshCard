@@ -7,8 +7,10 @@ import com.example.freshcard.MainActivity
 import com.example.freshcard.Structure.Database
 import com.example.freshcard.Structure.LearningTopic
 import com.example.freshcard.Structure.Topic
+import com.example.freshcard.Structure.TopicInfoView
 import com.example.freshcard.Structure.TopicItem
 import com.example.freshcard.Structure.User
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -99,14 +101,66 @@ public class UserDAO() {
         topicRef.child(topic.id).setValue(topic)
     }
 
-    fun getTopicById(id: String) : Topic{
-        var topic = Topic("","", "", ArrayList(emptyList<TopicItem>()), false, ArrayList(emptyList()), 0, 0)
-        topicRef.child("topics").child(id).get().addOnSuccessListener {
-            Log.i("firebase", "Got value ${it.child("title")}")
+    fun pushLearningTopic(learningTopic: LearningTopic, usId: String) {
+        db.child(usId).get().addOnSuccessListener {
+            var items = it.child("learningTopics")
+            var learningTopics  = ArrayList(emptyList<LearningTopic>())
+            if(items!=null) {
+                for( item in items.children) {
+                    var idTopic = item.child("idTopic").getValue(String::class.java)
+                    var idLearned1 = item.child("idLearned").getValue()
+                    var idLearned:ArrayList<String>? = idLearned1 as? ArrayList<String>
+                    var idLearning1 = item.child("idLearning").getValue()
+                    var idLearning:ArrayList<String>? = idLearning1  as? ArrayList<String>
+                    var idChecked1 = item.child("idChecked").getValue()
+                    var idChecked:ArrayList<String>?  = idChecked1  as? ArrayList<String>
+                    if(idLearned==null) {
+                        idLearned = ArrayList(emptyList<String>())
+                    }
+                    if(idLearning==null) {
+                        idLearning = ArrayList(emptyList<String>())
+                    }
+                    if(idChecked==null) {
+                        idChecked = ArrayList(emptyList<String>())
+                    }
+                    var newLearningTopic: LearningTopic = LearningTopic(idTopic!!, idChecked, idLearning, idLearned)
+
+                    learningTopics.add(newLearningTopic)
+                }
+
+
+                learningTopics.add(learningTopic)
+                db.child(usId).child("learningTopics").setValue(learningTopics)
+            }
         }.addOnFailureListener{
             Log.e("firebase", "Error getting data", it)
         }
-        return topic!!
+    }
+
+
+    fun getLearnedInfoByUser(userId: String, topicId: String, myF: (Int)-> Unit) {
+        Log.e("topiccx", "{idLearned.size}")
+        db.child(userId).get().addOnSuccessListener {
+            var items = it.child("learningTopics")
+            var learningTopics  = ArrayList(emptyList<LearningTopic>())
+            if(items!=null) {
+                for( item in items.children) {
+                    var idTopic = item.child("idTopic").getValue(String::class.java)
+                    if(idTopic == topicId) {
+                        var idLearned1 = item.child("idLearned").getValue()
+                        var idLearned:ArrayList<String>? = idLearned1 as? ArrayList<String>
+
+                        if(idLearned==null) {
+                            idLearned = ArrayList(emptyList<String>())
+                        }
+                        Log.e("topiccx", "${idLearned.size}")
+                        myF(idLearned.size)
+                    }
+                }
+            }
+        }.addOnFailureListener{
+            Log.e("firebase", "Error getting data", it)
+        }
     }
 
     fun bookmarkTopic(idUser : String, idTopic : String, isAdded : Boolean){
