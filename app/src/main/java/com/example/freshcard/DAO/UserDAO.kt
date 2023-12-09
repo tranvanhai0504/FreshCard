@@ -1,6 +1,7 @@
 package com.example.freshcard.DAO
 
 
+import android.content.Context
 import android.util.Log
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.example.freshcard.Structure.Database
@@ -132,6 +133,12 @@ public class UserDAO() {
         }.addOnFailureListener{
             Log.e("firebase", "Error getting data", it)
         }
+    }
+
+    fun getUserIdShareRef(context: Context): String {
+        val sharedPreferences = context.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+        val userId = sharedPreferences.getString("idUser", "undefined")!!
+        return userId
     }
 
 

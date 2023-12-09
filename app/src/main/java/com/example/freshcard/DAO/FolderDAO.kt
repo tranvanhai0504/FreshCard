@@ -2,7 +2,9 @@ package com.example.freshcard.DAO
 
 import android.content.Context
 import android.text.InputType
+import android.util.Log
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.freshcard.Structure.Database
 import com.example.freshcard.Structure.Folder
@@ -41,7 +43,6 @@ class FolderDAO() {
         folderRef.child(folder.id).setValue(folder)
     }
 
-
     fun getFolderData(userId: String,myF: (ArrayList<Folder>)-> Unit) {
         var query = folderRef.orderByChild("idUser").equalTo(userId)
         var folders = ArrayList(emptyList<Folder>())
@@ -71,4 +72,34 @@ class FolderDAO() {
     fun removeFolder(id: String) {
         folderRef.child(id).removeValue()
     }
+
+    fun setFoldersShareRef(context: Context, data: ArrayList<Folder>) {
+        if(context!=null) {
+            val sharedPreferences = context.applicationContext.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+            var editor = sharedPreferences.edit()
+            var set = mutableSetOf<String>()
+            var idSet = mutableSetOf<String>()
+            for(item in data) {
+                set.add(item.name)
+                idSet.add(item.id)
+            }
+            editor.putStringSet("folderNamesSet", set)
+            editor.putStringSet("folderIdsSet", idSet)
+            editor.apply()
+        }
+    }
+
+
+    fun getFolderNamesShareRef(context: Context): ArrayList<String> {
+        val sharedPreferences = context.applicationContext.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+        val set = sharedPreferences.getStringSet("folderNamesSet", emptySet())!!
+        return set!!.toCollection(ArrayList())
+    }
+
+    fun getFolderIdsShareRef(context: Context): ArrayList<String> {
+        val sharedPreferences = context.applicationContext.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+        val set = sharedPreferences.getStringSet("folderIdsSet", emptySet())
+        return set!!.toCollection(ArrayList())
+    }
+
 }

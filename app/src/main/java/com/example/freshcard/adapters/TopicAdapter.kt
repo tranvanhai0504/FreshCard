@@ -12,9 +12,11 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.freshcard.DAO.FolderDAO
 import com.example.freshcard.DAO.TopicDAO
 import com.example.freshcard.R
 import com.example.freshcard.Structure.LearningTopic
@@ -32,6 +34,8 @@ class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context): R
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mList[position]
+        val sharedPreferences = context.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+        val userId = sharedPreferences.getString("idUser", "undefined")!!
         holder.txtName.text = item.topicName
         holder.txtTotalCards.text = item.totalCards.toString()
         holder.txtTimeAccess.text = "Last access: ${item.timeAccess}"
@@ -71,11 +75,37 @@ class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context): R
             }
         }
 
+
+        if(userId == item.owner) {
+            holder.itemView.setOnLongClickListener{
+                v->
+                var arrNames: ArrayList<String> =  FolderDAO().getFolderNamesShareRef(context)
+                var arrIds: ArrayList<String> = FolderDAO().getFolderIdsShareRef(context)
+
+                true
+            }
+        }
+
         holder.itemView.setOnClickListener{
             v->
         }
 
 
+    }
+
+    private fun showDialog(names: ArrayList<String>, ids: ArrayList<String>) {
+        val alertDialog = AlertDialog.Builder(context)
+        var currId = ""
+         alertDialog.setTitle("Choose an Item")
+        var checkedItem = -1
+        alertDialog.setSingleChoiceItems(names.toTypedArray(),checkedItem) { dialog, which ->
+            checkedItem = which
+            currId = ids.get(which)
+            dialog.dismiss()
+        }
+        alertDialog.setNegativeButton("Cancel") { dialog, which -> }
+        val customAlertDialog = alertDialog.create()
+        customAlertDialog.show()
     }
 
     override fun getItemCount(): Int {
@@ -93,3 +123,5 @@ class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context): R
         val img = itemView.findViewById<ImageView>(R.id.imageTp)
     }
 }
+
+

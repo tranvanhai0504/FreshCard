@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.freshcard.DAO.FolderDAO
+import com.example.freshcard.DAO.UserDAO
 import com.example.freshcard.R
 import com.example.freshcard.Structure.Folder
 import com.example.freshcard.Structure.Topic
@@ -53,18 +54,7 @@ class FoldersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val sharedPreferences = requireContext().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-        val userId = sharedPreferences.getString("idUser", "undefined")!!
-        var adapterData = ArrayList<Folder>()
-//        adapterData.add(Folder("f1", "Words in Mach", ArrayList(emptyList<String>()), ""))
-//        adapterData.add(Folder("f2", "Under the water", ArrayList(emptyList<String>()), ""))
-//        adapterData.add(Folder("f3", "Enviroment", ArrayList(emptyList<String>()), ""))
-//        adapterData.add(Folder("f4", "Technology", ArrayList(emptyList<String>()), ""))
-//        adapterData.add(Folder("f5", "Basic Word", ArrayList(emptyList<String>()), ""))
-//        adapterData.add(Folder("f4", "Technology", ArrayList(emptyList<String>()), ""))
-//        adapterData.add(Folder("f5", "Basic Word", ArrayList(emptyList<String>()), ""))
-//        adapterData.add(Folder("f5", "Basic Word", ArrayList(emptyList<String>()), ""))
-//        adapterData.add(Folder("f5", "Basic Word", ArrayList(emptyList<String>()), ""))
+       var userId = UserDAO().getUserIdShareRef(requireContext())
         folderRecyclerView = this.requireView().findViewById(R.id.folderRecyclerView)
         folderRecyclerView.layoutManager = GridLayoutManager(context, 2)
         FolderDAO().getFolderData(userId) {arr-> updateAdapter(arr)}
@@ -77,6 +67,7 @@ class FoldersFragment : Fragment() {
     }
 
     fun updateAdapter(requestData: ArrayList<Folder>) {
+        FolderDAO().setFoldersShareRef(requireContext(), requestData)
         adapterData = requestData
         fodlerAdapter = FolderItemAdapter(adapterData, requireContext())
         folderRecyclerView.adapter = fodlerAdapter

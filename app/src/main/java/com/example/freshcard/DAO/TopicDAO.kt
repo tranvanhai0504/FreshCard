@@ -24,9 +24,6 @@ import java.time.LocalDateTime
 
 public class TopicDAO() {
     var topicRef: DatabaseReference = Database().getReference("topics")
-    var learningTopicRef: DatabaseReference = Database().getReference("learningtopics")
-
-
     fun getTopicById(id: String, myF: (Topic)-> Unit) : Topic{
         var topic = Topic("","", "", ArrayList(emptyList<TopicItem>()), false, ArrayList(emptyList()))
         topicRef.child(id).get().addOnSuccessListener {
@@ -81,7 +78,7 @@ public class TopicDAO() {
                     Log.e("topic", "${items}")
                     getTopicById(topicId!!) {tp ->
                         UserDAO().getLearnedInfoByUser(owner, tp.id) {size ->
-                            var newTopicView = TopicInfoView(tp.id,tp.title,tp.items.size,size,"", tp.isPublic.toString())
+                            var newTopicView = TopicInfoView(tp.id,tp.title,tp.items.size,size,"", tp.isPublic.toString(), owner)
                             Log.e("topicx", "${newTopicView}")
                             topicInfoList.add(newTopicView)
                             myF(topicInfoList)
@@ -96,11 +93,4 @@ public class TopicDAO() {
             }
         })
     }
-
-
-
-    fun pushLearningTopic(item: LearningTopic) {
-        learningTopicRef.child("${item.idTopic}").setValue(item)
-    }
-
 }
