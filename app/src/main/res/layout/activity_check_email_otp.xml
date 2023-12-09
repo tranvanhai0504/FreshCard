@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".checkEmailOTPActivity"
+    >
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="40dp"
+            android:paddingVertical="43dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_back"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/back_button"
+                android:drawableLeft="@drawable/round_arrow_back_24"
+                android:paddingHorizontal="7dp"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="302dp"
+                android:layout_height="87dp"
+                android:layout_marginTop="36dp"
+                android:src="@drawable/forgot"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.366"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_back" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="88dp"
+                android:gravity="center"
+                android:text="We have sent a code to reset your password"
+                android:textColor="@color/mediumGreen"
+                android:textSize="7pt"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.387"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Check your email"
+                android:textColor="@color/strongGreen"
+                android:textSize="12pt"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/textView2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView3"
+                app:layout_constraintVertical_bias="0.301" />
+
+            <EditText
+                android:id="@+id/edit_otp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:elevation="5dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/login_input"
+                android:hint="Enter your OTP"
+                android:gravity="center"
+                android:paddingHorizontal="15dp"
+                android:textColor="@color/strongGreen"
+                android:textColorHint="@color/grayDefault"
+                android:textSize="7pt"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@+id/edit_otp"
+                tools:layout_editor_absoluteX="43dp">
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="Did you don’t code? "
+                    android:textColor="@color/strongGreen"
+                    android:textSize="7pt" />
+
+                <TextView
+                    android:id="@+id/resend_otp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Resend OTP"
+                    android:textColor="@color/mediumGreen"
+                    android:textSize="7pt" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/alert_Email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/warningRed"
+                android:textSize="7pt"
+                app:layout_constraintBottom_toTopOf="@+id/edit_otp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+            <Button
+                android:id="@+id/btn_submit"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="56dp"
+                android:background="@drawable/button"
+                android:backgroundTint="@color/mediumGreen"
+                android:text="Check"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+            <TextView
+                android:id="@+id/backtologin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="25dp"
+                android:text="Back to Lgoin"
+                android:textColor="@color/mediumGreen"
+                android:textSize="7pt"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.483"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_submit"
+                app:layout_constraintVertical_bias="0.627" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
