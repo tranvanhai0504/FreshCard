@@ -76,6 +76,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun getContext(myF:(Context)-> Unit) {
+        myF(this)
+    }
+
     fun getUser(id : String){
         UserDAO().getDbUser().child(id).get().addOnSuccessListener {
             Log.e("user", "${it}")

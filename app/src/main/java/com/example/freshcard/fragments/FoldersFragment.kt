@@ -57,7 +57,9 @@ class FoldersFragment : Fragment() {
        var userId = UserDAO().getUserIdShareRef(requireContext())
         folderRecyclerView = this.requireView().findViewById(R.id.folderRecyclerView)
         folderRecyclerView.layoutManager = GridLayoutManager(context, 2)
-        FolderDAO().getFolderData(userId) {arr-> updateAdapter(arr)}
+        FolderDAO().getFolderData(userId) {arr->
+            Log.e("topic", "T${arr.size}")
+            updateAdapter(arr)}
 
         btnAddNewFolder = this.requireView().findViewById(R.id.btnNewFolder)
         btnAddNewFolder.setOnClickListener{
@@ -67,10 +69,12 @@ class FoldersFragment : Fragment() {
     }
 
     fun updateAdapter(requestData: ArrayList<Folder>) {
-        FolderDAO().setFoldersShareRef(requireContext(), requestData)
-        adapterData = requestData
-        fodlerAdapter = FolderItemAdapter(adapterData, requireContext())
-        folderRecyclerView.adapter = fodlerAdapter
+       if(isAdded) {
+           FolderDAO().setFoldersShareRef(requireContext(), requestData)
+           adapterData = requestData
+           fodlerAdapter = FolderItemAdapter(adapterData, requireContext())
+           folderRecyclerView.adapter = fodlerAdapter
+       }
     }
 
     private fun getNewFolderName(context: Context) {

@@ -22,6 +22,7 @@ import com.example.freshcard.DAO.FolderDAO
 import com.example.freshcard.DAO.TopicDAO
 import com.example.freshcard.FlashCardLearnActivity
 import com.example.freshcard.R
+import com.example.freshcard.Structure.Folder
 import com.example.freshcard.Structure.LearningTopic
 import com.example.freshcard.Structure.Topic
 import com.example.freshcard.Structure.TopicInfoView
@@ -29,6 +30,9 @@ import kotlin.random.Random
 
 class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context): RecyclerView.Adapter<TopicAdapter.ViewHolder>() {
    private lateinit var currHolder: ViewHolder
+   private var folders: ArrayList<Folder> = ArrayList(emptyList<Folder>())
+    var arrNames: ArrayList<String> =  ArrayList(emptyList<String>())
+    var arrIds: ArrayList<String> =  ArrayList(emptyList<String>())
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -80,12 +84,20 @@ class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context): R
             }
         }
 
+        FolderDAO().getFolderData(item.owner) {
+            arrIds.clear()
+            arrNames.clear()
+            for(item in it) {
+                arrIds.add(item.id)
+                arrNames.add(item.name)
+            }
+        }
+
         if(userId == item.owner) {
             holder.itemView.setOnLongClickListener{
                 v->
                 currHolder = holder
-                var arrNames: ArrayList<String> =  FolderDAO().getFolderNamesShareRef(context)
-                var arrIds: ArrayList<String> = FolderDAO().getFolderIdsShareRef(context)
+
                 showPopupMenu(holder, arrNames, arrIds)
                 true
             }
@@ -115,6 +127,8 @@ class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context): R
         var item = mList[currHolder.position]
          alertDialog.setTitle("Choose a folder")
         var checkedItem = -1
+
+        Log.e("topic", "x${names}, ---${ids}")
         alertDialog.setSingleChoiceItems(names.toTypedArray(),checkedItem) { dialog, which ->
             checkedItem = which
             currId = ids.get(which)
