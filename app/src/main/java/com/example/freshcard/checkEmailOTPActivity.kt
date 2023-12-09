@@ -1,7 +1,11 @@
 package com.example.freshcard
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Spannable
@@ -9,6 +13,7 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import com.example.freshcard.DAO.UserDAO
 import com.example.freshcard.databinding.ActivityCheckEmailOtpBinding
 import com.google.firebase.database.DatabaseError
@@ -66,7 +71,8 @@ class checkEmailOTPActivity : AppCompatActivity() {
                 if (result != null) {
                     if (result["state"] as Boolean) {
                         // Mã OTP đã được gửi lại thành công
-                        showToast("New OTP has been sent to your email.")
+                        showToast("New OTP has been sent.")
+                        showNotification(result["otp"].toString())
                     } else {
                         // Gửi lại mã OTP không thành công
                         showToast(result["message"].toString())
@@ -116,5 +122,25 @@ class checkEmailOTPActivity : AppCompatActivity() {
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showNotification(otp: String) {
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channelId = "channel_id"
+        val channelName = "channel_name"
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val notificationBuilder = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.iconlogo)
+            .setContentTitle("OTP Notification")
+            .setContentText("Your new OTP is: $otp \n OTP is only valid for 2 minutes")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+
+        notificationManager.notify(0, notificationBuilder.build())
     }
 }

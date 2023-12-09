@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener
 import java.util.Random
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
@@ -127,14 +128,8 @@ public class UserDAO() {
                         userRef.child("forgotPasswordCodeTime").removeValue()
                     }, 2 * 60 * 1000)
 
-                    // Gửi mã OTP qua email
-                    /*val emailSender = EmailSender(email)
-                    emailSender.setSubject("FreshCard - Quên mật khẩu")
-                    emailSender.setBody("Mã OTP của bạn để đặt lại mật khẩu là: $otpCode")
-                    emailSender.send()*/
-
                     // Trả về kết quả thành công
-                    onResult(hashMapOf("state" to true, "message" to "Đã gửi mã OTP đến email của bạn"))
+                    onResult(hashMapOf("state" to true, "message" to "Đã gửi mã OTP đến thông báo của bạn", "otp" to otpCode))
                 } else {
                     // Email không tồn tại
                     onResult(hashMapOf("state" to false, "message" to "Email không tồn tại"))
@@ -206,7 +201,8 @@ public class UserDAO() {
                     val userRef = userSnapshot.ref
 
                     // Hash mật khẩu mới trước khi lưu vào database
-                    val hashedPassword = BCrypt.withDefaults().hashToString(12, newPassword.toCharArray())
+                    val hashedPassword =
+                        BCrypt.withDefaults().hashToString(12, newPassword.toCharArray())
 
                     // Lưu mật khẩu mới vào database
                     userRef.child("password").setValue(hashedPassword)
@@ -225,21 +221,123 @@ public class UserDAO() {
             }
         }
         query.addListenerForSingleValueEvent(valueEventListener)
+    }
+
+    fun getUserById(userId: String, onResult: (User?) -> Unit) {
+        val userRef = db.child(userId)
+
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    // Chuyển đổi dữ liệu từ snapshot thành đối tượng User
+                    val user = snapshot.getValue(User::class.java)
+                    onResult(user)
+                } else {
+                    // Không tìm thấy người dùng với ID tương ứng
+                    onResult(null)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Xử lý khi có lỗi đọc dữ liệu từ cơ sở dữ liệu
+                onResult(null)
+            }
+        })
+    }
+
+    fun updateUserById(newAvatar: String? = null, Email: String? = null, newFullName: String? = null, newPhoneNumber: String? = null,
+                       onResult: (HashMap<String, Any?>) -> Unit
+    ) {
+
+        val userRef = db.orderByChild("email").equalTo(Email)
+
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    val userSnapshot = snapshot.children.iterator().next()
+                    val userRef = userSnapshot.ref
+
+                        userRef.child("avatar").setValue(newAvatar)
+
+                        userRef.child("fullName").setValue(newFullName)
+
+                        userRef.child("phoneNumber").setValue(newPhoneNumber)
+
+                    // Trả về kết quả thành công
+                    onResult(hashMapOf("state" to true, "message" to "Thông tin người dùng đã được cập nhật"))
+                } else {
+                    // Không tìm thấy người dùng với ID tương ứng
+                    onResult(hashMapOf("state" to false, "message" to "Không tìm thấy người dùng"))
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Xử lý khi có lỗi đọc dữ liệu từ cơ sở dữ liệu
+                onResult(hashMapOf("state" to false, "message" to "Lỗi database"))
+            }
+        })
+    }
+
+    fun changePassword(email: String, oldPassword: String, newPassword: String, onResult: (HashMap<String, Any?>) -> Unit) {
+        val query = db.orderByChild("email").equalTo(email)
+
+        val valueEventListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    // Lấy đối tượng User từ snapshot
+                    val userSnapshot = snapshot.children.iterator().next()
+                    val userRef = userSnapshot.ref
+
+                    // Lấy mật khẩu đã lưu trong database
+                    val storedPassword = userSnapshot.child("password").value.toString()
+
+                    // Kiểm tra xem mật khẩu cũ nhập vào có khớp với mật khẩu trong database không
+                    val isMatchPassword = BCrypt.verifyer().verify(oldPassword.toCharArray(), storedPassword.toCharArray())
+
+                    if (isMatchPassword.verified) {
+                        // Nếu mật khẩu cũ đúng, thì tiến hành thay đổi mật khẩu mới
+                        // Hash mật khẩu mới trước khi lưu vào database
+                        val hashedPassword = BCrypt.withDefaults().hashToString(12, newPassword.toCharArray())
+
+                        // Lưu mật khẩu mới vào database
+                        userRef.child("password").setValue(hashedPassword)
+
+                        // Trả về kết quả thành công
+                        onResult(hashMapOf("state" to true, "message" to "Mật khẩu đã được thay đổi"))
+                    } else {
+                        // Mật khẩu cũ không đúng
+                        onResult(hashMapOf("state" to false, "message" to "Mật khẩu cũ không đúng"))
+                    }
+                } else {
+                    // Email không tồn tại
+                    onResult(hashMapOf("state" to false, "message" to "Email không tồn tại"))
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Lỗi từ database
+                onResult(hashMapOf("state" to false, "message" to "Lỗi database"))
+            }
+        }
+        query.addListenerForSingleValueEvent(valueEventListener)
+    }
+
+
 
     fun pushTopic(topic: Topic) {
-        topicRef.child(topic.id).setValue(topic)
-    }
-
-    fun getTopicById(id: String) : Topic{
-        var topic = Topic("","", "", ArrayList(emptyList<TopicItem>()), false, ArrayList(emptyList()))
-        topicRef.child("topics").child(id).get().addOnSuccessListener {
-            Log.i("firebase", "Got value ${it.child("title")}")
-        }.addOnFailureListener{
-            Log.e("firebase", "Error getting data", it)
+            topicRef.child(topic.id).setValue(topic)
         }
-        return topic!!
-    }
 
+        fun getTopicById(id: String): Topic {
+            var topic =
+                Topic("", "", "", ArrayList(emptyList<TopicItem>()), false, ArrayList(emptyList()))
+            topicRef.child("topics").child(id).get().addOnSuccessListener {
+                Log.i("firebase", "Got value ${it.child("title")}")
+            }.addOnFailureListener {
+                Log.e("firebase", "Error getting data", it)
+            }
+            return topic!!
+        }
 
 }
 
