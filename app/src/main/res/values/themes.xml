@@ -6,7 +6,7 @@
     </style>
 
 
-    <style name="Theme.FreshCard" parent="Theme.MaterialComponents.DayNight.NoActionBar" >
+    <style name="Theme.FreshCard" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">#54B435</item>
         <item name="colorPrimaryVariant">#0F9D58</item>
         <item name="colorOnPrimary">#000</item>

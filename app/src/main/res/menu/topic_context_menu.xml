@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/topicContextMenuRemove"
+        android:title="Delete topic"/>
+
+    <item
+        android:id="@+id/topicContextMenuAddToFolder"
+        android:title="Add to folder"/>
+</menu>

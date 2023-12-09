@@ -1,6 +1,7 @@
 package com.example.freshcard.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.util.Log
@@ -13,17 +14,21 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.PopupMenu
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.freshcard.DAO.FolderDAO
 import com.example.freshcard.DAO.TopicDAO
+import com.example.freshcard.FlashCardLearnActivity
 import com.example.freshcard.R
 import com.example.freshcard.Structure.LearningTopic
+import com.example.freshcard.Structure.Topic
 import com.example.freshcard.Structure.TopicInfoView
 import kotlin.random.Random
 
 class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context): RecyclerView.Adapter<TopicAdapter.ViewHolder>() {
+   private lateinit var currHolder: ViewHolder
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -75,32 +80,45 @@ class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context): R
             }
         }
 
-
         if(userId == item.owner) {
             holder.itemView.setOnLongClickListener{
                 v->
+                currHolder = holder
                 var arrNames: ArrayList<String> =  FolderDAO().getFolderNamesShareRef(context)
                 var arrIds: ArrayList<String> = FolderDAO().getFolderIdsShareRef(context)
-
+                showPopupMenu(holder, arrNames, arrIds)
                 true
             }
         }
 
         holder.itemView.setOnClickListener{
             v->
+                var intent = Intent(context, FlashCardLearnActivity::class.java)
+                intent.putExtra("idTopic", item.topicId)
+                context.startActivity(intent)
         }
+    }
 
+    fun setList(arr : ArrayList<TopicInfoView>) {
+        mList = arr
+        notifyDataSetChanged()
+    }
 
+    fun addTopic(topic: TopicInfoView) {
+        mList.add(0,topic)
+        notifyDataSetChanged()
     }
 
     private fun showDialog(names: ArrayList<String>, ids: ArrayList<String>) {
         val alertDialog = AlertDialog.Builder(context)
         var currId = ""
-         alertDialog.setTitle("Choose an Item")
+        var item = mList[currHolder.position]
+         alertDialog.setTitle("Choose a folder")
         var checkedItem = -1
         alertDialog.setSingleChoiceItems(names.toTypedArray(),checkedItem) { dialog, which ->
             checkedItem = which
             currId = ids.get(which)
+            FolderDAO().addTopic(currId, item.topicId)
             dialog.dismiss()
         }
         alertDialog.setNegativeButton("Cancel") { dialog, which -> }
@@ -108,8 +126,59 @@ class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context): R
         customAlertDialog.show()
     }
 
+
+    private fun showPopupMenu(holder: TopicAdapter.ViewHolder, arrNames: ArrayList<String> ,arrIds: ArrayList<String> ) {
+        val popupMenu = PopupMenu(context, holder.txtAccess)
+        popupMenu.inflate(R.menu.topic_context_menu) // Inflate your menu resource
+        popupMenu.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.topicContextMenuRemove -> {
+                    currHolder = holder
+                    confirmDelete()
+                    true
+                }
+                R.id.topicContextMenuAddToFolder -> {
+                    showDialog(arrNames,arrIds)
+                    true
+                }
+                else -> {
+                    true
+                }
+            }
+        }
+
+        popupMenu.show()
+    }
+
     override fun getItemCount(): Int {
         return mList.size
+    }
+
+    fun handleRemove(id: String) {
+        TopicDAO().removeTopic(id)
+    }
+
+    private fun confirmDelete() {
+        var builder: AlertDialog.Builder = AlertDialog.Builder(context)
+        var item = mList[currHolder.position]
+
+        builder.setMessage("Delete topic ${item.topicName}?")
+            .setTitle("Alert")
+            .setPositiveButton("YES") {
+                    dialog, which ->
+                    handleRemove(item.topicId)
+            }
+            .setNegativeButton("NO") {
+                    dialog, which ->
+                //no fun
+            }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
+                v->
+            dialog.cancel()
+        }
     }
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

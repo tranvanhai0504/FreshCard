@@ -25,8 +25,13 @@ import com.example.freshcard.DAO.UserDAO
 import com.example.freshcard.Structure.LearningTopic
 import com.example.freshcard.Structure.Topic
 import com.example.freshcard.Structure.TopicItem
+import com.example.freshcard.adapters.TopicAdapter
+import com.example.freshcard.fragments.TopicsFragment
+import kotlinx.coroutines.runBlocking
 import org.apache.commons.csv.CSVFormat
 import java.io.InputStream
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.Calendar
 
 class AddTopic : AppCompatActivity() {
@@ -41,9 +46,13 @@ class AddTopic : AppCompatActivity() {
     private lateinit var btnImport: Button
     private lateinit var imageUri: Uri
 
-    public var adapterData =  ArrayList<TopicItem>()
+    private var learnedPeoples = ArrayList<String>()
+    var adapterData =  ArrayList<TopicItem>()
     var currTopicId = ""
     var userId = ""
+    var context = this
+    var isEditing = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_topic)
@@ -56,10 +65,29 @@ class AddTopic : AppCompatActivity() {
         btnSubmitTopic = findViewById(R.id.btnSubmitTopic)
         btnImport = findViewById(R.id.btnImport)
         btnSaveTopicName.isVisible = false
+        cardsRectyclerView.layoutManager = LinearLayoutManager(this)
+
+        var topicId: String = intent.getStringExtra("edit")!!
+        if(topicId != "false") {
+            TopicDAO().getTopicById(topicId) { topic->
+                adapterData = topic.items!!
+                Log.i("topics", "${adapterData}")
+                currTopicId = topicId
+                isEditing = true
+                learnedPeoples = topic.learnedPeople!!
+                cardAdapter =CardAdapter(adapterData, this, currTopicId){  -> selectImage() }
+                cardsRectyclerView.adapter = cardAdapter
+                inputTopicName.setText(topic.title)
+            }
+        }else {
+            currTopicId = "${getCurrentTimeInDecimal()}${userId}"
+            cardAdapter =CardAdapter(adapterData, this, currTopicId){  -> selectImage() }
+            cardsRectyclerView.adapter = cardAdapter
+        }
 
         val sharedPreferences = applicationContext.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
         userId = sharedPreferences.getString("idUser", "undefined")!!
-        currTopicId = "${getCurrentTimeInDecimal()}${userId}"
+
         btnImport.setOnClickListener{
             v->
             pickFile.launch("*/*")
@@ -90,9 +118,7 @@ class AddTopic : AppCompatActivity() {
         btnEditName.setOnClickListener {
             handleClickEditName()
         }
-        cardsRectyclerView.layoutManager = LinearLayoutManager(this)
-        cardAdapter =CardAdapter(adapterData, this, currTopicId){  -> selectImage() }
-        cardsRectyclerView.adapter = cardAdapter
+
 
     }
 
@@ -112,10 +138,14 @@ class AddTopic : AppCompatActivity() {
     }
 
     fun saveTopic() {
-            var topic = Topic(currTopicId, userId, inputTopicName.text.toString(), adapterData, false, ArrayList(emptyList<String>()))
-            UserDAO().pushTopic(topic)
+        var topic = Topic(currTopicId, userId, inputTopicName.text.toString(), adapterData, false, learnedPeoples, LocalDateTime.now().toEpochSecond(
+        ZoneOffset.UTC), 0)
+        if(!isEditing) {
+            MainActivity.Companion.user.learningTopics?.add(LearningTopic(idTopic = currTopicId, idLearning = ArrayList(emptyList<String>()), idLearned = ArrayList(emptyList<String>()), idChecked = ArrayList(emptyList<String>())))
             UserDAO().pushLearningTopic(LearningTopic(idTopic = currTopicId, idLearning = ArrayList(emptyList<String>()), idLearned = ArrayList(emptyList<String>()), idChecked = ArrayList(emptyList<String>())), userId)
-            finish()
+        }
+        UserDAO().pushTopic(topic)
+        finish()
     }
 
     fun getCurrentTimeInDecimal(): Int {

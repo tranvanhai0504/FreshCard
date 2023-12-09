@@ -14,14 +14,17 @@ import com.example.freshcard.fragments.FolderFragment
 import com.example.freshcard.fragments.HomeFragment
 import com.example.freshcard.fragments.ProfileFragment
 import com.example.freshcard.fragments.RankFragment
-import com.google.firebase.database.getValue
+import com.google.firebase.database.GenericTypeIndicator
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        var user = User()
+    }
+
     private lateinit var binding: ActivityMainBinding
-    lateinit var user : User
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Log.e("update", "reload")
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
@@ -67,7 +70,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.fab.setOnClickListener{
             v->
-            startActivity(Intent(this, AddTopic::class.java))
+            var intent = Intent(this, AddTopic::class.java)
+            intent.putExtra("edit", "false")
+            startActivity(intent)
         }
     }
 
@@ -80,8 +85,10 @@ class MainActivity : AppCompatActivity() {
             var lastAccess = it.child("lastAccess").getValue(Long::class.java)
             var avatar = it.child("avatar").getValue(String::class.java)
             var email = it.child("email").getValue(String::class.java)
-            var bm = it.child("bookmarkedTopics").getValue()
-            var bookMarks:ArrayList<String>?  = bm  as? ArrayList<String>
+            var bookMarks = it.child("bookmarkedTopics").getValue() as MutableMap<String, Boolean>?
+            if(bookMarks == null){
+                bookMarks = HashMap()
+            }
             var learningTopics = ArrayList(emptyList<LearningTopic>())
             for( item in it.child("learningTopics").children) {
                 var idTopic = item.child("idTopic").getValue(String::class.java)
@@ -103,7 +110,7 @@ class MainActivity : AppCompatActivity() {
 
                 learningTopics.add(LearningTopic(idTopic!!, idChecked, idLearning, idLearned))
             }
-            user = User(pass, fullName,avatar,email,phoneNumber,bookMarks,lastAccess)
+            user = User(pass, fullName,avatar,email,phoneNumber,bookMarks,lastAccess, learningTopics)
         }
     }
 

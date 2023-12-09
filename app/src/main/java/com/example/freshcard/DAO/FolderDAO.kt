@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import com.example.freshcard.Structure.Database
 import com.example.freshcard.Structure.Folder
 import com.example.freshcard.Structure.Topic
+import com.example.freshcard.Structure.TopicItem
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -86,6 +87,20 @@ class FolderDAO() {
             editor.putStringSet("folderNamesSet", set)
             editor.putStringSet("folderIdsSet", idSet)
             editor.apply()
+        }
+    }
+
+    fun addTopic(folderId: String, topicId:String) {
+        folderRef.child(folderId).child("idTopics").get().addOnSuccessListener {
+            var idTopics: ArrayList<String>? = ArrayList(emptyList<String>())
+            if(it.getValue()!=null) {
+                var list = it.getValue()
+                idTopics = list  as? ArrayList<String>
+            }
+            idTopics!!.add(topicId)
+            folderRef.child(folderId).child("idTopics").setValue(idTopics)
+        }.addOnFailureListener{
+            Log.e("firebase", "Error getting data", it)
         }
     }
 

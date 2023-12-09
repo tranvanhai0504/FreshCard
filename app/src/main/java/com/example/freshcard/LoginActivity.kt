@@ -30,6 +30,11 @@ class LoginActivity : AppCompatActivity() {
             startActivityForResult(intent, 0);
         }
 
+        binding.forgotPassword.setOnClickListener {
+            val intent = Intent(this, SendForgotPasswordEmailActivity::class.java)
+            startActivity(intent)
+        }
+
         binding.btnShowPassword.setOnClickListener{ e ->
             isShowPassword = !isShowPassword
             if(isShowPassword){
@@ -69,7 +74,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun cancelLoading(){
-        Toast.makeText(this, "this", Toast.LENGTH_SHORT).show()
         binding.progressCircle.visibility = ProgressBar.INVISIBLE
         binding.btnSubmit.text = "Login"
         binding.editEmail.isEnabled = true
@@ -83,12 +87,13 @@ class LoginActivity : AppCompatActivity() {
             if (it != null) {
                 //check state of login
                 if (it["state"] as Boolean) {
+                    UserDAO().UpdateDateLogin(it["message"].toString())
                     val intent = Intent(this, MainActivity::class.java)
                     intent.putExtra("idUser", it["message"].toString())
                     startActivity(intent)
                     finish()
                 } else {
-                    Toast.makeText(this, it["message"].toString(), Toast.LENGTH_SHORT).show()
+
                 }
             }else{
                 Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
