@@ -56,7 +56,7 @@ class TopicsFragment : Fragment() {
         val sharedPreferences = requireContext().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
         val userId = sharedPreferences.getString("idUser", "undefined")!!
         topicRecyclerView = this.requireView().findViewById(R.id.topicsRecyclerView)
-        topicsAdapter = TopicAdapter(mlist, requireContext())
+        topicsAdapter = TopicAdapter(mlist, requireContext(), "view")
         topicRecyclerView.layoutManager = LinearLayoutManager(context)
         TopicDAO().getTopicInfoViewByOwner(userId) {data ->
             if(mlist.equals(data)){
@@ -80,7 +80,7 @@ class TopicsFragment : Fragment() {
 
     fun updateAdapter(data: ArrayList<TopicInfoView>) {
         Log.e("topic-", "${data}")
-        topicsAdapter = TopicAdapter(data, requireContext())
+        topicsAdapter = TopicAdapter(data, requireContext(), "view")
         topicRecyclerView.adapter = topicsAdapter
     }
 

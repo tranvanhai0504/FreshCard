@@ -94,6 +94,8 @@ class AddTopic : AppCompatActivity() {
                 cardAdapter =CardAdapter(adapterData, this, currTopicId){  -> selectImage() }
                 cardsRectyclerView.adapter = cardAdapter
                 inputTopicName.setText(topic.title)
+                switchButton.alpha = 0.4F
+                switchButton.isEnabled = false
             }
         }else {
             currTopicId = "${getCurrentTimeInDecimal()}${userId}"
