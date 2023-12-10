@@ -5,32 +5,67 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.viewpager2.widget.ViewPager2
 import com.example.freshcard.R
+import com.example.freshcard.adapters.TopicFolderFragmentAdapter
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
-/**
- * A simple [Fragment] subclass.
- * Use the [FolderFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 class FolderFragment : Fragment(R.layout.fragment_folder) {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var tabLayout : TabLayout
+     private lateinit var viewPager: ViewPager2
+    private lateinit var fragmentAdapter : TopicFolderFragmentAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
+//        arguments?.let {
+//
+//        }
+//
+//        tabLayout!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+//            override fun onTabSelected(tab: TabLayout.Tab?) {
+//                tab?.let {
+//                    viewPager!!.currentItem = it.position
+//                }
+//            }
+//
+//            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+//            override fun onTabReselected(tab: TabLayout.Tab?) {}
+//        })
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
+
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_folder, container, false)
+
+        return  inflater.inflate(R.layout.fragment_folder, container, false)
+
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        tabLayout = this.requireView().findViewById(R.id.tabLayout)
+        viewPager = this.requireView().findViewById(R.id.pager)
+        viewPager.isSaveEnabled = false
+
+        fragmentAdapter = TopicFolderFragmentAdapter(this)
+        viewPager.adapter = fragmentAdapter
+
+
+        TabLayoutMediator(tabLayout, viewPager){ tab, positon ->
+            if(positon == 0){
+                tab.text = "Folders"
+            }else{
+                tab.text = "Topics"
+            }
+        }.attach()
+    }
+
+
 
     companion object {
         /**

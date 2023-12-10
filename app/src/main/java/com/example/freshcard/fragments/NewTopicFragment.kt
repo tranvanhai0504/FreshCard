@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.freshcard.DAO.TopicDAO
 import com.example.freshcard.R
 import com.example.freshcard.Structure.Topic
 import com.example.freshcard.Structure.TopicItem
@@ -16,7 +17,7 @@ import com.example.freshcard.adapters.TopicNewHomeAdapter
 
 class NewTopicFragment : Fragment() {
     lateinit var newTopicAdapter : TopicNewHomeAdapter
-    var newTopicList : ArrayList<Topic> = ArrayList<Topic>()
+    lateinit var newTopicList : ArrayList<Topic>
     lateinit var cardRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,10 +37,14 @@ class NewTopicFragment : Fragment() {
 
         cardRecyclerView = this.requireView().findViewById(R.id.listNewTopicView)
         cardRecyclerView.layoutManager = LinearLayoutManager(context)
-        newTopicList.add(Topic("id","-Nk-5J5lT1gXrDL1NAdQ", "Animals", ArrayList<TopicItem>(), true, ArrayList<String>()))
 
-        Log.i("listTopic", newTopicList.toString())
-        newTopicAdapter = TopicNewHomeAdapter(newTopicList, this)
+        loadData()
         cardRecyclerView.adapter = newTopicAdapter
+    }
+
+    fun loadData(){
+        newTopicList = ArrayList<Topic>()
+        newTopicAdapter = TopicNewHomeAdapter(newTopicList, this)
+        TopicDAO().getNewTopics(newTopicList, newTopicAdapter)
     }
 }

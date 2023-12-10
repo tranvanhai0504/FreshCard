@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingVertical="40dp"
+    android:paddingHorizontal="30dp"
+    tools:context=".FlashCardLearnActivity">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/back_button"
+        android:drawableLeft="@drawable/round_arrow_back_24"
+        android:paddingHorizontal="7dp"
+        android:textAlignment="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_test"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:backgroundTint="@color/mediumGreen"
+        android:text="Test"
+        android:background="@drawable/button_corner"
+        android:textStyle="bold"
+        android:textSize="6pt"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_back"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btn_back" />
+
+    <LinearLayout
+        android:id="@+id/nameCover"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@+id/btn_back"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        >
+
+        <TextView
+            android:id="@+id/txtTopicName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="11pt"
+            android:textStyle="bold"
+            android:textColor="@color/strongGreen"
+            android:layout_weight="1"
+            android:text="Topic name"/>
+
+        <ImageButton
+            android:id="@+id/btnOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/option_icon"
+            android:backgroundTint="#fff"
+            />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/strongGreen"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameCover" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="30dp">
+
+        <LinearLayout
+            android:id="@+id/countCover"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="10pt"
+                android:layout_weight="1"
+                android:text="20/60"/>
+
+            <android.widget.Button
+                android:layout_width="60dp"
+                android:layout_height="25dp"
+                android:scaleType="centerCrop"
+                android:text="Stars"
+                android:background="@drawable/switch_button"
+                android:textSize="4pt"
+                android:textColor="@color/grayDefault"
+                />
+
+            <android.widget.Button
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/switch_button"
+                android:layout_width="60dp"
+                android:layout_height="25dp"
+                android:text="All"
+                android:textSize="4pt"
+                android:textColor="@color/grayDefault"
+                />
+        </LinearLayout>
+
+
+        <com.yuyakaido.android.cardstackview.CardStackView
+            android:id="@+id/cardStackView"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toBottomOf="@+id/countCover"
+            android:layout_height="200dp"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            app:layout_constraintTop_toBottomOf="@+id/cardStackView"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/progressBar"
+            android:paddingHorizontal="30dp">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btnAuto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                app:backgroundTint="@color/strongGreen"
+                app:tint="@color/white"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:fabSize="auto"
+                android:src="@drawable/arrow_drop_down_big"
+                app:rippleColor="#22ED7563"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Auto play"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/strongGreen"
+                app:layout_constraintEnd_toEndOf="@+id/btnAuto"
+                app:layout_constraintStart_toStartOf="@+id/btnAuto"
+                app:layout_constraintTop_toBottomOf="@+id/btnAuto" />
+
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btnRollback"
+                android:src="@drawable/refund_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tint="@color/white"
+                android:layout_centerVertical="true"
+                app:backgroundTint="@color/strongGreen"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/btnAuto"
+                app:layout_constraintRight_toLeftOf="@+id/btnShuffle"
+                app:fabSize="auto"
+                app:rippleColor="#22ED7563"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Roll back"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/strongGreen"
+                app:layout_constraintEnd_toEndOf="@+id/btnRollback"
+                app:layout_constraintStart_toStartOf="@+id/btnRollback"
+                app:layout_constraintTop_toBottomOf="@+id/btnRollback" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btnShuffle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/sort_random"
+                android:layout_centerVertical="true"
+                app:tint="@color/white"
+                app:backgroundTint="@color/strongGreen"
+                app:fabSize="auto"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/btnRollback"
+                app:layout_constraintTop_toTopOf="parent"
+                app:rippleColor="#22ED7563" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shuffle"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/strongGreen"
+                app:layout_constraintEnd_toEndOf="@+id/btnShuffle"
+                app:layout_constraintStart_toStartOf="@+id/btnShuffle"
+                app:layout_constraintTop_toBottomOf="@+id/btnShuffle" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,8 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.freshcard.AddTopic
+import com.example.freshcard.DAO.ImageDAO
+import com.example.freshcard.FlashCardLearnActivity
 import com.example.freshcard.R
 import com.example.freshcard.Structure.TopicItem
 import kotlin.random.Random
@@ -60,6 +63,8 @@ class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val top
             v->
             upImage()
         }
+
+
         holder.btnOption.setOnClickListener{
             v->
             showPopupMenu(holder)
@@ -79,11 +84,15 @@ class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val top
             holder.image.isVisible = false
             isCreateNew = true
         }else{
+            holder.image.isVisible = true
             if(imagesMap.containsKey(item.id)) {
                 holder.image.setImageURI(imagesMap.get(item.id))
-                holder.image.isVisible = true
+            }else {
+                ImageDAO().getImage(item.image,holder.image,"images")
             }
         }
+
+        Log.e("hashmap", "${imagesMap}")
 
         holder.btnCancle.setOnClickListener{
                 v->
@@ -133,7 +142,7 @@ class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val top
     }
 
     public fun createEmptyCard() {
-        mList.add(0,TopicItem("","", "", "", ""))
+        mList.add(0,TopicItem("${toppicId}<${mList.size}","", "", "", ""))
         notifyDataSetChanged()
     }
 
@@ -168,7 +177,7 @@ class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val top
     }
 
     fun handleSave() {
-        var topicItem = TopicItem("${toppicId}<${mList.size}", currHolder.txtVocab.text.toString(), currHolder.txtVietnamese.text.toString(), currHolder.txtDes.text.toString(), currImageName)
+        var topicItem = TopicItem("${mList[currHolder.absoluteAdapterPosition].id}", currHolder.txtVocab.text.toString(), currHolder.txtVietnamese.text.toString(), currHolder.txtDes.text.toString(), currImageName)
         if(!isCreateNew) {
             topicItem = mList[currHolder.absoluteAdapterPosition]
             topicItem.en =  currHolder.txtVocab.text.toString()
@@ -247,6 +256,7 @@ class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val top
         currImageName = name
         currHolder.image.isVisible = true
         imagesMap.set(mList[currHolder.absoluteAdapterPosition].id, imageUri)
+        Log.e("hashmap", (mList[currHolder.absoluteAdapterPosition].id))
     }
 
 

@@ -1,26 +1,26 @@
 package com.example.freshcard.DAO
 
 
+import android.content.Context
+import android.util.Log
 import at.favre.lib.crypto.bcrypt.BCrypt
+import com.example.freshcard.MainActivity
 import com.example.freshcard.Structure.Database
-
-import com.example.freshcard.Structure.EmailSender
-
+import com.example.freshcard.Structure.LearningTopic
 import com.example.freshcard.Structure.Topic
+import com.example.freshcard.Structure.TopicInfoView
 import com.example.freshcard.Structure.TopicItem
-
 import com.example.freshcard.Structure.User
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
-
 import java.util.Random
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -38,7 +38,9 @@ import javax.mail.Session
 import javax.mail.Transport
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
-
+import kotlinx.coroutines.tasks.await
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 public class UserDAO() {
     var db: DatabaseReference = Database().getReference("users")
@@ -89,8 +91,7 @@ public class UserDAO() {
                 onResult(result)
             }
         }
-        query.addValueEventListener(valueEventListener)
-
+        query.addListenerForSingleValueEvent(valueEventListener)
     }
 
     fun register(email: String, password: String, name: String): Boolean {
@@ -114,6 +115,9 @@ public class UserDAO() {
         return this.db
     }
 
+    fun pushTopic(topic: Topic) {
+        topicRef.child(topic.id).setValue(topic)
+    }
 
     fun sendForgotPasswordCode(email: String, onResult: (HashMap<String, Any?>?) -> Unit) {
         val query = db.orderByChild("email").equalTo(email)
@@ -307,11 +311,11 @@ public class UserDAO() {
                     val userSnapshot = snapshot.children.iterator().next()
                     val userRef = userSnapshot.ref
 
-                        userRef.child("avatar").setValue(newAvatar)
+                    userRef.child("avatar").setValue(newAvatar)
 
-                        userRef.child("fullName").setValue(newFullName)
+                    userRef.child("fullName").setValue(newFullName)
 
-                        userRef.child("phoneNumber").setValue(newPhoneNumber)
+                    userRef.child("phoneNumber").setValue(newPhoneNumber)
 
                     // Trả về kết quả thành công
                     onResult(hashMapOf("state" to true, "message" to "\n" +
@@ -343,18 +347,26 @@ public class UserDAO() {
                     val storedPassword = userSnapshot.child("password").value.toString()
 
                     // Kiểm tra xem mật khẩu cũ nhập vào có khớp với mật khẩu trong database không
-                    val isMatchPassword = BCrypt.verifyer().verify(oldPassword.toCharArray(), storedPassword.toCharArray())
+                    val isMatchPassword = BCrypt.verifyer()
+                        .verify(oldPassword.toCharArray(), storedPassword.toCharArray())
 
                     if (isMatchPassword.verified) {
                         // Nếu mật khẩu cũ đúng, thì tiến hành thay đổi mật khẩu mới
                         // Hash mật khẩu mới trước khi lưu vào database
-                        val hashedPassword = BCrypt.withDefaults().hashToString(12, newPassword.toCharArray())
+                        val hashedPassword =
+                            BCrypt.withDefaults().hashToString(12, newPassword.toCharArray())
 
                         // Lưu mật khẩu mới vào database
                         userRef.child("password").setValue(hashedPassword)
 
                         // Trả về kết quả thành công
                         onResult(hashMapOf("state" to true, "message" to "Password has been changed"))
+                        onResult(
+                            hashMapOf(
+                                "state" to true,
+                                "message" to "Mật khẩu đã được thay đổi"
+                            )
+                        )
                     } else {
                         // Mật khẩu cũ không đúng
                         onResult(hashMapOf("state" to false, "message" to "The old password is incorrect"))
@@ -373,22 +385,107 @@ public class UserDAO() {
         query.addListenerForSingleValueEvent(valueEventListener)
     }
 
+    fun pushLearningTopic(learningTopic: LearningTopic, usId: String) {
+        db.child(usId).get().addOnSuccessListener {
+            var items = it.child("learningTopics")
+            var learningTopics  = ArrayList(emptyList<LearningTopic>())
+            if(items!=null) {
+                for( item in items.children) {
+                    var idTopic = item.child("idTopic").getValue(String::class.java)
+                    var idLearned1 = item.child("idLearned").getValue()
+                    var idLearned:ArrayList<String>? = idLearned1 as? ArrayList<String>
+                    var idLearning1 = item.child("idLearning").getValue()
+                    var idLearning:ArrayList<String>? = idLearning1  as? ArrayList<String>
+                    var idChecked1 = item.child("idChecked").getValue()
+                    var idChecked:ArrayList<String>?  = idChecked1  as? ArrayList<String>
+                    if(idLearned==null) {
+                        idLearned = ArrayList(emptyList<String>())
+                    }
+                    if(idLearning==null) {
+                        idLearning = ArrayList(emptyList<String>())
+                    }
+                    if(idChecked==null) {
+                        idChecked = ArrayList(emptyList<String>())
+                    }
+                    var newLearningTopic: LearningTopic = LearningTopic(idTopic!!, idChecked, idLearning, idLearned)
+
+                    learningTopics.add(newLearningTopic)
+                }
 
 
-    fun pushTopic(topic: Topic) {
-            topicRef.child(topic.id).setValue(topic)
-        }
-
-        fun getTopicById(id: String): Topic {
-            var topic =
-                Topic("", "", "", ArrayList(emptyList<TopicItem>()), false, ArrayList(emptyList()))
-            topicRef.child("topics").child(id).get().addOnSuccessListener {
-                Log.i("firebase", "Got value ${it.child("title")}")
-            }.addOnFailureListener {
-                Log.e("firebase", "Error getting data", it)
+                learningTopics.add(learningTopic)
+                db.child(usId).child("learningTopics").setValue(learningTopics)
             }
-            return topic!!
+        }.addOnFailureListener{
+            Log.e("firebase", "Error getting data", it)
+        }
+    }
+
+    fun getUserIdShareRef(context: Context): String {
+        val sharedPreferences = context.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+        val userId = sharedPreferences.getString("idUser", "undefined")!!
+        return userId
+    }
+
+
+    fun getLearnedInfoByUser(userId: String, topicId: String, myF: (Int)-> Unit) {
+        Log.e("topiccx", "{idLearned.size}")
+        db.child(userId).get().addOnSuccessListener {
+            var items = it.child("learningTopics")
+            var learningTopics  = ArrayList(emptyList<LearningTopic>())
+            if(items!=null) {
+                for( item in items.children) {
+                    var idTopic = item.child("idTopic").getValue(String::class.java)
+                    if(idTopic == topicId) {
+                        var idLearned1 = item.child("idLearned").getValue()
+                        var idLearned:ArrayList<String>? = idLearned1 as? ArrayList<String>
+
+                        if(idLearned==null) {
+                            idLearned = ArrayList(emptyList<String>())
+                        }
+                        Log.e("topiccx", "${idLearned.size}")
+                        myF(idLearned.size)
+                    }
+                }
+            }
+        }.addOnFailureListener{
+            Log.e("firebase", "Error getting data", it)
+        }
+    }
+
+    fun bookmarkTopic(idUser : String, idTopic : String, isAdded : Boolean){
+        if(isAdded){
+            val bookmarkMap = HashMap<String, Boolean>()
+            bookmarkMap[idTopic] = true
+            db.child(idUser).child("bookmarkedTopics").updateChildren(bookmarkMap as Map<String, Any>)
+        }else{
+            db.child(idUser).child("bookmarkedTopics").child(idTopic).removeValue()
+        }
+    }
+
+    fun addLearningTopic(idUser : String, idTopic: String){
+        if(MainActivity.Companion.user.learningTopics?.find {
+            it.idTopic == idTopic
+            } != null){
+            return
         }
 
-}
+        var learningTopic = LearningTopic(idTopic)
+        topicRef.child(idTopic).get().addOnSuccessListener {
+            var topicItem = it.child("items")
 
+            var gti = object : GenericTypeIndicator<ArrayList<TopicItem>>(){}
+            var topicItems = topicItem.getValue(gti)
+            if (topicItems != null) {
+                learningTopic.idLearning = topicItems.map { it -> it.id } as ArrayList<String>
+            }
+
+            MainActivity.Companion.user.learningTopics?.add(learningTopic)
+            db.child(idUser).child("learningTopics").setValue(MainActivity.Companion.user.learningTopics)
+        }
+    }
+
+    fun UpdateDateLogin(id: String){
+        db.child(id).child("lastAccess").setValue(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC))
+    }
+}

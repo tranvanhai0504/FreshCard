@@ -57,4 +57,19 @@ class ImageDAO {
             e.printStackTrace()
         }
     }
+
+    public fun getImageWithCallBack(filename:String, imageView: ImageView, path : String, myF: ()-> Unit) {
+        var bitmap: Bitmap
+        var storageReference = FirebaseStorage.getInstance().getReference("$path/$filename")
+        try {
+            var file = File.createTempFile("tempFile", "jpg")
+            storageReference.getFile(file)
+                .addOnSuccessListener{
+                    bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                    imageView.setImageBitmap(bitmap)
+                }
+        }catch(e: IOException){
+            e.printStackTrace()
+        }
+    }
 }
