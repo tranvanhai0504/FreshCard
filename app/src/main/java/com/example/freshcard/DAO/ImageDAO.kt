@@ -42,7 +42,7 @@ class ImageDAO {
             })
         return fileName
     }
-
+    
     public fun getImage(filename:String, imageView: ImageView, path : String) {
         var bitmap: Bitmap
         var storageReference = FirebaseStorage.getInstance().getReference("$path/$filename")

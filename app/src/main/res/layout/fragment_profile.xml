@@ -32,37 +32,27 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/view2"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/avatar"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="40dp"
-                android:elevation="12dp"
-                android:innerRadius="0dp"
-                android:shape="ring"
-                android:thicknessRatio="5"
-                app:cardBackgroundColor="@color/strongGreen"
-                app:cardCornerRadius="40dp"
+                android:layout_marginTop="28dp"
+                android:src="@drawable/user"
+                app:civ_border_color="@color/mediumGreen"
+                app:civ_border_width="2dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.501"
+                app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView8">
+                app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
-                <ImageView
-                    android:id="@+id/avatar"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/user" />
-            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/textName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="28dp"
                 android:text="Enter Name"
                 android:textColor="@color/strongGreen"
                 android:textSize="10pt"
@@ -70,33 +60,32 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view2" />
-
+                app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
             <TextView
                 android:id="@+id/textView10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="36dp"
+                android:layout_width="72dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="28dp"
                 android:text="Phone:"
-                android:textStyle="bold"
                 android:textColor="@color/strongGreen"
                 android:textSize="10pt"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
             <TextView
                 android:id="@+id/textPhone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
+                android:layout_width="280dp"
+                android:layout_height="31dp"
+                android:layout_marginTop="23dp"
                 android:gravity="left"
                 android:text="Enter phone"
                 android:textColor="@color/strongGreen"
                 android:textSize="10pt"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.081"
+                app:layout_constraintHorizontal_bias="0.604"
                 app:layout_constraintStart_toEndOf="@+id/textView10"
                 app:layout_constraintTop_toBottomOf="@+id/textEmail" />
 
@@ -104,26 +93,26 @@
                 android:id="@+id/textView9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="36dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="28dp"
                 android:text="Email:"
-                android:textStyle="bold"
                 android:textColor="@color/strongGreen"
                 android:textSize="10pt"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textName" />
 
             <TextView
                 android:id="@+id/textEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="280dp"
+                android:layout_height="31dp"
                 android:layout_marginTop="28dp"
                 android:gravity="left"
                 android:text="Enter email"
                 android:textColor="@color/strongGreen"
                 android:textSize="10pt"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.443"
+                app:layout_constraintHorizontal_bias="0.666"
                 app:layout_constraintStart_toEndOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textName" />
 
@@ -134,11 +123,11 @@
                 android:background="@drawable/baseline"
                 android:gravity="center"
                 android:textColor="@color/strongGreen"
-                app:layout_constraintBottom_toBottomOf="@+id/view2"
+                app:layout_constraintBottom_toBottomOf="@+id/avatar"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.68"
+                app:layout_constraintHorizontal_bias="0.647"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/view2"
+                app:layout_constraintTop_toTopOf="@+id/avatar"
                 app:layout_constraintVertical_bias="0.0" />
 
             <Button
