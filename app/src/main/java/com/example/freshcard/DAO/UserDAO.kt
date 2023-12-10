@@ -2,7 +2,9 @@ package com.example.freshcard.DAO
 
 
 import android.content.Context
+/*
 import android.util.Log
+*/
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.example.freshcard.MainActivity
 import com.example.freshcard.Structure.Database
@@ -28,7 +30,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+/*
 import java.time.LocalDateTime
+*/
 import java.util.Properties
 import javax.mail.Authenticator
 import javax.mail.Message

@@ -71,7 +71,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     // Kiểm tra xem user.avatar có giá trị không
                     if (user.avatar != null) {
                         // Nếu có, sử dụng Glide để tải và hiển thị hình ảnh
-                        ImageDAO().getImage(user.avatar.toString(), avatarImageView, "images")
+                        ImageDAO().getImage(user.avatar.toString(), avatarImageView, "avatars")
 
 
                         btnEdit.setOnClickListener {

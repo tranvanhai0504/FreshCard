@@ -52,7 +52,7 @@ class EditProfileActivity : AppCompatActivity() {
         binding.editFullname.setText(fullName)
         binding.editEmail.setText(email)
         binding.editPhone.setText(phone)
-        ImageDAO().getImage(avatarFileName.toString(), binding.avatar, "images")
+        ImageDAO().getImage(avatarFileName.toString(), binding.avatar, "avatars")
 
         binding.btnBack.setOnClickListener{
             finish()
@@ -134,7 +134,7 @@ class EditProfileActivity : AppCompatActivity() {
 
             // Gọi hàm uploadImage từ ImageDAO
             val imageDAO = ImageDAO()
-            uploadedFileName = imageDAO.uploadImage(this, imageUri)
+            uploadedFileName = imageDAO.uploadAvtar(this, imageUri)
             binding.avatar.setImageBitmap(imageBitmap)
 
             // Làm điều gì đó với uploadedFileName nếu cần
