@@ -1,39 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingVertical="40dp"
-    android:paddingHorizontal="30dp"
+    android:paddingTop="40dp"
+
+    android:orientation="vertical"
     tools:context=".FlashCardLearnActivity">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_back"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@drawable/back_button"
-        android:drawableLeft="@drawable/round_arrow_back_24"
-        android:paddingHorizontal="7dp"
-        android:textAlignment="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <RelativeLayout
+        android:paddingHorizontal="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/btn_test"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:backgroundTint="@color/mediumGreen"
-        android:text="Test"
-        android:background="@drawable/button_corner"
-        android:textStyle="bold"
-        android:textSize="6pt"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_back"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btn_back" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/back_button"
+            android:drawableLeft="@drawable/round_arrow_back_24"
+            android:paddingHorizontal="7dp"
+            android:textAlignment="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_test"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:backgroundTint="@color/mediumGreen"
+            android:text="Test"
+            android:background="@drawable/button_corner"
+            android:textStyle="bold"
+            android:layout_alignParentEnd="true"
+            android:textSize="6pt"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_back"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn_back" />
+
+    </RelativeLayout>
 
     <LinearLayout
+        android:paddingHorizontal="30dp"
         android:id="@+id/nameCover"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -63,6 +73,7 @@
     </LinearLayout>
 
     <View
+        android:layout_marginHorizontal="30dp"
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="3dp"
@@ -71,14 +82,16 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameCover" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_constraintTop_toBottomOf="@+id/view"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="30dp">
+        android:gravity="center"
+        android:clipChildren="false">
 
         <LinearLayout
+            android:paddingHorizontal="30dp"
             android:id="@+id/countCover"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -87,6 +100,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/txtIndex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
@@ -115,27 +129,23 @@
                 />
         </LinearLayout>
 
-
-        <com.yuyakaido.android.cardstackview.CardStackView
-            android:id="@+id/cardStackView"
-            android:layout_width="match_parent"
-            app:layout_constraintTop_toBottomOf="@+id/countCover"
-            android:layout_height="200dp"/>
-
         <ProgressBar
+            android:paddingHorizontal="30dp"
             android:id="@+id/progressBar"
-            app:layout_constraintTop_toBottomOf="@+id/cardStackView"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
+            android:layout_below="@id/cardStackView1"
             android:layout_height="5dp"
+            android:layout_marginTop="20dp"
             />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buttonCover"
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/progressBar"
-            android:paddingHorizontal="30dp">
+            android:layout_below="@+id/progressBar"
+            android:paddingHorizontal="50dp">
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/btnAuto"
@@ -210,8 +220,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/btnShuffle" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <com.yuyakaido.android.cardstackview.CardStackView
+            android:id="@+id/cardStackView1"
+            android:layout_below="@+id/countCover"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:padding="4dp"
+            android:clipToPadding="false"
+            android:layout_height="230dp"
+            />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

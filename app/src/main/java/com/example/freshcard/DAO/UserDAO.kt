@@ -221,7 +221,7 @@ public class UserDAO() {
     fun getUserById(userId: String, onResult: (User?) -> Unit) {
         val userRef = db.child(userId)
 
-        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        userRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     // Chuyển đổi dữ liệu từ snapshot thành đối tượng User

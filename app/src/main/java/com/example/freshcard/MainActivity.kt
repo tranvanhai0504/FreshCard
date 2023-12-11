@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.fab.setOnClickListener{
-            v->
+                v->
             startActivity(Intent(this, AddTopic::class.java))
         }
     }
@@ -83,7 +83,10 @@ class MainActivity : AppCompatActivity() {
             var lastAccess = it.child("lastAccess").getValue(Long::class.java)
             var avatar = it.child("avatar").getValue(String::class.java)
             var email = it.child("email").getValue(String::class.java)
-            var bookMarks = it.child("bookmarkedTopics").getValue() as MutableMap<String, Boolean>
+            var bookMarks = it.child("bookmarkedTopics").getValue() as MutableMap<String, Boolean>?
+            if(bookMarks == null){
+                bookMarks = HashMap()
+            }
             var learningTopics = ArrayList(emptyList<LearningTopic>())
             for( item in it.child("learningTopics").children) {
                 var idTopic = item.child("idTopic").getValue(String::class.java)
