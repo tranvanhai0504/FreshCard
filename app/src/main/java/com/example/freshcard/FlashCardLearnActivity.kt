@@ -2,15 +2,15 @@ package com.example.freshcard
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
-import com.example.freshcard.adapters.TopicAdapter
-import androidx.appcompat.widget.PopupMenu
 import android.util.Log
 import android.view.View
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
-import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
 import com.example.freshcard.DAO.TopicDAO
@@ -20,13 +20,19 @@ import com.example.freshcard.Structure.TopicItem
 import com.example.freshcard.adapters.CardStackAdapter
 import com.example.freshcard.databinding.ActivityFlashCardLearnBinding
 import com.example.freshcard.utils.ItemDiffCallback
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.CardStackView
 import com.yuyakaido.android.cardstackview.Direction
+import com.yuyakaido.android.cardstackview.Duration
+import com.yuyakaido.android.cardstackview.RewindAnimationSetting
 import com.yuyakaido.android.cardstackview.StackFrom
+import com.yuyakaido.android.cardstackview.SwipeAnimationSetting
 import com.yuyakaido.android.cardstackview.SwipeableMethod
-import java.util.Locale
+import kotlinx.coroutines.runBlocking
+import java.util.Stack
+
 
 class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
     private lateinit var binding: ActivityFlashCardLearnBinding
@@ -35,7 +41,9 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
     private val cardStackView by lazy { findViewById<CardStackView>(R.id.cardStackView1) }
     private val manager by lazy { CardStackLayoutManager(this, this) }
     private val adapter by lazy { CardStackAdapter(this, tts = getTTS()) }
-    private var tts: TextToSpeech? = null
+    private var directionSwiped : Stack<Direction> = Stack<Direction>()
+    private var isAutoPlay : Boolean = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +76,8 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
         binding.btnOption.setOnClickListener{
             showPopupMenu(id!!)
         }
+
+        setupButton()
     }
 
     private fun showPopupMenu(id: String) {
@@ -140,19 +150,20 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
 
     override fun onCardSwiped(direction: Direction?) {
         if(index + 1 > topic.items?.size!!){
-            binding.txtIndex.text = "1" + "/" +topic.items?.size
             index = 1
         }else{
             index++
-            binding.txtIndex.text = index.toString() + "/" +topic.items?.size
         }
+        binding.txtIndex.text = index.toString() + "/" +topic.items?.size
         updateProcessBar(index)
 
+        if (direction != null) {
+            directionSwiped.push(direction)
+        }
         Log.d("CardStackView", "onCardSwiped: p = ${manager.topPosition}, d = $direction")
         if (manager.topPosition == adapter.itemCount - 3) {
             paginate()
         }
-
     }
 
     override fun onCardRewound() {
@@ -186,26 +197,79 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
         result.dispatchUpdatesTo(adapter)
     }
 
-    //text to speech
-//    override fun onInit(status: Int) {
-//        if (status == TextToSpeech.SUCCESS) {
-//            val result = tts!!.setLanguage(Locale.US)
-//
-//            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-//                Log.e("TTS","The Language not supported!")
-//            } else {
-////                btnSpeak!!.isEnabled = true
-//            }
-//        }
-//    }
-//    public override fun onDestroy() {
-//        // Shutdown TTS when
-//        // activity is destroyed
-//        if (tts != null) {
-//            tts!!.stop()
-//            tts!!.shutdown()
-//        }
-//        super.onDestroy()
-//    }
+    private fun setupButton() {
+        val auto = findViewById<FloatingActionButton>(R.id.btnAuto)
+        auto.setOnClickListener{
+            if(!isAutoPlay){
+                startAutoPlay()
+            }else{
+                isAutoPlay = false
+            }
+        }
 
+
+        val back = findViewById<FloatingActionButton>(R.id.btnRollback)
+        back.setOnClickListener {
+            if(!directionSwiped.empty()){
+                val setting = RewindAnimationSetting.Builder()
+                    .setDirection(directionSwiped.pop())
+                    .setDuration(Duration.Normal.duration)
+                    .setInterpolator(DecelerateInterpolator())
+                    .build()
+                manager.setRewindAnimationSetting(setting)
+                cardStackView.rewind()
+                if(index == 1){
+                    index = topic.items?.size!!
+                }else{
+                    index--
+                }
+                binding.txtIndex.text = index.toString() + "/" +topic.items?.size
+                updateProcessBar(index)
+            }
+        }
+
+
+        val shuffle = findViewById<FloatingActionButton>(R.id.btnShuffle)
+//        shuffle .setOnClickListener {
+//            val setting = SwipeAnimationSetting.Builder()
+//                .setDirection(Direction.Right)
+//                .setDuration(Duration.Normal.duration)
+//                .setInterpolator(AccelerateInterpolator())
+//                .build()
+//            manager.setSwipeAnimationSetting(setting)
+//            cardStackView.swipe()
+//        }
+    }
+
+    fun startAutoPlay(){
+        isAutoPlay = false
+        val backgroundThread = Thread {
+            isAutoPlay = true
+
+            while(isAutoPlay){
+                runBlocking {
+                    Thread.sleep(1000)
+                    runOnUiThread {
+                        Log.i("check", manager.topView.isDirty.toString())
+                        manager.topView.performClick()
+                    }
+
+                    Thread.sleep(2000)
+
+                    runOnUiThread{
+                        val setting = SwipeAnimationSetting.Builder()
+                            .setDirection(Direction.Left)
+                            .setDuration(Duration.Normal.duration)
+                            .setInterpolator(AccelerateInterpolator())
+                            .build()
+                        manager.setSwipeAnimationSetting(setting)
+                        cardStackView.swipe()
+                        adapter.currentIndex++
+                    }
+                }
+
+            }
+        }
+        backgroundThread.start()
+    }
 }

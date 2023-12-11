@@ -3,8 +3,6 @@ package com.example.freshcard.adapters
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.speech.tts.TextToSpeech
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +10,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -31,6 +27,7 @@ class CardStackAdapter(
 ) : RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
     lateinit var flip_animation : AnimatorSet
     lateinit var flip_animation_back : AnimatorSet
+    var currentIndex = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -43,14 +40,6 @@ class CardStackAdapter(
 
         holder.textCard.text = item.en
         holder.textCardBack.text = item.vie
-
-//        var bacColors = listOf<String>("#8CDA4F","#ECE3BA", "#CCB6B6", "#B9B2CB")
-//        val textColors = listOf<String>("#17594A", "#D5B04D", "#A45353", "#55498D")
-
-//        var mainColor = bacColors[position % textColors.size]
-//        var subColor = textColors[position % bacColors.size]
-//
-//        changeColor(holder, mainColor, subColor)
 
         val scale = context.applicationContext.resources.displayMetrics.density
 
@@ -81,6 +70,10 @@ class CardStackAdapter(
         holder.voiceBtn.setOnClickListener{
             speakOut(item.en)
         }
+    }
+
+    fun flipCurrentCard(){
+
     }
 
 //    fun changeColor(holder: ViewHolder, mainColor : String, subColor : String){
