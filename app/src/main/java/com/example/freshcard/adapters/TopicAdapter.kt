@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.freshcard.DAO.FolderDAO
 import com.example.freshcard.DAO.TopicDAO
 import com.example.freshcard.FlashCardLearnActivity
+import com.example.freshcard.FolderViewActivity
 import com.example.freshcard.R
 import com.example.freshcard.Structure.Folder
 import com.example.freshcard.Structure.LearningTopic
@@ -28,7 +29,7 @@ import com.example.freshcard.Structure.Topic
 import com.example.freshcard.Structure.TopicInfoView
 import kotlin.random.Random
 
-class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context): RecyclerView.Adapter<TopicAdapter.ViewHolder>() {
+class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context, val ct: String): RecyclerView.Adapter<TopicAdapter.ViewHolder>() {
    private lateinit var currHolder: ViewHolder
    private var folders: ArrayList<Folder> = ArrayList(emptyList<Folder>())
     var arrNames: ArrayList<String> =  ArrayList(emptyList<String>())
@@ -48,10 +49,14 @@ class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context): R
         holder.txtName.text = item.topicName
         holder.txtTotalCards.text = item.totalCards.toString()
         holder.txtTimeAccess.text = "Last access: ${item.timeAccess}"
-        holder.txtAccess.text = item.access
         holder.progress.max = 100
         holder.txtProgress.text = "${item.totalLearned}/${item.totalCards} cards learned"
         holder.progress.progress = ((item.totalLearned.toFloat()/item.totalCards.toFloat())*100).toInt()
+        if(item.access) {
+            holder.txtAccess.text = "Public"
+        }else {
+            holder.txtAccess.text = "Private"
+        }
         val randomNumber = Random.nextInt(0, 4)
         when(randomNumber) {
             0-> {
@@ -143,7 +148,11 @@ class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context): R
 
     private fun showPopupMenu(holder: TopicAdapter.ViewHolder, arrNames: ArrayList<String> ,arrIds: ArrayList<String> ) {
         val popupMenu = PopupMenu(context, holder.txtAccess)
-        popupMenu.inflate(R.menu.topic_context_menu) // Inflate your menu resource
+       if(ct == "view") {
+           popupMenu.inflate(R.menu.topic_context_menu) // Inflate your menu resource
+       }else {
+           popupMenu.inflate(R.menu.folder_view_context_menu) // Inflate your menu resource
+       }
         popupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.topicContextMenuRemove -> {
@@ -153,6 +162,10 @@ class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context): R
                 }
                 R.id.topicContextMenuAddToFolder -> {
                     showDialog(arrNames,arrIds)
+                    true
+                }
+                R.id.removeFromFolder-> {
+                    confirmRemoveFromFolder()
                     true
                 }
                 else -> {
@@ -166,6 +179,11 @@ class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context): R
 
     override fun getItemCount(): Int {
         return mList.size
+    }
+
+    private fun removeTopicFromList(id: String) {
+        mList = ArrayList(mList.filter { it.topicId!=id })
+        notifyDataSetChanged()
     }
 
     fun handleRemove(id: String) {
@@ -185,6 +203,30 @@ class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context): R
             .setNegativeButton("NO") {
                     dialog, which ->
                 //no fun
+            }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
+                v->
+            dialog.cancel()
+        }
+    }
+
+    private fun confirmRemoveFromFolder() {
+        var builder: AlertDialog.Builder = AlertDialog.Builder(context)
+        var item = mList[currHolder.position]
+
+        builder.setMessage("Remove ${item.topicName} from folder ?")
+            .setTitle("Remove topic")
+            .setPositiveButton("YES") {
+                    dialog, which ->
+
+                    FolderViewActivity().removeTopicFromFolder(item.topicId, context.applicationContext)
+                    removeTopicFromList(item.topicId)
+            }
+            .setNegativeButton("NO") {
+                    dialog, which ->
             }
         val dialog: AlertDialog = builder.create()
         dialog.show()

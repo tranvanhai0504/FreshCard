@@ -41,6 +41,11 @@ class FolderDAO() {
         dialog.show()
     }
 
+    fun updateFolderTitle(folderId: String, newName: String) {
+        folderRef.child(folderId).child("name").setValue(newName)
+
+    }
+
 
     fun pushFolder(folder: Folder) {
         folderRef.child(folder.id).setValue(folder)
@@ -74,6 +79,10 @@ class FolderDAO() {
                 // Handle errors
             }
         })
+    }
+
+    fun getFolderById(id: String, myF: (Folder)-> Unit) {
+
     }
 
 
@@ -124,6 +133,20 @@ class FolderDAO() {
         val sharedPreferences = context.applicationContext.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
         val set = sharedPreferences.getStringSet("folderIdsSet", emptySet())
         return set!!.toCollection(ArrayList())
+    }
+
+    fun removeTopicFromFolder(topicId: String, folderId: String) {
+        folderRef.child(folderId).child("idTopics").get().addOnSuccessListener {
+            var idTopics: ArrayList<String>? = ArrayList(emptyList<String>())
+            if(it.getValue()!=null) {
+                var list = it.getValue()
+                idTopics = list  as? ArrayList<String>
+            }
+            idTopics!!.remove(topicId)
+            folderRef.child(folderId).child("idTopics").setValue(idTopics)
+        }.addOnFailureListener{
+            Log.e("firebase", "Error getting data", it)
+        }
     }
 
 //    fun getFoldersShareRef(myF: (ArrayList<Folder>)-> Unit) {

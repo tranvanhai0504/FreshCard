@@ -94,6 +94,12 @@ class AddTopic : AppCompatActivity() {
                 cardAdapter =CardAdapter(adapterData, this, currTopicId){  -> selectImage() }
                 cardsRectyclerView.adapter = cardAdapter
                 inputTopicName.setText(topic.title)
+                if(topic.isPublic) {
+                    switchButton.alpha = 0.4F
+                    switchButton.isEnabled = false
+                    switchButton.text = "Public"
+                    switchButton.isChecked = true
+                }
             }
         }else {
             currTopicId = "${getCurrentTimeInDecimal()}${userId}"
