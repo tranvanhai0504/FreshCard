@@ -97,7 +97,7 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
     fun updateUi(topicData : Topic){
         binding.txtTopicName.text = topicData.title
         binding.txtIndex.text = index.toString() + "/" + topicData.items?.size
-        updateProcessBar()
+        updateProcessBar(index)
 
         manager.setStackFrom(StackFrom.Bottom)
         manager.setVisibleCount(3)
@@ -132,12 +132,13 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
             index++
             binding.txtIndex.text = index.toString() + "/" +topic.items?.size
         }
+        updateProcessBar(index)
 
         Log.d("CardStackView", "onCardSwiped: p = ${manager.topPosition}, d = $direction")
         if (manager.topPosition == adapter.itemCount - 3) {
             paginate()
         }
-        updateProcessBar()
+
     }
 
     override fun onCardRewound() {
@@ -156,8 +157,8 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
 
     }
 
-    private fun updateProcessBar(){
-        binding.progressBar.progress = index / topic.items?.size!! * 100
+    private fun updateProcessBar(index : Int){
+        binding.progressBar.progress = ((index.toFloat() / topic.items?.size!!.toFloat()) * 100).toInt()
     }
 
     private fun paginate() {

@@ -136,7 +136,9 @@
             android:layout_width="match_parent"
             android:layout_below="@id/cardStackView1"
             android:layout_height="5dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
+            android:progressDrawable="@drawable/custom_progress_bg"
+
             />
 
         <androidx.constraintlayout.widget.ConstraintLayout
