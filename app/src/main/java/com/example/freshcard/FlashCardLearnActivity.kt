@@ -4,11 +4,13 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import com.example.freshcard.adapters.TopicAdapter
 import androidx.appcompat.widget.PopupMenu
 import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
+import android.widget.TextView
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
 import com.example.freshcard.DAO.TopicDAO
@@ -24,6 +26,7 @@ import com.yuyakaido.android.cardstackview.CardStackView
 import com.yuyakaido.android.cardstackview.Direction
 import com.yuyakaido.android.cardstackview.StackFrom
 import com.yuyakaido.android.cardstackview.SwipeableMethod
+import java.util.Locale
 
 class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
     private lateinit var binding: ActivityFlashCardLearnBinding
@@ -31,7 +34,8 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
     private var index = 1
     private val cardStackView by lazy { findViewById<CardStackView>(R.id.cardStackView1) }
     private val manager by lazy { CardStackLayoutManager(this, this) }
-    private val adapter by lazy { CardStackAdapter(this) }
+    private val adapter by lazy { CardStackAdapter(this, tts = getTTS()) }
+    private var tts: TextToSpeech? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,6 +103,7 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
         binding.txtIndex.text = index.toString() + "/" + topicData.items?.size
         updateProcessBar(index)
 
+
         manager.setStackFrom(StackFrom.Bottom)
         manager.setVisibleCount(3)
         manager.setTranslationInterval(8.0f)
@@ -118,6 +123,15 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
                 supportsChangeAnimations = false
             }
         }
+    }
+
+    private fun getTTS(): TextToSpeech {
+        val textToSpeech = TextToSpeech(this) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                // TTS initialized successfully
+            }
+        }
+        return textToSpeech
     }
 
     override fun onCardDragging(direction: Direction?, ratio: Float) {
@@ -171,4 +185,27 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
         adapter.setList(new)
         result.dispatchUpdatesTo(adapter)
     }
+
+    //text to speech
+//    override fun onInit(status: Int) {
+//        if (status == TextToSpeech.SUCCESS) {
+//            val result = tts!!.setLanguage(Locale.US)
+//
+//            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+//                Log.e("TTS","The Language not supported!")
+//            } else {
+////                btnSpeak!!.isEnabled = true
+//            }
+//        }
+//    }
+//    public override fun onDestroy() {
+//        // Shutdown TTS when
+//        // activity is destroyed
+//        if (tts != null) {
+//            tts!!.stop()
+//            tts!!.shutdown()
+//        }
+//        super.onDestroy()
+//    }
+
 }

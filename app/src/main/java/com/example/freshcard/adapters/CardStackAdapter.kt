@@ -5,6 +5,7 @@ import android.animation.AnimatorSet
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.speech.tts.TextToSpeech
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,13 +18,16 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.freshcard.FlashCardLearnActivity
 import com.example.freshcard.R
 import com.example.freshcard.Structure.LearningTopic
 import com.example.freshcard.Structure.TopicItem
+import java.util.Locale
 
 class CardStackAdapter(
         var context : Context,
-        private var items: ArrayList<TopicItem> = ArrayList<TopicItem>()
+        private var items: ArrayList<TopicItem> = ArrayList<TopicItem>(),
+                private val tts: TextToSpeech
 ) : RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
     lateinit var flip_animation : AnimatorSet
     lateinit var flip_animation_back : AnimatorSet
@@ -73,6 +77,10 @@ class CardStackAdapter(
                 }
             }
         }
+
+        holder.voiceBtn.setOnClickListener{
+            speakOut(item.en)
+        }
     }
 
 //    fun changeColor(holder: ViewHolder, mainColor : String, subColor : String){
@@ -109,6 +117,10 @@ class CardStackAdapter(
         return items
     }
 
+    private fun speakOut(text: String) {
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
+    }
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var cardFront = view.findViewById<CardView>(R.id.card_front)
         var cardBack = view.findViewById<CardView>(R.id.card_back)
@@ -125,5 +137,9 @@ class CardStackAdapter(
         var textCardBack = view.findViewById<TextView>(R.id.textCard_card_back)
         var imageBack = view.findViewById<ImageView>(R.id.img_card_back)
     }
+
+
+
+
 
 }

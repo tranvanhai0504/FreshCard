@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.fragment.app.Fragment
 import com.example.freshcard.DAO.UserDAO
@@ -15,6 +16,7 @@ import com.example.freshcard.fragments.HomeFragment
 import com.example.freshcard.fragments.ProfileFragment
 import com.example.freshcard.fragments.RankFragment
 import com.google.firebase.database.GenericTypeIndicator
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -124,4 +126,32 @@ class MainActivity : AppCompatActivity() {
             commit()
         }
     }
+
+//    override fun onInit(status: Int) {
+//        if (status == TextToSpeech.SUCCESS) {
+//            val result = tts!!.setLanguage(Locale.US)
+//
+//            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+//                Log.e("TTS","The Language not supported!")
+//            } else {
+//                btnSpeak!!.isEnabled = true
+//            }
+//        }
+//    }
+//    private fun speakOut() {
+//        val text = etSpeak!!.text.toString()
+//        tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null,"")
+//    }
+//
+//    public override fun onDestroy() {
+//        // Shutdown TTS when
+//        // activity is destroyed
+//        if (tts != null) {
+//            tts!!.stop()
+//            tts!!.shutdown()
+//        }
+//        super.onDestroy()
+//    }
+
+
 }
