@@ -40,76 +40,90 @@ public class TopicDAO() {
         }
         query.addValueEventListener(valueEventListener)
     }
+
+
     fun getTopicById(id: String, myF: (Topic)-> Unit) : Topic{
         var topic = Topic("","", "", ArrayList(emptyList<TopicItem>()), false, ArrayList(emptyList()))
-        topicRef.child(id).get().addOnSuccessListener {
-            if(it.getValue()!=null) {
-                var id = it.child("id").getValue(String::class.java)
-                var title = it.child("title").getValue(String::class.java)
-                var isPublic = it.child("public").getValue(Boolean::class.java)
-                var lsStr = it.child("learnedPeople").getValue()
-                var learnedPeople: ArrayList<String>? = lsStr as? ArrayList<String>
-                if(learnedPeople == null) {
-                    learnedPeople = ArrayList(emptyList<String>())
+        topicRef.child(id).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if(dataSnapshot.getValue()!=null) {
+                    var id = dataSnapshot.child("id").getValue(String::class.java)
+                    var title = dataSnapshot.child("title").getValue(String::class.java)
+                    var isPublic = dataSnapshot.child("public").getValue(Boolean::class.java)
+                    var lsStr = dataSnapshot.child("learnedPeople").getValue()
+                    var learnedPeople: ArrayList<String>? = lsStr as? ArrayList<String>
+                    if(learnedPeople == null) {
+                        learnedPeople = ArrayList(emptyList<String>())
+                    }
+                    var items = ArrayList<TopicItem>()
+                    var owner = dataSnapshot.child("owner").getValue(String::class.java)
+                    for(itemSnapshot in dataSnapshot.child("items").children) {
+                        var id = itemSnapshot.child("id").getValue(String::class.java)
+                        var en = itemSnapshot.child("en").getValue(String::class.java)
+                        var vie = itemSnapshot.child("vie").getValue(String::class.java)
+                        var description = itemSnapshot.child("description").getValue(String::class.java)
+                        var image = itemSnapshot.child("image").getValue(String::class.java)
+                        var newItem = TopicItem(id!!, en!!, vie!!, description!!, image!!)
+                        items.add(newItem)
+                    }
+                    topic = Topic(id!!, owner!!,title!!, items, isPublic!!, learnedPeople!! )
+                    myF(topic!!)
                 }
-                var items = ArrayList<TopicItem>()
-                var owner = it.child("owner").getValue(String::class.java)
-                for(itemSnapshot in it.child("items").children) {
-                    var id = itemSnapshot.child("id").getValue(String::class.java)
-                    var en = itemSnapshot.child("en").getValue(String::class.java)
-                    var vie = itemSnapshot.child("vie").getValue(String::class.java)
-                    var description = itemSnapshot.child("description").getValue(String::class.java)
-                    var image = itemSnapshot.child("image").getValue(String::class.java)
-                    var newItem = TopicItem(id!!, en!!, vie!!, description!!, image!!)
-                    items.add(newItem)
-                }
-                topic = Topic(id!!, owner!!,title!!, items, isPublic!!, learnedPeople!! )
-                myF(topic!!)
             }
-        }.addOnFailureListener{
-            Log.e("firebase", "Error getting data", it)
-        }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
         return topic!!
     }
+
 
     fun getTopicViewById(id: String, myF: (TopicInfoView)-> Unit){
         val user = MainActivity.Companion.user
         val learningTopic = user.learningTopics
         var currLearningTopic: LearningTopic = learningTopic!!.get(0)
         var topic = TopicInfoView("","", 0,0, "", false, "")
-        topicRef.child(id).get().addOnSuccessListener {
-            if(it.getValue()!=null) {
-                var id = it.child("id").getValue(String::class.java)
-                var title = it.child("title").getValue(String::class.java)
-                var isPublic = it.child("public").getValue(Boolean::class.java)
-                var lsStr = it.child("learnedPeople").getValue()
-                var learnedPeople: ArrayList<String>? = lsStr as? ArrayList<String>
-                if(learnedPeople == null) {
-                    learnedPeople = ArrayList(emptyList<String>())
+        topicRef.child(id).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if(dataSnapshot.getValue()!=null) {
+                    var id = dataSnapshot.child("id").getValue(String::class.java)
+                    var title = dataSnapshot.child("title").getValue(String::class.java)
+                    var isPublic = dataSnapshot.child("public").getValue(Boolean::class.java)
+                    var lsStr = dataSnapshot.child("learnedPeople").getValue()
+                    var learnedPeople: ArrayList<String>? = lsStr as? ArrayList<String>
+                    if(learnedPeople == null) {
+                        learnedPeople = ArrayList(emptyList<String>())
+                    }
+                    var items = ArrayList<TopicItem>()
+                    var owner = dataSnapshot.child("owner").getValue(String::class.java)
+                    for(itemSnapshot in dataSnapshot.child("items").children) {
+                        var id = itemSnapshot.child("id").getValue(String::class.java)
+                        var en = itemSnapshot.child("en").getValue(String::class.java)
+                        var vie = itemSnapshot.child("vie").getValue(String::class.java)
+                        var description = itemSnapshot.child("description").getValue(String::class.java)
+                        var image = itemSnapshot.child("image").getValue(String::class.java)
+                        var newItem = TopicItem(id!!, en!!, vie!!, description!!, image!!)
+                        items.add(newItem)
+                    }
+                    learningTopic!!.forEach{
+                        if(it.idTopic == id) {
+                            currLearningTopic = it
+                        }
+                    }
+                    topic = TopicInfoView(id!!,title!!, items.size, currLearningTopic.idLearned.size, "", isPublic!!, owner!!)
+                    myF(topic!!)
                 }
-                var items = ArrayList<TopicItem>()
-                var owner = it.child("owner").getValue(String::class.java)
-                for(itemSnapshot in it.child("items").children) {
-                    var id = itemSnapshot.child("id").getValue(String::class.java)
-                    var en = itemSnapshot.child("en").getValue(String::class.java)
-                    var vie = itemSnapshot.child("vie").getValue(String::class.java)
-                    var description = itemSnapshot.child("description").getValue(String::class.java)
-                    var image = itemSnapshot.child("image").getValue(String::class.java)
-                    var newItem = TopicItem(id!!, en!!, vie!!, description!!, image!!)
-                    items.add(newItem)
-                }
-               learningTopic!!.forEach{
-                   if(it.idTopic == id) {
-                       currLearningTopic = it
-                   }
-               }
-                topic = TopicInfoView(id!!,title!!, items.size, currLearningTopic.idLearned.size, "", isPublic!!, owner!!)
-                myF(topic!!)
             }
-        }.addOnFailureListener{
-            Log.e("firebase", "Error getting data", it)
-        }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+
     }
+
 
     suspend fun  getListTopics(idList: ArrayList<String>, myF: (ArrayList<Topic>)-> Unit): ArrayList<Topic> {
         return withContext(Dispatchers.IO) {

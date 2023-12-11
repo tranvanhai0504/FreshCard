@@ -1,5 +1,6 @@
 package com.example.freshcard
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -8,9 +9,14 @@ import android.speech.tts.TextToSpeech
 import com.example.freshcard.adapters.TopicAdapter
 import androidx.appcompat.widget.PopupMenu
 import android.util.Log
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
 import com.example.freshcard.DAO.TopicDAO
@@ -40,6 +46,16 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        var dialog: Dialog = Dialog(this, R.style.CustomDialogTheme)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.learning_type_dialog)
+        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        dialog.window!!.setDimAmount(0.2F)
+        dialog.window!!.setGravity(Gravity.CENTER)
+        var btnFillTest:Button = dialog.findViewById(R.id.btnTextTest)
+        var btnPickerTest:Button = dialog.findViewById(R.id.btnPickerTest)
+        var btnCloseDialog:ImageButton = dialog.findViewById(R.id.btnCloseDialog)
+
         binding = ActivityFlashCardLearnBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
@@ -68,6 +84,27 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
         binding.btnOption.setOnClickListener{
             showPopupMenu(id!!)
         }
+
+        binding.btnTest.setOnClickListener {
+            dialog.show()
+        }
+
+        btnFillTest.setOnClickListener{
+            Toast.makeText(this, "test with fill in blank", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+        }
+
+        btnPickerTest.setOnClickListener{
+            Toast.makeText(this, "test with multiple choices", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+
+        }
+
+        btnCloseDialog.setOnClickListener{
+
+            dialog.dismiss()
+        }
+
     }
 
     private fun showPopupMenu(id: String) {
