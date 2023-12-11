@@ -69,9 +69,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.fab.setOnClickListener{
-                v->
-            startActivity(Intent(this, AddTopic::class.java))
+            v->
+            var intent = Intent(this, AddTopic::class.java)
+            intent.putExtra("edit", "false")
+            startActivity(intent)
         }
+    }
+
+    fun getContext(myF:(Context)-> Unit) {
+        myF(this)
     }
 
     fun getUser(id : String){
@@ -108,7 +114,7 @@ class MainActivity : AppCompatActivity() {
 
                 learningTopics.add(LearningTopic(idTopic!!, idChecked, idLearning, idLearned))
             }
-            user = User(pass, fullName,avatar,email,phoneNumber,bookMarks,lastAccess)
+            user = User(pass, fullName,avatar,email,phoneNumber,bookMarks,lastAccess, learningTopics)
         }
     }
 

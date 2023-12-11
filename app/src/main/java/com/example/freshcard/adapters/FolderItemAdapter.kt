@@ -1,6 +1,7 @@
 package com.example.freshcard.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.example.freshcard.DAO.FolderDAO
+import com.example.freshcard.FolderViewActivity
 import com.example.freshcard.R
 import com.example.freshcard.Structure.Folder
 import java.util.Calendar
@@ -56,6 +58,19 @@ private lateinit var currHolder:  FolderItemAdapter.ViewHolder
             showPopupMenu(holder)
         }
 
+        holder.itemView.setOnClickListener {
+            var intent = Intent(context, FolderViewActivity::class.java)
+            intent.putExtra("folderId", item.id)
+            intent.putExtra("folder", item)
+            val sharedPreferences = context.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+
+            val editor = sharedPreferences.edit()
+            editor.putString("folderId", item.id)
+            editor.apply()
+            Log.e("remove", "${sharedPreferences.all}")
+            context.startActivity(intent)
+        }
+
     }
 
     fun createNewfolder(name: String) {
@@ -78,6 +93,7 @@ private lateinit var currHolder:  FolderItemAdapter.ViewHolder
 
     private fun showPopupMenu(holder: FolderItemAdapter.ViewHolder) {
         val popupMenu = PopupMenu(context, holder.btnOption)
+        var currFolder = mList[holder.position]
         popupMenu.inflate(R.menu.folder_popup_menu) // Inflate your menu resource
         popupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
@@ -87,7 +103,10 @@ private lateinit var currHolder:  FolderItemAdapter.ViewHolder
                     true
                 }
                 R.id.folderPopupEdit -> {
-                    FolderDAO().getNewFolderName(context){ name-> handleEdit(name)}
+                    FolderDAO().getNewFolderName(context){ name->
+                        handleEdit(name)
+                        FolderDAO().updateFolderTitle(currFolder.id, name)
+                        }
                     true
                 }
                 else -> {

@@ -1,8 +1,11 @@
 package com.example.freshcard
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.freshcard.adapters.TopicAdapter
+import androidx.appcompat.widget.PopupMenu
 import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
@@ -57,6 +60,31 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
         binding.btnBack.setOnClickListener {
             finish()
         }
+
+        binding.btnOption.setOnClickListener{
+            showPopupMenu(id!!)
+        }
+    }
+
+    private fun showPopupMenu(id: String) {
+        val popupMenu = PopupMenu(this, binding.btnOption)
+        popupMenu.inflate(R.menu.learing_popup_menu) // Inflate your menu resource
+        popupMenu.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.learningPopupmenuEdit -> {
+                    var intent = Intent(this, AddTopic::class.java)
+                    intent.putExtra("edit", id)
+                    startActivity(intent)
+                    true
+                }
+
+                else -> {
+                    true
+                }
+            }
+        }
+
+        popupMenu.show()
     }
 
     fun getTopic(id : String){

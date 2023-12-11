@@ -22,6 +22,8 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.freshcard.AddTopic
+import com.example.freshcard.DAO.ImageDAO
+import com.example.freshcard.FlashCardLearnActivity
 import com.example.freshcard.R
 import com.example.freshcard.Structure.TopicItem
 import kotlin.random.Random
@@ -61,6 +63,8 @@ class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val top
             v->
             upImage()
         }
+
+
         holder.btnOption.setOnClickListener{
             v->
             showPopupMenu(holder)
@@ -80,9 +84,11 @@ class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val top
             holder.image.isVisible = false
             isCreateNew = true
         }else{
+            holder.image.isVisible = true
             if(imagesMap.containsKey(item.id)) {
                 holder.image.setImageURI(imagesMap.get(item.id))
-                holder.image.isVisible = true
+            }else {
+                ImageDAO().getImage(item.image,holder.image,"images")
             }
         }
 

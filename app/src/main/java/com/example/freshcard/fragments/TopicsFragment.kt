@@ -33,6 +33,7 @@ class TopicsFragment : Fragment() {
     private lateinit var topicsAdapter: TopicAdapter
     private lateinit var topicRecyclerView: RecyclerView
     private  lateinit var btnNewTopic: Button
+    private var mlist = ArrayList<TopicInfoView>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,19 +56,37 @@ class TopicsFragment : Fragment() {
         val sharedPreferences = requireContext().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
         val userId = sharedPreferences.getString("idUser", "undefined")!!
         topicRecyclerView = this.requireView().findViewById(R.id.topicsRecyclerView)
+        topicsAdapter = TopicAdapter(mlist, requireContext(), "view")
         topicRecyclerView.layoutManager = LinearLayoutManager(context)
-        TopicDAO().getTopicInfoViewByOwner(userId) {data -> updateAdapter(data)}
+        TopicDAO().getTopicInfoViewByOwner(userId) {data ->
+            if(mlist.equals(data)){
+                Log.i("taf", data.toString())
+            }
+
+            mlist = data
+            topicsAdapter.setList(mlist)
+            Log.i("taggg", mlist.size.toString())
+            topicsAdapter.notifyDataSetChanged()
+        }
+        topicRecyclerView.adapter = topicsAdapter
         btnNewTopic = this.requireView().findViewById(R.id.btnNewTopic)
         btnNewTopic.setOnClickListener{
             v->
-            startActivity(Intent(context, AddTopic::class.java))
+            var intent = Intent(context, AddTopic::class.java)
+            intent.putExtra("edit", "false")
+            startActivity(intent)
         }
     }
 
     fun updateAdapter(data: ArrayList<TopicInfoView>) {
         Log.e("topic-", "${data}")
-        topicsAdapter = TopicAdapter(data, requireContext())
+        topicsAdapter = TopicAdapter(data, requireContext(), "view")
         topicRecyclerView.adapter = topicsAdapter
+    }
+
+    fun reloadTopicList() {
+        var userId = UserDAO().getUserIdShareRef(requireContext())
+        TopicDAO().getTopicInfoViewByOwner(userId) {data -> updateAdapter(data)}
     }
 
 

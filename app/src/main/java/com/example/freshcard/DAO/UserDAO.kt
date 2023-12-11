@@ -1,14 +1,17 @@
 package com.example.freshcard.DAO
 
 
-//import android.util.Log
+import android.content.Context
+import android.util.Log
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.example.freshcard.MainActivity
 import com.example.freshcard.Structure.Database
 import com.example.freshcard.Structure.LearningTopic
 import com.example.freshcard.Structure.Topic
+import com.example.freshcard.Structure.TopicInfoView
 import com.example.freshcard.Structure.TopicItem
 import com.example.freshcard.Structure.User
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -17,7 +20,6 @@ import com.google.firebase.database.ValueEventListener
 import java.util.Random
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -360,8 +362,15 @@ public class UserDAO() {
         }
     }
 
+    fun getUserIdShareRef(context: Context): String {
+        val sharedPreferences = context.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+        val userId = sharedPreferences.getString("idUser", "undefined")!!
+        return userId
+    }
+
 
     fun getLearnedInfoByUser(userId: String, topicId: String, myF: (Int)-> Unit) {
+        Log.e("topiccx", "{idLearned.size}")
         db.child(userId).get().addOnSuccessListener {
             var items = it.child("learningTopics")
             var learningTopics  = ArrayList(emptyList<LearningTopic>())
