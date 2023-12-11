@@ -113,8 +113,8 @@ class AddTopic : AppCompatActivity() {
         btnImport.setOnClickListener{
             v->
             pickFile.launch("*/*")
-
         }
+
         btnAddCard.setOnClickListener{
             v->
             if(cardAdapter.isEditing) {
@@ -122,8 +122,6 @@ class AddTopic : AppCompatActivity() {
             }else {
                 cardAdapter.createEmptyCard()
             }
-
-
         }
         btnSubmitTopic.setOnClickListener{
             v->
@@ -133,10 +131,12 @@ class AddTopic : AppCompatActivity() {
             v->
             finish()
         }
+
         btnSaveTopicName.setOnClickListener{
             v->
             handleSaveName()
         }
+
         btnEditName.setOnClickListener {
             handleClickEditName()
         }
