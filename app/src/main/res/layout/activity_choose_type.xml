@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChooseTypeActivity"
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="43dp"
+            android:paddingHorizontal="40dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_back"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="28dp"
+                android:background="@drawable/back_button"
+                android:drawableLeft="@drawable/round_arrow_back_24"
+                android:paddingHorizontal="7dp"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.032"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:paddingBottom="12dp"
+                android:text="Choose the type test"
+                android:textColor="@color/strongGreen"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/btn_back"
+                app:layout_constraintTop_toBottomOf="@+id/btn_back" />
+
+            <android.widget.Button
+                android:id="@+id/btn_engtovn"
+                android:layout_width="370dp"
+                android:layout_height="53dp"
+                android:layout_marginTop="52dp"
+                android:background="@drawable/corner_shadow_green"
+                android:backgroundTint="@color/white"
+                android:text="English to Vietnamese"
+                android:textColor="@color/mediumGreen"
+                app:layout_constraintEnd_toEndOf="@+id/title"
+                app:layout_constraintHorizontal_bias="0.159"
+                app:layout_constraintStart_toStartOf="@+id/title"
+                app:layout_constraintTop_toBottomOf="@+id/title" />
+
+            <android.widget.Button
+                android:id="@+id/btn_vntoeng"
+                android:layout_width="370dp"
+                android:layout_height="53dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/corner_shadow_green"
+                android:backgroundTint="@color/white"
+                android:text="Vietnamese to English"
+                android:textColor="@color/mediumGreen"
+                app:layout_constraintEnd_toEndOf="@+id/btn_engtovn"
+                app:layout_constraintStart_toStartOf="@+id/btn_engtovn"
+                app:layout_constraintTop_toBottomOf="@+id/btn_engtovn" />
+
+            <android.widget.Button
+                android:id="@+id/btn_submit"
+                android:layout_width="337dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="180dp"
+                android:background="@drawable/button"
+                android:backgroundTint="@color/grayDefault"
+                android:text="OK"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="@+id/btn_vntoeng"
+                app:layout_constraintHorizontal_bias="0.515"
+                app:layout_constraintStart_toStartOf="@+id/btn_vntoeng"
+                app:layout_constraintTop_toBottomOf="@+id/btn_vntoeng" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

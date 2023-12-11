@@ -26,6 +26,15 @@
         android:theme="@style/Theme.FreshCard"
         tools:targetApi="31">
         <activity
+            android:name=".ResultPointsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ResultCricleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChooseTypeActivity"
+            android:exported="false" />
+        <activity
             android:name=".FolderViewActivity"
             android:exported="false" />
         <activity
