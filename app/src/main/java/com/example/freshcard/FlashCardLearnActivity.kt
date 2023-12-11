@@ -17,6 +17,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
 import com.example.freshcard.DAO.TopicDAO
@@ -42,7 +43,7 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
     private val manager by lazy { CardStackLayoutManager(this, this) }
     private val adapter by lazy { CardStackAdapter(this, tts = getTTS()) }
     private var tts: TextToSpeech? = null
-
+    private var userId: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -65,7 +66,7 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
 
         //get id user
         val sharedPreferences = this.applicationContext?.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-        var userId = sharedPreferences?.getString("idUser", "undefined")!!
+        userId = sharedPreferences?.getString("idUser", "undefined")!!
 
         //create learning topic
         if (id != null) {
@@ -83,6 +84,7 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
 
         binding.btnOption.setOnClickListener{
             showPopupMenu(id!!)
+
         }
 
         binding.btnTest.setOnClickListener {
@@ -105,6 +107,11 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
             dialog.dismiss()
         }
 
+    }
+
+    private fun handleOptionButton() {
+        binding.btnOption.isVisible = topic.owner == userId
+        Log.e("option", "${topic.owner} -- ${userId}")
     }
 
     private fun showPopupMenu(id: String) {
@@ -160,6 +167,8 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
                 supportsChangeAnimations = false
             }
         }
+
+        handleOptionButton()
     }
 
     private fun getTTS(): TextToSpeech {
