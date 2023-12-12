@@ -1,28 +1,34 @@
     package com.example.freshcard
 
+    import android.Manifest
     import android.app.NotificationChannel
     import android.app.NotificationManager
     import android.content.Context
     import android.content.Intent
+    import android.content.pm.PackageManager
     import android.os.Build
     import android.os.Bundle
+    import android.os.Handler
+    import android.os.Looper
+    import android.provider.Settings
     import android.widget.Toast
     import androidx.appcompat.app.AppCompatActivity
     import androidx.core.app.NotificationCompat
+    import androidx.core.content.ContextCompat
     import com.example.freshcard.DAO.UserDAO
     import com.example.freshcard.databinding.ActivitySendForgotPassEmailBinding
-    import com.google.firebase.database.DataSnapshot
-    import com.google.firebase.database.DatabaseError
-    import com.google.firebase.database.FirebaseDatabase
-    import com.google.firebase.database.ValueEventListener
-    import com.google.firebase.database.getValue
 
 
     class SendForgotPasswordEmailActivity : AppCompatActivity() {
+        private  val REQUEST_NOTIFICATION_CODE = 12
         private lateinit var binding: ActivitySendForgotPassEmailBinding
+        private val handler = Handler(Looper.getMainLooper())
+        private var isOperationAllowed = true
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
+
+            checkNotificationPermission()
 
             binding = ActivitySendForgotPassEmailBinding.inflate(layoutInflater)
             val view = binding.root
@@ -36,8 +42,28 @@
                 val email = binding.editEmail.text.toString().trim()
                 var result = validate(email)
 
-                if(result){
+                if (result) {
                     sendForgotPasswordEmail(email)
+                }
+            }
+
+        }
+
+        private fun checkNotificationPermission() {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                return
+            }
+            else{
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    // Quyền đã được cấp, thực hiện công việc cần thiết
+                } else {
+                    // Chưa cấp quyền, yêu cầu quyền
+                    val permissions = arrayOf(Manifest.permission.POST_NOTIFICATIONS)
+                    requestPermissions(permissions, REQUEST_NOTIFICATION_CODE)
                 }
             }
         }
@@ -60,46 +86,33 @@
             return stateEmail
         }
 
-        private fun sendForgotPasswordEmail(email: String){
-            UserDAO().sendForgotPasswordCode(email){
-                    it ->
-
+        private fun sendForgotPasswordEmail(email: String) {
+            UserDAO().sendForgotPasswordCode(email) { it ->
                 if (it != null) {
-                    //check state of login
+                    // Check state of login
                     if (it["state"] as Boolean) {
-                        Toast.makeText(this, "Please check notification to seen OTP reset your password", Toast.LENGTH_SHORT).show()
-
-                        showNotification(it["otp"].toString())
+                        Toast.makeText(this, "Please check email to see OTP and reset your password", Toast.LENGTH_SHORT).show()
 
                         val intent = Intent(this, checkEmailOTPActivity::class.java)
                         intent.putExtra("email", email)
                         startActivity(intent)
                     } else {
-                        Toast.makeText(this, it["message"].toString(), Toast.LENGTH_SHORT).show()
+                        val errorMessage = it["message"].toString()
+                        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+
+                        // Nếu thông báo là "Email does not exist", cho phép thực hiện lại ngay lập tức
+                        if (errorMessage == "Email does not exist") {
+                            isOperationAllowed = true
+                        } else {
+                            // Ngược lại, đặt trạng thái của hoạt động không được phép và đặt lịch sau 2 phút
+                            isOperationAllowed = false
+                            handler.postDelayed({ isOperationAllowed = true }, 2 * 60 * 1000)
+                        }
                     }
-                }else{
-                    Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
-        private fun showNotification(otp: String) {
-            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val channelId = "channel_id"
-            val channelName = "channel_name"
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
-                notificationManager.createNotificationChannel(channel)
-            }
-
-            val notificationBuilder = NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.iconlogo)
-                .setContentTitle("OTP Notification")
-                .setContentText("Your OTP is: $otp \n OTP is only valid for 2 minutes")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true)
-
-            notificationManager.notify(0, notificationBuilder.build())
-        }
     }

@@ -2,7 +2,6 @@ package com.example.freshcard.DAO
 
 
 import android.content.Context
-import android.util.Log
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.example.freshcard.MainActivity
 import com.example.freshcard.Structure.Database
@@ -20,6 +19,23 @@ import com.google.firebase.database.ValueEventListener
 import java.util.Random
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
+import com.google.firebase.database.getValue
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import java.util.Properties
+import javax.mail.Authenticator
+import javax.mail.Message
+import javax.mail.MessagingException
+import javax.mail.PasswordAuthentication
+import javax.mail.Session
+import javax.mail.Transport
+import javax.mail.internet.InternetAddress
+import javax.mail.internet.MimeMessage
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -125,22 +141,61 @@ public class UserDAO() {
                         userRef.child("forgotPasswordCode").removeValue()
                         userRef.child("forgotPasswordCodeTime").removeValue()
                     }, 2 * 60 * 1000)
-
+                    sendForgotPasswordEmail(email, otpCode)
                     // Trả về kết quả thành công
-                    onResult(hashMapOf("state" to true, "message" to "Đã gửi mã OTP đến thông báo của bạn", "otp" to otpCode))
+                    onResult(hashMapOf("state" to true, "message" to "Encrypted OTP sent to your email", "otp" to otpCode))
+
                 } else {
                     // Email không tồn tại
-                    onResult(hashMapOf("state" to false, "message" to "Email không tồn tại"))
+                    onResult(hashMapOf("state" to false, "message" to "Email does not exist"))
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 // Lỗi database
-                onResult(hashMapOf("state" to false, "message" to "Đã có lỗi xảy ra"))
+                onResult(hashMapOf("state" to false, "message" to "An error has occurred"))
             }
         }
 
         query.addListenerForSingleValueEvent(valueEventListener)
+    }
+
+    private fun sendForgotPasswordEmail(email: String, otpCode: String) {
+        GlobalScope.launch(Dispatchers.IO) {
+            // Gửi email sử dụng thư viện JavaMail
+            val senderEmail = "freshcard01@gmail.com"
+            val senderPassword = "qrngpzsdxdlmzbjj"
+
+            val properties = Properties()
+            properties["mail.smtp.auth"] = "true"
+            properties["mail.smtp.starttls.enable"] = "true"
+            properties["mail.smtp.host"] = "smtp.gmail.com" // Đối với Gmail
+            properties["mail.smtp.port"] = "587"
+
+            val session = Session.getInstance(properties, object : Authenticator() {
+                override fun getPasswordAuthentication(): PasswordAuthentication {
+                    return PasswordAuthentication(senderEmail, senderPassword)
+                }
+            })
+
+            try {
+                val message = MimeMessage(session)
+                message.setFrom(InternetAddress(senderEmail))
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email))
+                message.subject = "Forgot Password Code"
+                message.setText("Your OTP code is: $otpCode")
+
+                // Gửi email
+                Transport.send(message)
+
+                // Log thông báo sau khi gửi thành công (có thể thay thế bằng cách khác)
+                Log.d("Email", "Email sent successfully")
+
+            } catch (e: MessagingException) {
+                // Log thông báo nếu có lỗi
+                Log.e("Email", "Error sending email", e)
+            }
+        }
     }
 
     fun checkForgotPasswordCode(email: String, enteredCode: String, onResult: (HashMap<String, Any?>?) -> Unit) {
@@ -164,18 +219,18 @@ public class UserDAO() {
 
                         if (currentTime - storedCodeTime <= expirationTime) {
                             // Mã OTP hợp lệ
-                            onResult(hashMapOf("state" to true, "message" to "Mã OTP hợp lệ"))
+                            onResult(hashMapOf("state" to true, "message" to "Valid OTP code"))
                         } else {
                             // Mã OTP đã hết hạn
-                            onResult(hashMapOf("state" to false, "message" to "Mã OTP đã hết hạn"))
+                            onResult(hashMapOf("state" to false, "message" to "OTP code has expired"))
                         }
                     } else {
                         // Mã OTP không đúng
-                        onResult(hashMapOf("state" to false, "message" to "Mã OTP không đúng"))
+                        onResult(hashMapOf("state" to false, "message" to "OTP code is incorrect"))
                     }
                 } else {
                     // Email không tồn tại
-                    onResult(hashMapOf("state" to false, "message" to "Email không tồn tại"))
+                    onResult(hashMapOf("state" to false, "message" to "Email does not exist"))
                 }
             }
 
@@ -261,10 +316,11 @@ public class UserDAO() {
                     userRef.child("phoneNumber").setValue(newPhoneNumber)
 
                     // Trả về kết quả thành công
-                    onResult(hashMapOf("state" to true, "message" to "Thông tin người dùng đã được cập nhật"))
+                    onResult(hashMapOf("state" to true, "message" to "\n" +
+                            "User information has been updated"))
                 } else {
                     // Không tìm thấy người dùng với ID tương ứng
-                    onResult(hashMapOf("state" to false, "message" to "Không tìm thấy người dùng"))
+                    onResult(hashMapOf("state" to false, "message" to "User not found"))
                 }
             }
 
@@ -302,6 +358,7 @@ public class UserDAO() {
                         userRef.child("password").setValue(hashedPassword)
 
                         // Trả về kết quả thành công
+                        onResult(hashMapOf("state" to true, "message" to "Password has been changed"))
                         onResult(
                             hashMapOf(
                                 "state" to true,
@@ -310,11 +367,11 @@ public class UserDAO() {
                         )
                     } else {
                         // Mật khẩu cũ không đúng
-                        onResult(hashMapOf("state" to false, "message" to "Mật khẩu cũ không đúng"))
+                        onResult(hashMapOf("state" to false, "message" to "The old password is incorrect"))
                     }
                 } else {
                     // Email không tồn tại
-                    onResult(hashMapOf("state" to false, "message" to "Email không tồn tại"))
+                    onResult(hashMapOf("state" to false, "message" to "Email does not exist"))
                 }
             }
 

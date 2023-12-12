@@ -107,11 +107,18 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
             dialog.dismiss()
         }
 
+
+        binding.btnTest.setOnClickListener {
+            var intent = Intent(this, ChooseTypeActivity::class.java)
+            intent.putExtra("idTopicTest", id)
+            startActivity(intent)
+        }
     }
 
     private fun handleOptionButton() {
         binding.btnOption.isVisible = topic.owner == userId
         Log.e("option", "${topic.owner} -- ${userId}")
+
     }
 
     private fun showPopupMenu(id: String) {

@@ -43,6 +43,26 @@ class ImageDAO {
         return fileName
     }
 
+    public fun uploadAvtar(context: Context, imageUri: Uri): String {
+        progressDialog = ProgressDialog(context)
+        progressDialog!!.setTitle("Uploading File....")
+        progressDialog!!.show()
+        val formatter = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.CANADA)
+        val now = Date()
+        val fileName: String = formatter.format(now)
+        storageReference = FirebaseStorage.getInstance().getReference("avatars/$fileName")
+        storageReference.putFile(imageUri)
+            .addOnSuccessListener(OnSuccessListener<Any?> {
+                Toast.makeText(context, "Successfully Uploaded", Toast.LENGTH_SHORT)
+                    .show()
+                if (progressDialog!!.isShowing()) progressDialog!!.dismiss()
+            }).addOnFailureListener(OnFailureListener {
+                if (progressDialog!!.isShowing()) progressDialog!!.dismiss()
+                Toast.makeText(context, "Failed to Upload", Toast.LENGTH_SHORT).show()
+            })
+        return fileName
+    }
+    
     public fun getImage(filename:String, imageView: ImageView, path : String) {
         var bitmap: Bitmap
         var storageReference = FirebaseStorage.getInstance().getReference("$path/$filename")
