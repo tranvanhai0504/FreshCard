@@ -36,6 +36,7 @@
             android:exported="false" />
         <activity
             android:name=".ChooseTypeActivity"
+            android:name=".MultipleChoicesTestActivity"
             android:exported="false" />
         <activity
             android:name=".FolderViewActivity"
