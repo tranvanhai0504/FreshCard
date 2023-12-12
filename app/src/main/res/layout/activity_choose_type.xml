@@ -50,43 +50,44 @@
 
             <android.widget.Button
                 android:id="@+id/btn_engtovn"
-                android:layout_width="370dp"
+                android:layout_width="270dp"
                 android:layout_height="53dp"
                 android:layout_marginTop="52dp"
                 android:background="@drawable/corner_shadow_green"
                 android:backgroundTint="@color/white"
                 android:text="English to Vietnamese"
                 android:textColor="@color/mediumGreen"
-                app:layout_constraintEnd_toEndOf="@+id/title"
-                app:layout_constraintHorizontal_bias="0.159"
-                app:layout_constraintStart_toStartOf="@+id/title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.493"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title" />
 
             <android.widget.Button
                 android:id="@+id/btn_vntoeng"
-                android:layout_width="370dp"
+                android:layout_width="270dp"
                 android:layout_height="53dp"
                 android:layout_marginTop="32dp"
                 android:background="@drawable/corner_shadow_green"
                 android:backgroundTint="@color/white"
                 android:text="Vietnamese to English"
                 android:textColor="@color/mediumGreen"
-                app:layout_constraintEnd_toEndOf="@+id/btn_engtovn"
-                app:layout_constraintStart_toStartOf="@+id/btn_engtovn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.493"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btn_engtovn" />
 
             <android.widget.Button
                 android:id="@+id/btn_submit"
-                android:layout_width="337dp"
+                android:layout_width="270dp"
                 android:layout_height="50dp"
-                android:layout_marginTop="180dp"
+                android:layout_marginTop="204dp"
                 android:background="@drawable/button"
                 android:backgroundTint="@color/grayDefault"
                 android:text="OK"
                 android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="@+id/btn_vntoeng"
-                app:layout_constraintHorizontal_bias="0.515"
-                app:layout_constraintStart_toStartOf="@+id/btn_vntoeng"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btn_vntoeng" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

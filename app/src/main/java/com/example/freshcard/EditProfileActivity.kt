@@ -58,6 +58,12 @@ class EditProfileActivity : AppCompatActivity() {
             finish()
         }
 
+        binding.btnChangePassword.setOnClickListener {
+            var intent = Intent(this, ChangePasswordActivity::class.java)
+            intent.putExtra("email", email)
+            startActivity(intent)
+        }
+
         binding.btnPhoto.setOnClickListener {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                 dispatchTakePictureIntent()

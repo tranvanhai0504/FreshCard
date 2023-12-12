@@ -16,7 +16,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+/*
 import com.bumptech.glide.Glide
+*/
 import com.example.freshcard.R
 import com.example.freshcard.Structure.LearningTopic
 import com.example.freshcard.Structure.TopicItem

@@ -53,7 +53,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         val textPhone = view.findViewById<TextView>(R.id.textPhone)
         val avatarImageView = view.findViewById<ImageView>(R.id.avatar)
         val btnEdit = view.findViewById<Button>(R.id.btn_edit)
-        val btnChangpws = view.findViewById<Button>(R.id.btn_changpws)
 
         val sharedPreferences = requireContext().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
         val savedId = sharedPreferences.getString("idUser", null)
@@ -96,14 +95,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 }
             }
         }
-
-
-        btnChangpws.setOnClickListener {
-            val intent = Intent(activity, ChangePasswordActivity::class.java)
-            intent.putExtra("email", textEmail.text.toString())
-            startActivity(intent)
-        }
-
 
     }
     companion object {

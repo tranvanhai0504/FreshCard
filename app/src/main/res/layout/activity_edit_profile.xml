@@ -110,17 +110,33 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edit_email" />
+
             <Button
                 android:id="@+id/btn_submit"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="74dp"
+                android:layout_marginTop="28dp"
                 android:background="@drawable/button"
                 android:backgroundTint="@color/mediumGreen"
-                android:text="Save"
+                android:text="Save Profile"
                 android:textColor="@color/white"
                 app:layout_constraintTop_toBottomOf="@+id/edit_phone"
-                tools:layout_editor_absoluteX="22dp" />
+                tools:layout_editor_absoluteX="40dp" />
+
+            <Button
+                android:id="@+id/btn_changePassword"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="28dp"
+                android:background="@drawable/button"
+                android:backgroundTint="@color/mediumGreen"
+                android:text="Change Password"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_submit"
+                app:layout_constraintVertical_bias="0.953" />
 
             <Button
                 android:id="@+id/btn_photo"

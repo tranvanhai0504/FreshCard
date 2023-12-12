@@ -64,6 +64,12 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
         binding.btnOption.setOnClickListener{
             showPopupMenu(id!!)
         }
+
+        binding.btnTest.setOnClickListener {
+            var intent = Intent(this, ChooseTypeActivity::class.java)
+            intent.putExtra("idTopicTest", id)
+            startActivity(intent)
+        }
     }
 
     private fun showPopupMenu(id: String) {
