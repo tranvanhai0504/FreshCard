@@ -1,10 +1,19 @@
 package com.example.freshcard
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.style.BackgroundColorSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.example.freshcard.Structure.ResultTest
 import com.example.freshcard.databinding.ActivityShowResultBinding
 
@@ -37,9 +46,14 @@ class ShowResultActivity : AppCompatActivity() {
             finish()
         }
 
+        binding.txtMessage2.setOnClickListener{
+            setRankMessage(21)
+        }
+
     }
 
     private fun setUpResultView(){
+        setRankMessage(1)
         binding.txtResultPercent.text = "${result.amountCorrect*100 /totalItems}%"
         binding.txtResult.text = "${result.amountCorrect}/${totalItems}"
         binding.txtTime.text = secToTime(result.duration)
@@ -55,5 +69,20 @@ class ShowResultActivity : AppCompatActivity() {
         }
 
         return time
+    }
+
+    private fun setRankMessage(rank: Int) {
+        var message = "You have achieved #$rank position on dashboard"
+        val spannable = SpannableString(message)
+        val greenColor = ContextCompat.getColor(this, R.color.mediumGreen)
+        val rankPositionStart = message.indexOf("#$rank")
+        val rankPositionEnd = rankPositionStart + rank.toString().length+1
+        spannable.setSpan(
+            ForegroundColorSpan(greenColor),
+            rankPositionStart,
+            rankPositionEnd,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        binding.txtMessage2.text = spannable
     }
 }
