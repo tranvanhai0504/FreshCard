@@ -102,7 +102,9 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
         }
 
         btnFillTest.setOnClickListener{
-
+            var intent = Intent(this, ChooseTypeActivity::class.java)
+            intent.putExtra("idTopicTest", id)
+            startActivityForResult(intent, 100)
             dialog.dismiss()
         }
 

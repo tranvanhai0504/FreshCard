@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WordTypingActivity"
+    >
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/test_bkg"
+        app:layout_constraintBottom_toTopOf="@+id/timerWrapper"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.609" />
+
+    <ImageButton
+
+        android:id="@+id/btn_back_home"
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/white_home"
+        android:backgroundTint="#00000000"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="20dp"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+    <ImageButton
+
+        android:id="@+id/btn_back"
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/white_back"
+        android:backgroundTint="#00000000"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="20dp"
+        />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/timerWrapper"
+        android:layout_width="112dp"
+        android:layout_height="30dp"
+        android:layout_margin="4dp"
+        android:background="@drawable/corner_shadow"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintBottom_toBottomOf="@id/btn_back_home"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_back_home"
+        app:layout_constraintVertical_bias="0.189">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="-2dp"
+                android:text="Timer"
+                android:textColor="@color/strongGreen"
+                android:textSize="7dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/time_result"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="01:03"
+                android:textColor="@color/strongGreen"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="156dp"
+        android:layout_marginTop="44dp"
+        android:text="Score: "
+        android:textColor="@color/strongGreen"
+        android:textSize="8pt"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+    <TextView
+        android:id="@+id/score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="300"
+        android:textColor="@color/mediumGreen"
+        android:textSize="8pt"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/textView13"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/textView13"
+        app:layout_constraintTop_toTopOf="@+id/textView13"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/first_ques"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/circle_shape2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+    <TextView
+        android:id="@+id/text_first_ques"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="01"
+        android:textSize="15dp"
+        android:textColor="@color/mediumGreen"
+        app:layout_constraintBottom_toBottomOf="@+id/first_ques"
+        app:layout_constraintEnd_toEndOf="@+id/first_ques"
+        app:layout_constraintHorizontal_bias="0.484"
+        app:layout_constraintStart_toStartOf="@+id/first_ques"
+        app:layout_constraintTop_toTopOf="@+id/first_ques" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="10dp"
+        android:max="100"
+        android:progress="0"
+        android:progressTint="@color/mediumGreen"
+        app:layout_constraintBottom_toBottomOf="@+id/first_ques"
+        app:layout_constraintEnd_toStartOf="@+id/end_ques"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/first_ques"
+        app:layout_constraintTop_toBottomOf="@+id/score"
+        app:layout_constraintVertical_bias="0.791" />
+
+    <ImageView
+        android:id="@+id/end_ques"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="50dp"
+        android:background="@drawable/circle_shape2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.944"
+        app:layout_constraintStart_toEndOf="@+id/first_ques"
+        app:layout_constraintTop_toTopOf="@+id/first_ques" />
+
+    <TextView
+        android:id="@+id/text_end_ques"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="60"
+        android:textColor="@color/mediumGreen"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/end_ques"
+        app:layout_constraintEnd_toEndOf="@+id/end_ques"
+        app:layout_constraintHorizontal_bias="0.484"
+        app:layout_constraintStart_toStartOf="@+id/end_ques"
+        app:layout_constraintTop_toTopOf="@+id/end_ques" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Type the mean of this word:"
+        android:textColor="@color/strongGreen"
+        android:textSize="8pt"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/first_ques" />
+
+    <TextView
+        android:id="@+id/nameTopicItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Name"
+        android:textColor="@color/mediumGreen"
+        android:textSize="15pt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+    <TextView
+        android:id="@+id/resultname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/warningRed"
+        android:layout_marginTop="8dp"
+
+        android:textSize="8pt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameTopicItem" />
+
+    <EditText
+        android:id="@+id/edit_result"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/login_input"
+        android:gravity="center"
+        android:hint="Enter your result"
+        android:paddingHorizontal="15dp"
+        android:textColor="@color/strongGreen"
+        android:textColorHint="@color/grayDefault"
+        android:textSize="7pt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/resultname" />
+
+    <android.widget.Button
+        android:id="@+id/btn_submit"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="52dp"
+        android:background="@drawable/button"
+        android:backgroundTint="@color/mediumGreen"
+        android:text="Check"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_result" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
