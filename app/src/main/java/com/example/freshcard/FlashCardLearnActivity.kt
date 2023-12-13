@@ -104,13 +104,15 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
         btnFillTest.setOnClickListener{
             var intent = Intent(this, ChooseTypeActivity::class.java)
             intent.putExtra("idTopicTest", id)
+            intent.putExtra("testType", "text")
             startActivityForResult(intent, 100)
             dialog.dismiss()
         }
 
         btnPickerTest.setOnClickListener{
-            var intent = Intent(this, MultipleChoicesTestActivity::class.java)
+            var intent = Intent(this, ChooseTypeActivity::class.java)
             intent.putExtra("topic", topic)
+            intent.putExtra("testType", "multipleChoices")
             startActivityForResult(intent, 100)
             dialog.dismiss()
 
@@ -125,9 +127,10 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 100) {
-            finish()
-        }
+//        if (requestCode == 100 && data!!.getBooleanExtra("isFinish", false)) {
+//            setResult(RESULT_OK)
+//            finish()
+//        }
     }
 
     private fun handleOptionButton() {

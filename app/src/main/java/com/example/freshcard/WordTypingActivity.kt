@@ -58,8 +58,6 @@ class WordTypingActivity : AppCompatActivity() {
             val intent = Intent(this, FlashCardLearnActivity::class.java)
             startActivity(intent)
         }
-
-
         binding.score.text = "0"
 
     }

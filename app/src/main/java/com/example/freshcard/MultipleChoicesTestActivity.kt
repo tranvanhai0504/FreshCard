@@ -43,6 +43,7 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
     private var listWords: ArrayList<String> = ArrayList(emptyList<String>())
     private var currDurationInt: Int = 0
     private var currAnswer: String = ""
+    private var isEntoVie = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,9 +52,17 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
         topic = (intent.getSerializableExtra("topic") as? Topic)!!
+        var type = intent.getStringExtra("selectedButton")
+        if(type == "btnEngtovn") {
+            isEntoVie = true
+        }
         listItems = topic.items!!
         listItems.forEach{
-            listWords.add(it.vie)
+            if(isEntoVie) {
+                listWords.add(it.vie)
+            }else {
+                listWords.add(it.en)
+            }
         }
         if(listWords.size<4) {
             listWords.add("word")
@@ -125,6 +134,7 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
             binding.btnOption3.setTextColor(normalTextColor)
             binding.btnOption4.setTextColor(normalButtonColor)
         }
+        Log.e("result", "3resetTest")
         binding.btnSubmit.setOnClickListener{
             timer.cancel()
             var userId = UserDAO().getUserIdShareRef(this)
@@ -152,6 +162,9 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
             .setPositiveButton("YES") {
                     dialog, which ->
                     setResult(Activity.RESULT_OK)
+                    var intent = Intent()
+                    intent.putExtra("isFinish", true)
+                    setResult(100, intent)
                     timer.cancel()
                     finish()
 
@@ -186,7 +199,10 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
                 resetTest()
                 Log.e("result", "data ${data}")
             }else {
+                var intent = Intent()
+                intent.putExtra("isFinish", true)
                 setResult(Activity.RESULT_OK)
+                setResult(100, intent)
                 timer.cancel()
                 finish()
             }
@@ -205,7 +221,11 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
     }
     private fun checkResult(value: String) {
         var item = listItems[currentIndex]
-        if(value == item.vie) {
+        var word = item.en
+        if(isEntoVie) {
+            word = item.vie
+        }
+        if(value == word) {
             totalCorrect+=1
             binding.txtTotalCorrect.text = "${totalCorrect}"
         }else {
@@ -215,19 +235,34 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
     }
 
     private fun setCurrentView(item: TopicItem) {
-        listWords.remove(item.vie)
+        if(isEntoVie) {
+            listWords.remove(item.vie)
+        }else {
+            listWords.remove(item.en)
+        }
         listWords.shuffle()
         var randomWords:ArrayList<String> = ArrayList(listWords.take(3))
-        randomWords.add(item.vie)
+        if(isEntoVie) {
+            randomWords.add(item.vie)
+        }else {
+            randomWords.add(item.en)
+        }
         randomWords.shuffle()
         binding.btnOption1.text = randomWords.get(0)
         binding.btnOption2.text = randomWords.get(1)
         binding.btnOption3.text = randomWords.get(2)
         binding.btnOption4.text = randomWords.get(3)
-        binding.txtCurrWord.text = item.en
         listWords = ArrayList(emptyList<String>())
-        listItems.forEach{
-            listWords.add(it.vie)
+        if(isEntoVie) {
+            binding.txtCurrWord.text = item.en
+            listItems.forEach{
+                listWords.add(it.vie)
+            }
+        }else {
+            binding.txtCurrWord.text = item.vie
+            listItems.forEach{
+                listWords.add(it.en)
+            }
         }
     }
 
