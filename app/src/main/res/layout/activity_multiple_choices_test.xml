@@ -8,14 +8,12 @@
     >
 
     <ImageView
-        android:layout_width="478dp"
-        android:layout_height="352dp"
-        android:src="@drawable/bkg_testing"
-        app:layout_constraintBaseline_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/test_bkg"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_editor_absoluteY="-63dp" />
+        app:layout_constraintRight_toRightOf="parent"/>
     <ImageButton
 
         android:id="@+id/btnHome"
@@ -118,7 +116,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txtTotalWrong"
-                android:text="2"
+                android:text="0"
                 android:textStyle="bold"
                 android:textColor="@color/warningRed"
                 android:textSize="15dp"
@@ -161,7 +159,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txtTotalCorrect"
-                android:text="11"
+                android:text="0"
                 android:textStyle="bold"
                 android:textColor="@color/mediumGreen"
                 android:textSize="15dp"
@@ -182,7 +180,6 @@
         android:id="@+id/progress"
         android:indeterminateOnly="false"
         android:progressDrawable="@drawable/progressbar_back"
-        android:progress="68"
         app:layout_constraintTop_toBottomOf="@id/timerWrapper"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -198,7 +195,7 @@
         app:layout_constraintLeft_toLeftOf="@id/progress"
         app:layout_constraintRight_toRightOf="@id/progress"
         app:layout_constraintBottom_toBottomOf="@id/progress"
-        android:text="68"
+        android:text="0"
         android:textSize="15dp"
         android:textColor="#fff"
         android:textStyle="bold"
@@ -254,11 +251,11 @@
         app:layout_constraintLeft_toLeftOf="@id/currWordWrapper"
         android:text="Bo`"
         android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/mediumLightGreen"
+        android:textColor="@color/grayDefault"
         android:layout_marginTop="25dp"
-        android:background="@drawable/corner_shadow"
+        android:background="@drawable/strong_corner_btn"
         android:layout_marginLeft="20dp"
+
         />
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="140dp"
@@ -324,6 +321,26 @@
         android:layout_marginBottom="60dp"
         android:layout_marginLeft="60dp"
         android:layout_marginRight="60dp"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:id="@+id/btnSubmit"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="@id/btnOption2"
+        android:text="Finish"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/mediumLightGreen"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/strong_corner_btn"
+        android:layout_marginBottom="60dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:visibility="invisible"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

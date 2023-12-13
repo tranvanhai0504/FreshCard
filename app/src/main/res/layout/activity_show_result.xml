@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ShowResultActivity"
+    android:padding="32dp"
+    >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/heading"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="Result"
+        android:textSize="26dp"
+        android:textColor="#A45353"
+        android:textStyle="bold"
+        android:layout_marginTop="22dp"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtTypeTest"
+        app:layout_constraintTop_toBottomOf="@id/heading"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="Multiple choices test"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        android:textColor="#A45353"
+        />
+
+
+    <ProgressBar
+        android:layout_width="235dp"
+        android:layout_height="235dp"
+        android:id="@+id/progress"
+        android:indeterminateOnly="false"
+        android:progressDrawable="@drawable/largest_progress_bar"
+        app:layout_constraintTop_toBottomOf="@id/txtTypeTest"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="30dp"
+        android:progress="80"
+
+        />
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtFinishOnLabel"
+        app:layout_constraintTop_toBottomOf="@id/progress"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textColor="@color/strongGreen"
+        android:text="Finish on"
+        android:textSize="16dp"
+        android:textStyle="bold"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="@id/progress"
+        app:layout_constraintBottom_toBottomOf="@id/progress"
+        app:layout_constraintLeft_toLeftOf="@id/progress"
+        app:layout_constraintRight_toRightOf="@id/progress"
+        android:gravity="center"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtResultPercent"
+            android:text="80%"
+            android:textSize="40dp"
+            android:textStyle="bold"
+            android:textColor="@color/mediumGreen"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtResult"
+            android:textStyle="bold"
+            android:textSize="26dp"
+            android:textColor="@color/grayDefault"
+            android:text="48/60"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtTime"
+        android:textSize="16dp"
+        android:textColor="@color/mediumGreen"
+        android:textStyle="bold"
+        android:text="12:10"
+        app:layout_constraintTop_toBottomOf="@id/txtFinishOnLabel"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtMessage"
+        android:text="Wow, you so smart!"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:textColor="@color/grayDefault"
+        app:layout_constraintTop_toBottomOf="@id/txtTime"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="36dp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:textAlignment="center"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtMessage2"
+        android:text="You have achieved #1 position on dashboard"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:textColor="@color/grayDefault"
+        app:layout_constraintTop_toBottomOf="@id/txtMessage"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="10dp"
+        />
+    
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/txtMessage2"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="36dp"
+            android:gravity="center"
+
+            >
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="141dp"
+                android:layout_height="45dp"
+                android:id="@+id/btnAgain"
+                android:text="Do Again"
+                android:background="@drawable/active_solid_corner_btn"
+                android:textAllCaps="false"
+                android:textColor="@color/mediumLightGreen"
+                android:textStyle="bold"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="141dp"
+                android:layout_height="45dp"
+                android:id="@+id/btnBack"
+                android:text="Back to main"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:textColor="@color/mediumLightGreen"
+                android:layout_marginLeft="34dp"
+                android:background="@drawable/active_solid_corner_btn"
+                />
+        </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

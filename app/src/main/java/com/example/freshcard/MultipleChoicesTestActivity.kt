@@ -1,11 +1,299 @@
 package com.example.freshcard
 
+import android.app.Activity
+import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import com.example.freshcard.DAO.UserDAO
+import com.example.freshcard.Structure.ResultTest
+import com.example.freshcard.Structure.Topic
+import com.example.freshcard.Structure.TopicItem
+import com.example.freshcard.databinding.ActivityMultipleChoicesTestBinding
+import com.google.type.DateTime
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MultipleChoicesTestActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMultipleChoicesTestBinding
+    private lateinit var timer: Job
+    private lateinit var topic: Topic
+    private var totalCorrect: Int = 0
+    private var totalWrong: Int = 0
+    private var currentIndex: Int = 0
+    private var currDuration: String = ""
+    private lateinit var listItems: ArrayList<TopicItem>
+    private var listWords: ArrayList<String> = ArrayList(emptyList<String>())
+    private var currDurationInt: Int = 0
+    private var currAnswer: String = ""
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_multiple_choices_test)
+        binding = ActivityMultipleChoicesTestBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+        topic = (intent.getSerializableExtra("topic") as? Topic)!!
+        listItems = topic.items!!
+        listItems.forEach{
+            listWords.add(it.vie)
+        }
+        if(listWords.size<4) {
+            listWords.add("word")
+            listWords.add("key")
+            listWords.add("how")
+        }
+        setCurrentView(listItems[0])
+
+        startTimer()
+        settingCheckButton(false)
+        val normalButtonColor = ContextCompat.getColor(this, R.color.white)
+        val normalTextColor = ContextCompat.getColor(this, R.color.grayDefault)
+        val selectedButtonColor = ContextCompat.getColor(this, R.color.mediumLightGreen)
+        binding.btnCheck.setOnClickListener{
+            checkResult(currAnswer)
+            resetButton(normalButtonColor,normalTextColor)
+            nextItem()
+        }
+
+        binding.btnback.setOnClickListener {
+
+        }
+
+        binding.btnOption1.setOnClickListener{
+            currAnswer = binding.btnOption1.text.toString()
+            binding.btnOption1.backgroundTintList =  ColorStateList.valueOf(selectedButtonColor)
+            binding.btnOption1.setTextColor(normalButtonColor)
+            binding.btnOption2.backgroundTintList =  ColorStateList.valueOf(normalButtonColor)
+            binding.btnOption3.backgroundTintList =  ColorStateList.valueOf(normalButtonColor)
+            binding.btnOption4.backgroundTintList =  ColorStateList.valueOf(normalButtonColor)
+            binding.btnOption2.setTextColor(normalTextColor)
+            binding.btnOption3.setTextColor(normalTextColor)
+            binding.btnOption4.setTextColor(normalTextColor)
+            settingCheckButton(true)
+        }
+        binding.btnOption2.setOnClickListener{
+            currAnswer = binding.btnOption2.text.toString()
+            binding.btnOption1.backgroundTintList =  ColorStateList.valueOf(normalButtonColor)
+            binding.btnOption2.backgroundTintList =  ColorStateList.valueOf(selectedButtonColor)
+            binding.btnOption2.setTextColor(normalButtonColor)
+            binding.btnOption3.backgroundTintList =  ColorStateList.valueOf(normalButtonColor)
+            binding.btnOption4.backgroundTintList =  ColorStateList.valueOf(normalButtonColor)
+            binding.btnOption1.setTextColor(normalTextColor)
+            binding.btnOption3.setTextColor(normalTextColor)
+            binding.btnOption4.setTextColor(normalTextColor)
+            settingCheckButton(true)
+        }
+        binding.btnOption3.setOnClickListener{
+            currAnswer = binding.btnOption3.text.toString()
+            binding.btnOption1.backgroundTintList =  ColorStateList.valueOf(normalButtonColor)
+            binding.btnOption2.backgroundTintList =  ColorStateList.valueOf(normalButtonColor)
+            binding.btnOption3.backgroundTintList =  ColorStateList.valueOf(selectedButtonColor)
+            binding.btnOption4.backgroundTintList =  ColorStateList.valueOf(normalButtonColor)
+            binding.btnOption1.setTextColor(normalTextColor)
+            binding.btnOption2.setTextColor(normalTextColor)
+            binding.btnOption3.setTextColor(normalButtonColor)
+            binding.btnOption4.setTextColor(normalTextColor)
+            settingCheckButton(true)
+        }
+        binding.btnOption4.setOnClickListener{
+            currAnswer = binding.btnOption4.text.toString()
+            settingCheckButton(true)
+            binding.btnOption1.backgroundTintList =  ColorStateList.valueOf(normalButtonColor)
+            binding.btnOption2.backgroundTintList =  ColorStateList.valueOf(normalButtonColor)
+            binding.btnOption3.backgroundTintList =  ColorStateList.valueOf(normalButtonColor)
+            binding.btnOption4.backgroundTintList =  ColorStateList.valueOf(selectedButtonColor)
+            binding.btnOption1.setTextColor(normalTextColor)
+            binding.btnOption2.setTextColor(normalTextColor)
+            binding.btnOption3.setTextColor(normalTextColor)
+            binding.btnOption4.setTextColor(normalButtonColor)
+        }
+        binding.btnSubmit.setOnClickListener{
+            timer.cancel()
+            var userId = UserDAO().getUserIdShareRef(this)
+
+            var result: ResultTest = ResultTest(userId,totalCorrect,currDurationInt, (DateTime.getDefaultInstance()).toString(), "multiple choice")
+            var intent = Intent(this, ShowResultActivity::class.java)
+            intent.putExtra("totalItems", listItems.size)
+            intent.putExtra("result", result)
+            startActivityForResult(intent, 100)
+        }
+
+        binding.btnback.setOnClickListener{
+            confirmExit()
+        }
+
+
     }
+    private fun confirmExit() {
+        var builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setMessage("Stop testing?")
+            .setTitle("Exit")
+            .setPositiveButton("YES") {
+                    dialog, which ->
+                    setResult(Activity.RESULT_OK)
+                    timer.cancel()
+                    finish()
+
+            }
+            .setNegativeButton("NO") {
+                    dialog, which ->
+                        timer.cancel()
+                        dialog.dismiss()
+
+
+            }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+
+    }
+
+    private fun settingCheckButton(bool: Boolean) {
+        if(bool) {
+            binding.btnCheck.alpha = 1f
+        }else {
+            binding.btnCheck.alpha = 0.6f
+        }
+        binding.btnCheck.isEnabled = bool
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 100) {
+            var isAgain = data!!.getBooleanExtra("isAgain", false)
+            if(isAgain) {
+                Log.e("result", "data ${data}")
+                resetTest()
+                Log.e("result", "data ${data}")
+            }else {
+                setResult(Activity.RESULT_OK)
+                timer.cancel()
+                finish()
+            }
+        }
+    }
+
+    private fun resetButton(normalButtonColor: Int,normalTextColor: Int) {
+        binding.btnOption1.backgroundTintList =  ColorStateList.valueOf(normalButtonColor)
+        binding.btnOption2.backgroundTintList =  ColorStateList.valueOf(normalButtonColor)
+        binding.btnOption3.backgroundTintList =  ColorStateList.valueOf(normalButtonColor)
+        binding.btnOption4.backgroundTintList =  ColorStateList.valueOf(normalButtonColor)
+        binding.btnOption1.setTextColor(normalTextColor)
+        binding.btnOption2.setTextColor(normalTextColor)
+        binding.btnOption3.setTextColor(normalTextColor)
+        binding.btnOption4.setTextColor(normalTextColor)
+    }
+    private fun checkResult(value: String) {
+        var item = listItems[currentIndex]
+        if(value == item.vie) {
+            totalCorrect+=1
+            binding.txtTotalCorrect.text = "${totalCorrect}"
+        }else {
+            totalWrong +=1
+            binding.txtTotalWrong.text = "${totalWrong}"
+        }
+    }
+
+    private fun setCurrentView(item: TopicItem) {
+        listWords.remove(item.vie)
+        listWords.shuffle()
+        var randomWords:ArrayList<String> = ArrayList(listWords.take(3))
+        randomWords.add(item.vie)
+        randomWords.shuffle()
+        binding.btnOption1.text = randomWords.get(0)
+        binding.btnOption2.text = randomWords.get(1)
+        binding.btnOption3.text = randomWords.get(2)
+        binding.btnOption4.text = randomWords.get(3)
+        binding.txtCurrWord.text = item.en
+        listWords = ArrayList(emptyList<String>())
+        listItems.forEach{
+            listWords.add(it.vie)
+        }
+    }
+
+    private fun nextItem() {
+        currAnswer = ""
+        settingCheckButton(false)
+        currentIndex+=1
+        if(currentIndex>=listItems.size) {
+            binding.btnSubmit.isVisible = true
+            binding.btnCheck.isVisible = false
+            binding.btnOption1.isVisible = false
+            binding.btnOption2.isVisible = false
+            binding.btnOption3.isVisible = false
+            binding.btnOption4.isVisible = false
+            binding.contentTitle.isVisible = false
+            binding.txtCurrWord.text = "Done!"
+            binding.progress.progress = 100
+            binding.progressState.text = "100"
+
+        }else {
+            setCurrentView(listItems[currentIndex])
+            binding.progress.progress = (currentIndex*100/listItems.size)
+            binding.progressState.text = "${currentIndex*100/listItems.size}"
+        }
+    }
+
+    private fun startTimer() {
+        timer = GlobalScope.launch(Dispatchers.Main) {
+            var i = 0
+            while (i <= 6000) {
+                val time = when {
+                    i < 10 -> "00:0$i"
+                    i < 60 -> "00:$i"
+                    i < 600 -> if (i % 60 < 10) "0${i / 60}:0${i % 60}" else "0${i / 60}:${i % 60}"
+                    else -> "${i / 600}:${i % 600}"
+                }
+                binding.txtTimer.text = time
+                currDuration = time
+                delay(1000)
+                i += 1
+                currDurationInt = i
+            }
+        }
+
+    }
+
+    fun resetTest() {
+        Log.e("result", "0resetTest")
+        val normalButtonColor = Color.parseColor("#FFFFFF")
+        Log.e("result", "1resetTest")
+        val normalTextColor = Color.parseColor("#B0B0B0")
+        totalCorrect = 0
+        totalWrong = 0
+        currentIndex = -1
+        Log.e("result", "2resetTest")
+
+//        setCurrentView(listItems[0])
+        nextItem()
+        Log.e("result", "3resetTest")
+
+        resetButton(normalButtonColor,normalTextColor)
+        settingCheckButton(false)
+        binding.txtTotalCorrect.text = "0"
+        binding.txtTotalWrong.text = "0"
+        binding.progressState.text = "0"
+        binding.progress.progress = 0
+
+        binding.btnSubmit.isVisible = false
+        binding.btnCheck.isVisible = true
+        binding.btnOption1.isVisible = true
+        binding.btnOption2.isVisible = true
+        binding.btnOption3.isVisible = true
+        binding.btnOption4.isVisible = true
+        binding.contentTitle.isVisible = true
+        startTimer()
+    }
+
 }

@@ -44,18 +44,22 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
     private val adapter by lazy { CardStackAdapter(this, tts = getTTS()) }
     private var tts: TextToSpeech? = null
     private var userId: String = ""
+    private lateinit var dialog: Dialog
+    private lateinit var btnFillTest:Button
+    private lateinit var btnPickerTest:Button
+    private lateinit var btnCloseDialog:ImageButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var dialog: Dialog = Dialog(this, R.style.CustomDialogTheme)
+        dialog = Dialog(this, R.style.CustomDialogTheme)
         dialog.setCancelable(true)
         dialog.setContentView(R.layout.learning_type_dialog)
         dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         dialog.window!!.setDimAmount(0.2F)
         dialog.window!!.setGravity(Gravity.CENTER)
-        var btnFillTest:Button = dialog.findViewById(R.id.btnTextTest)
-        var btnPickerTest:Button = dialog.findViewById(R.id.btnPickerTest)
-        var btnCloseDialog:ImageButton = dialog.findViewById(R.id.btnCloseDialog)
+        btnFillTest = dialog.findViewById(R.id.btnTextTest)
+        btnPickerTest = dialog.findViewById(R.id.btnPickerTest)
+        btnCloseDialog = dialog.findViewById(R.id.btnCloseDialog)
 
         binding = ActivityFlashCardLearnBinding.inflate(layoutInflater)
         val view = binding.root
@@ -83,21 +87,29 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
         }
 
         binding.btnOption.setOnClickListener{
+
+
             showPopupMenu(id!!)
 
         }
 
         binding.btnTest.setOnClickListener {
+            if(topic.items?.size!! < 4 ){
+                btnPickerTest.alpha = 0.5f
+                btnPickerTest.isEnabled = false
+            }
             dialog.show()
         }
 
         btnFillTest.setOnClickListener{
-            Toast.makeText(this, "test with fill in blank", Toast.LENGTH_SHORT).show()
+
             dialog.dismiss()
         }
 
         btnPickerTest.setOnClickListener{
-            Toast.makeText(this, "test with multiple choices", Toast.LENGTH_SHORT).show()
+            var intent = Intent(this, MultipleChoicesTestActivity::class.java)
+            intent.putExtra("topic", topic)
+            startActivityForResult(intent, 100)
             dialog.dismiss()
 
         }
@@ -109,6 +121,13 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
 
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 100) {
+            finish()
+        }
+    }
+
     private fun handleOptionButton() {
         binding.btnOption.isVisible = topic.owner == userId
         Log.e("option", "${topic.owner} -- ${userId}")
@@ -117,6 +136,7 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
     private fun showPopupMenu(id: String) {
         val popupMenu = PopupMenu(this, binding.btnOption)
         popupMenu.inflate(R.menu.learing_popup_menu) // Inflate your menu resource
+
         popupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.learningPopupmenuEdit -> {

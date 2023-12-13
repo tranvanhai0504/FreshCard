@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- button_border.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background Color -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#fff" /> <!-- Your default green color -->
+            <corners android:radius="8dip" /> <!-- Set your desired corner radius -->
+        </shape>
+    </item>
+    <!-- Border -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/white" />
+            <stroke
+                android:width="2dp"
+                android:color="@color/mediumLightGreen" />
+            <corners android:radius="8dip" />
+        </shape>
+    </item>
+</layer-list>
