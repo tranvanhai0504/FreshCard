@@ -11,7 +11,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import com.example.freshcard.DAO.HistoryDAO
+import com.example.freshcard.DAO.TestResultDAO
 import com.example.freshcard.DAO.UserDAO
+import com.example.freshcard.Structure.History
 import com.example.freshcard.Structure.ResultTest
 import com.example.freshcard.Structure.Topic
 import com.example.freshcard.Structure.TopicItem
@@ -24,6 +27,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.Date
 
 class MultipleChoicesTestActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMultipleChoicesTestBinding
@@ -127,6 +133,9 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
             var intent = Intent(this, ShowResultActivity::class.java)
             intent.putExtra("totalItems", listItems.size)
             intent.putExtra("result", result)
+
+            HistoryDAO().pushHistory(userId, topic.id, Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
+            TestResultDAO().pushTestResult(ResultTest(userId,totalCorrect,currDurationInt,(DateTime.getDefaultInstance()).toString(), "Multiple Choices"))
             startActivityForResult(intent, 100)
         }
 
