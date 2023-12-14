@@ -2,6 +2,7 @@ package com.example.freshcard.DAO
 
 
 import android.content.Context
+import android.util.Log
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.example.freshcard.MainActivity
 import com.example.freshcard.Structure.Database
@@ -19,7 +20,6 @@ import com.google.firebase.database.ValueEventListener
 import java.util.Random
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -329,6 +329,11 @@ public class UserDAO() {
                 onResult(hashMapOf("state" to false, "message" to "Lỗi database"))
             }
         })
+    }
+
+    fun updateStarTopicItem(listLearning : ArrayList<LearningTopic>){
+        var userId = MainActivity.idUser
+        db.child(userId).child("learningTopics").setValue(listLearning)
     }
 
     fun changePassword(email: String, oldPassword: String, newPassword: String, onResult: (HashMap<String, Any?>) -> Unit) {
