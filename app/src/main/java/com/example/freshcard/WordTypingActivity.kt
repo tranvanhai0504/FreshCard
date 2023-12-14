@@ -36,6 +36,7 @@ class WordTypingActivity : AppCompatActivity() {
     var duration = 0
     var amountCorrect = 0
     var amountIncorrect = 0
+    private val correctAnswers = mutableListOf<String>()
     private val incorrectAnswers = mutableListOf<String>()
     var textEndQues: String? = null
     var textFirstQues:String? = null
@@ -57,7 +58,6 @@ class WordTypingActivity : AppCompatActivity() {
 
         binding.btnBack.setOnClickListener {
             confirmExit()
-            finish()
         }
 
         binding.btnBackHome.setOnClickListener {
@@ -198,6 +198,8 @@ class WordTypingActivity : AppCompatActivity() {
                     amountCorrect++
                     binding.score.text = scorePlus.toString()
                     binding.resultname.setTextColor(ContextCompat.getColor(this, R.color.strongGreen))
+                    correctAnswers.add("$desEng - $desVn")
+                    Log.e("correctAnswers", "correctAnswers: $correctAnswers", )
                     binding.btnSubmit.text = if (currentItemIndex == checkcurrentItemIndex) "Finish" else "Next"
                     // Bước 2: Nếu enterKey trùng với cdesEng, thì btnSubmit có text là "Next".
 
@@ -278,6 +280,8 @@ class WordTypingActivity : AppCompatActivity() {
                     amountCorrect++
                     binding.score.text = scorePlus.toString()
                     binding.resultname.setTextColor(ContextCompat.getColor(this, R.color.strongGreen))
+                    correctAnswers.add("$desEng - $desVn")
+                    Log.e("correctAnswers", "correctAnswers: $correctAnswers", )
                     binding.btnSubmit.text = if (currentItemIndex == checkcurrentItemIndex) "Finish" else "Next"
 
                     binding.btnSubmit.setOnClickListener {
@@ -347,14 +351,15 @@ class WordTypingActivity : AppCompatActivity() {
             startActivity(intent)
 
         // Truyền mảng incorrectAnswers đến hàm lưu trạng thái
-        saveIncorrectAnswers(incorrectAnswers)
+        saveIncorrectAnswers(incorrectAnswers, correctAnswers)
     }
 
-    private fun saveIncorrectAnswers(incorrectAnswers: List<String>) {
+    private fun saveIncorrectAnswers(incorrectAnswers: List<String>, correctAnswers: List<String>) {
         // Lưu mảng incorrectAnswers vào SharedPreferences
         val sharedPreferences = applicationContext.getSharedPreferences("your_prefs_name", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putStringSet("incorrectAnswers", HashSet(incorrectAnswers))
+        editor.putStringSet("correctAnswers", HashSet(correctAnswers))
         editor.apply()
     }
 
