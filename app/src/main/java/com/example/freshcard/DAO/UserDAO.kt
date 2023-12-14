@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener
 import java.util.Random
 import android.os.Handler
 import android.os.Looper
+import android.support.annotation.ArrayRes
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -275,6 +276,11 @@ public class UserDAO() {
         })
     }
 
+    fun updateStarTopicItem(listLearning : ArrayList<LearningTopic>){
+        var userId = MainActivity.idUser
+        db.child(userId).child("learningTopics").setValue(listLearning)
+    }
+
     fun changePassword(email: String, oldPassword: String, newPassword: String, onResult: (HashMap<String, Any?>) -> Unit) {
         val query = db.orderByChild("email").equalTo(email)
 
@@ -425,6 +431,8 @@ public class UserDAO() {
             db.child(idUser).child("learningTopics").setValue(MainActivity.Companion.user.learningTopics)
         }
     }
+
+
 
     fun UpdateDateLogin(id: String){
         db.child(id).child("lastAccess").setValue(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC))

@@ -1,16 +1,27 @@
 package com.example.freshcard
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import com.example.freshcard.adapters.TopicAdapter
+import androidx.appcompat.widget.PopupMenu
 import android.util.Log
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.Toast
+import android.widget.TextView
+import androidx.core.view.isVisible
 import android.view.animation.LinearInterpolator
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.PopupMenu
+import android.widget.FrameLayout
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
 import com.example.freshcard.DAO.TopicDAO
@@ -41,12 +52,25 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
     private val cardStackView by lazy { findViewById<CardStackView>(R.id.cardStackView1) }
     private val manager by lazy { CardStackLayoutManager(this, this) }
     private val adapter by lazy { CardStackAdapter(this, tts = getTTS()) }
+    private var tts: TextToSpeech? = null
+    private var userId: String = ""
     private var directionSwiped : Stack<Direction> = Stack<Direction>()
     private var isAutoPlay : Boolean = false
-
+    private var currentList : ArrayList<TopicItem> = ArrayList<TopicItem>()
+    private var mode = "all"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        var dialog: Dialog = Dialog(this, R.style.CustomDialogTheme)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.learning_type_dialog)
+        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        dialog.window!!.setDimAmount(0.2F)
+        dialog.window!!.setGravity(Gravity.CENTER)
+        var btnFillTest:Button = dialog.findViewById(R.id.btnTextTest)
+        var btnPickerTest:Button = dialog.findViewById(R.id.btnPickerTest)
+        var btnCloseDialog:ImageButton = dialog.findViewById(R.id.btnCloseDialog)
 
         binding = ActivityFlashCardLearnBinding.inflate(layoutInflater)
         val view = binding.root
@@ -57,7 +81,7 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
 
         //get id user
         val sharedPreferences = this.applicationContext?.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-        var userId = sharedPreferences?.getString("idUser", "undefined")!!
+        userId = sharedPreferences?.getString("idUser", "undefined")!!
 
         //create learning topic
         if (id != null) {
@@ -75,9 +99,55 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
 
         binding.btnOption.setOnClickListener{
             showPopupMenu(id!!)
+
+        }
+
+        binding.btnTest.setOnClickListener {
+            dialog.show()
         }
 
         setupButton()
+
+        btnFillTest.setOnClickListener{
+            Toast.makeText(this, "test with fill in blank", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+        }
+
+        btnPickerTest.setOnClickListener{
+            Toast.makeText(this, "test with multiple choices", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+
+        }
+
+        btnCloseDialog.setOnClickListener{
+
+            dialog.dismiss()
+        }
+
+    }
+
+    private fun handleOptionButton() {
+        binding.btnOption.isVisible = topic.owner == userId
+    }
+
+    private fun getAllItem() {
+        currentList = if(topic.items !== null){
+            topic.items!!
+        }else{
+            ArrayList<TopicItem>()
+        }
+    }
+
+    private fun getStarItems(){
+        var idStarList = MainActivity.user.learningTopics?.find {
+            it.idTopic == topic.id
+        }?.idChecked
+
+        var starList = topic.items?.filter {
+            idStarList?.contains(it.id) == true
+        }
+
+        currentList = starList as ArrayList<TopicItem>
     }
 
     private fun showPopupMenu(id: String) {
@@ -104,15 +174,17 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
     fun getTopic(id : String){
         TopicDAO().getTopicById(id){
             topic = it
+            adapter.setTopicId(it.id)
             updateUi(topic)
+            getAllItem()
         }
     }
 
-    fun updateUi(topicData : Topic){
+    private fun updateUi(topicData : Topic){
         binding.txtTopicName.text = topicData.title
-        binding.txtIndex.text = index.toString() + "/" + topicData.items?.size
+        currentList = topic.items!!
+        binding.txtIndex.text = index.toString() + "/" + currentList?.size
         updateProcessBar(index)
-
 
         manager.setStackFrom(StackFrom.Bottom)
         manager.setVisibleCount(3)
@@ -126,13 +198,15 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
         manager.setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
         manager.setOverlayInterpolator(LinearInterpolator())
         cardStackView.layoutManager = manager
-        topicData.items?.let { adapter.setList(it) }
+        currentList?.let { adapter.setList(it) }
         cardStackView.adapter = adapter
         cardStackView.itemAnimator.apply {
             if (this is DefaultItemAnimator) {
                 supportsChangeAnimations = false
             }
         }
+
+        handleOptionButton()
     }
 
     private fun getTTS(): TextToSpeech {
@@ -149,25 +223,25 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
     }
 
     override fun onCardSwiped(direction: Direction?) {
-        if(index + 1 > topic.items?.size!!){
+        if(index + 1 > currentList.size!!){
             index = 1
         }else{
             index++
         }
-        binding.txtIndex.text = index.toString() + "/" +topic.items?.size
+        binding.txtIndex.text = index.toString() + "/" + currentList.size
         updateProcessBar(index)
 
         if (direction != null) {
             directionSwiped.push(direction)
         }
-        Log.d("CardStackView", "onCardSwiped: p = ${manager.topPosition}, d = $direction")
+
         if (manager.topPosition == adapter.itemCount - 3) {
             paginate()
         }
     }
 
     override fun onCardRewound() {
-
+//        binding.btnBack.isEnabled = false
     }
 
     override fun onCardCanceled() {
@@ -175,22 +249,30 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
     }
 
     override fun onCardAppeared(view: View?, position: Int) {
-
+        view?.findViewById<FrameLayout>(R.id.card_container)?.alpha = 1F
+        view?.findViewById<FrameLayout>(R.id.card_container)?.rotationX = 0F
+        view?.findViewById<FrameLayout>(R.id.card_container2)?.alpha = 0F
+        view?.findViewById<FrameLayout>(R.id.card_container2)?.rotationX = 180F
     }
 
     override fun onCardDisappeared(view: View?, position: Int) {
 
+        view?.findViewById<FrameLayout>(R.id.card_container)?.alpha = 1F
+        view?.findViewById<FrameLayout>(R.id.card_container)?.rotationX = 0F
+        view?.findViewById<FrameLayout>(R.id.card_container2)?.alpha = 0F
+        view?.findViewById<FrameLayout>(R.id.card_container2)?.rotationX = 180F
+
     }
 
     private fun updateProcessBar(index : Int){
-        binding.progressBar.progress = ((index.toFloat() / topic.items?.size!!.toFloat()) * 100).toInt()
+        binding.progressBar.progress = ((index.toFloat() / currentList?.size!!.toFloat()) * 100).toInt()
     }
 
     private fun paginate() {
         val old = adapter.getList()
         val new = ArrayList<TopicItem>()
         new.addAll(old)
-        topic.items?.let { new.addAll(it) }
+        currentList?.let { new.addAll(it) }
         val callback = ItemDiffCallback(old, new)
         val result = DiffUtil.calculateDiff(callback)
         adapter.setList(new)
@@ -200,10 +282,19 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
     private fun setupButton() {
         val auto = findViewById<FloatingActionButton>(R.id.btnAuto)
         auto.setOnClickListener{
-            if(!isAutoPlay){
-                startAutoPlay()
-            }else{
-                isAutoPlay = false
+            if(adapter.itemCount < 4){
+                Toast.makeText(this, "This topic is not enough item to run this feature", Toast.LENGTH_SHORT).show()
+
+            }else {
+                if (!isAutoPlay) {
+                    startAutoPlay()
+                    auto.setImageResource(R.drawable.stop_fill)
+                    binding.txtPlayShow.text = "Stop"
+                } else {
+                    isAutoPlay = false
+                    auto.setImageResource(R.drawable.arrow_drop_down_big)
+                    binding.txtPlayShow.text = "Auto play"
+                }
             }
         }
 
@@ -219,43 +310,88 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
                 manager.setRewindAnimationSetting(setting)
                 cardStackView.rewind()
                 if(index == 1){
-                    index = topic.items?.size!!
+                    index = currentList?.size!!
                 }else{
                     index--
                 }
-                binding.txtIndex.text = index.toString() + "/" +topic.items?.size
+                binding.txtIndex.text = index.toString() + "/" + currentList.size
                 updateProcessBar(index)
             }
         }
 
 
         val shuffle = findViewById<FloatingActionButton>(R.id.btnShuffle)
-//        shuffle .setOnClickListener {
-//            val setting = SwipeAnimationSetting.Builder()
-//                .setDirection(Direction.Right)
-//                .setDuration(Duration.Normal.duration)
-//                .setInterpolator(AccelerateInterpolator())
-//                .build()
-//            manager.setSwipeAnimationSetting(setting)
-//            cardStackView.swipe()
-//        }
+        shuffle.setOnClickListener {
+            adapter.shuffle()
+        }
+
+        var starCardBtn = binding.btnStarCard
+        var allCardBtn = binding.btnAllCard
+        starCardBtn.setOnClickListener {
+            starCardBtn.setTextColor(Color.parseColor("#ffffff"))
+            starCardBtn.setBackgroundResource(R.drawable.switch_button_active)
+            allCardBtn.setTextColor(Color.parseColor("#B0B0B0"))
+            allCardBtn.setBackgroundResource(R.drawable.switch_button)
+
+            mode = "star"
+            getStarItems()
+            adapter.setList(currentList)
+            adapter.notifyDataSetChanged()
+
+            directionSwiped.clear()
+
+            index = 1
+            binding.txtIndex.text = index.toString() + "/" + currentList.size
+            updateProcessBar(index)
+        }
+
+        allCardBtn.setOnClickListener {
+            allCardBtn.setTextColor(Color.parseColor("#ffffff"))
+            allCardBtn.setBackgroundResource(R.drawable.switch_button_active)
+            starCardBtn.setTextColor(Color.parseColor("#B0B0B0"))
+            starCardBtn.setBackgroundResource(R.drawable.switch_button)
+
+            mode = "all"
+            getAllItem()
+            adapter.setList(currentList)
+            adapter.notifyDataSetChanged()
+
+            directionSwiped.clear()
+
+            index = 1
+            binding.txtIndex.text = index.toString() + "/" +currentList.size
+            updateProcessBar(index)
+        }
     }
 
-    fun startAutoPlay(){
+    private fun startAutoPlay(){
         isAutoPlay = false
         val backgroundThread = Thread {
             isAutoPlay = true
-
-            while(isAutoPlay){
-                runBlocking {
-                    Thread.sleep(1000)
-                    runOnUiThread {
-                        Log.i("check", manager.topView.isDirty.toString())
-                        manager.topView.performClick()
+            runBlocking {
+                while(isAutoPlay){
+                    if(manager.topView.findViewById<FrameLayout>(R.id.card_container).alpha == 1F){
+                        Thread.sleep(2000)
+                        if(!isAutoPlay){
+                            break
+                        }
+                        runOnUiThread {
+                            manager.topView.performClick()
+                        }
                     }
 
                     Thread.sleep(2000)
+                    if(!isAutoPlay){
+                        break
+                    }
+                    runOnUiThread {
+                        manager.topView.performClick()
+                    }
 
+                    Thread.sleep(400)
+                    if(!isAutoPlay){
+                        break
+                    }
                     runOnUiThread{
                         val setting = SwipeAnimationSetting.Builder()
                             .setDirection(Direction.Left)
@@ -264,10 +400,8 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
                             .build()
                         manager.setSwipeAnimationSetting(setting)
                         cardStackView.swipe()
-                        adapter.currentIndex++
                     }
                 }
-
             }
         }
         backgroundThread.start()

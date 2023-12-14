@@ -151,8 +151,8 @@
             android:text="Import CSV"
             android:textColor="@color/mediumGreen"
             android:background="@drawable/large_solid_button"
-            android:backgroundTint="#fff"
             android:layout_marginBottom="4dp"
+
 
             />
 

@@ -21,6 +21,7 @@ import java.util.Locale
 class MainActivity : AppCompatActivity() {
     companion object {
         var user = User()
+        var idUser = ""
     }
 
     private lateinit var binding: ActivityMainBinding
@@ -36,6 +37,9 @@ class MainActivity : AppCompatActivity() {
 
         //get id user from intent
         var id = intent.getStringExtra("idUser")
+        if (id != null) {
+            idUser = id
+        }
 
         //check id
         if (id != null) {

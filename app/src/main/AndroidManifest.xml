@@ -23,6 +23,9 @@
         android:theme="@style/Theme.FreshCard"
         tools:targetApi="31">
         <activity
+            android:name=".MultipleChoicesTestActivity"
+            android:exported="false" />
+        <activity
             android:name=".FolderViewActivity"
             android:exported="false" />
         <activity
