@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.example.freshcard.R
+import com.example.freshcard.databinding.FragmentRankBinding
 
 /**
  * A simple [Fragment] subclass.
@@ -16,7 +18,7 @@ class RankFragment : Fragment(R.layout.fragment_rank) {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-
+    private lateinit var recyclerView: RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -29,7 +31,7 @@ class RankFragment : Fragment(R.layout.fragment_rank) {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        recyclerView = this.requireView().findViewById(R.id.rankingRecyclerview)
         return inflater.inflate(R.layout.fragment_rank, container, false)
     }
 

@@ -17,7 +17,8 @@ class TestResultDAO {
                 var duration = item.child("duration").getValue(Int::class.java)
                 var time = item.child("time").getValue(String::class.java)
                 var type = item.child("type").getValue(String::class.java)
-                ls.add(ResultTest(userId!!, amountCorrect!!,duration!!,time!!,type!!))
+                var topicId = item.child("idTopic").getValue(String::class.java)
+                ls.add(ResultTest(userId!!,topicId!!,amountCorrect!!,duration!!,time!!,type!!))
             }
             ls.add(testResult)
             testResultRef.setValue(ls)

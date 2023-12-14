@@ -149,20 +149,22 @@
             android:id="@+id/btnAgain"
             android:layout_width="141dp"
             android:layout_height="45dp"
-            android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"
             android:background="@drawable/active_solid_corner_btn"
             android:text="Do Again"
             android:textAllCaps="false"
             android:textColor="@color/mediumLightGreen"
             android:textStyle="bold" />
+        <TextView
+            android:layout_width="34dp"
+            android:layout_height="1dp"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnBack"
             android:layout_width="141dp"
             android:layout_height="45dp"
-            android:layout_marginEnd="5dp"
             android:layout_marginLeft="34dp"
+            android:layout_marginEnd="5dp"
             android:background="@drawable/active_solid_corner_btn"
             android:text="Back to main"
             android:textAllCaps="false"

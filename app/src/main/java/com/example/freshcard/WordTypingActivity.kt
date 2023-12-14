@@ -267,7 +267,7 @@ class WordTypingActivity : AppCompatActivity() {
             HistoryDAO().pushHistory(userId, idTopic, Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
         }
 
-        TestResultDAO().pushTestResult(ResultTest(userId,amountCorrect,duration,(DateTime.getDefaultInstance()).toString(), "Enter word"))
+        TestResultDAO().pushTestResult(ResultTest(userId,idTopic!!,amountCorrect,duration,(DateTime.getDefaultInstance()).toString(), "Enter word"))
 
         val intent = Intent(this, ResultPointsActivity::class.java)
             intent.putExtra("textEndQues", textEndQues)
