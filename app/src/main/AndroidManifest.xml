@@ -4,7 +4,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-feature android:name="android.hardware.camera"
+        android:required="false" />
 
     <uses-feature
         android:name="android.hardware.telephony"
@@ -22,6 +25,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FreshCard"
         tools:targetApi="31">
+
+        <activity
+            android:name=".ResultPointsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WordTypingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChooseTypeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ShowResultActivity"
+            android:exported="false" />
         <activity
             android:name=".MultipleChoicesTestActivity"
             android:exported="false" />

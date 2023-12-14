@@ -12,12 +12,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
 import com.example.freshcard.ChangePasswordActivity
+import com.example.freshcard.DAO.ImageDAO
 import com.example.freshcard.DAO.UserDAO
 import com.example.freshcard.EditProfileActivity
 import com.example.freshcard.R
-import com.squareup.picasso.Picasso
 import java.io.File
 
 
@@ -54,7 +53,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         val textPhone = view.findViewById<TextView>(R.id.textPhone)
         val avatarImageView = view.findViewById<ImageView>(R.id.avatar)
         val btnEdit = view.findViewById<Button>(R.id.btn_edit)
-        val btnChangpws = view.findViewById<Button>(R.id.btn_changpws)
 
         val sharedPreferences = requireContext().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
         val savedId = sharedPreferences.getString("idUser", null)
@@ -72,13 +70,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     // Kiểm tra xem user.avatar có giá trị không
                     if (user.avatar != null) {
                         // Nếu có, sử dụng Glide để tải và hiển thị hình ảnh
-                        /*avatarImageView.setImageResource(R.drawable.user)*/
-                        val avatarFileName = user.avatar
-                        val avatarFullPath = requireContext().getDir("images", Context.MODE_PRIVATE).absolutePath + File.separator + avatarFileName
+                        ImageDAO().getImage(user.avatar.toString(), avatarImageView, "avatars")
 
-                        Glide.with(requireContext())
-                            .load(File(avatarFullPath))
-                            .into(avatarImageView)
 
                         btnEdit.setOnClickListener {
                             // Chuyển sang ActivityEditProfile
@@ -102,14 +95,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 }
             }
         }
-
-
-        btnChangpws.setOnClickListener {
-            val intent = Intent(activity, ChangePasswordActivity::class.java)
-            intent.putExtra("email", textEmail.text.toString())
-            startActivity(intent)
-        }
-
 
     }
     companion object {
