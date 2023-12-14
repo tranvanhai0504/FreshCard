@@ -187,6 +187,13 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
                     true
                 }
 
+                R.id.learningPopupmenuRank-> {
+                    var intent = Intent(this, RankingDetailActivity::class.java)
+                    intent.putExtra("topicId", topic.id)
+                    startActivity(intent)
+                    true
+                }
+
                 else -> {
                     true
                 }
