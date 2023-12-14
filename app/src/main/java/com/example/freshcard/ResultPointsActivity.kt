@@ -19,6 +19,9 @@ class ResultPointsActivity : AppCompatActivity() {
         val duration = intent.getIntExtra("duration", 0) // corrected duplicate key
         val scorePlus = intent.getIntExtra("scorePlus", 0)
         val durationMillis = duration.toLong()
+
+        val idTopic = intent.getStringExtra("idTopic")
+
         binding.resultPercent.text = "$scorePlus points"
         binding.timeResult.text = formatDuration(durationMillis)
         binding.resultCorrect.text = "$amountCorrect / $textEndQues"
@@ -27,15 +30,16 @@ class ResultPointsActivity : AppCompatActivity() {
             finish()
         }
         binding.btnDoAgain.setOnClickListener {
-            val intent = Intent(this, FlashCardLearnActivity::class.java)
+            val intent = Intent(this, ChooseTypeActivity::class.java)
+            intent.putExtra("idTopicTest", idTopic)
             finish()
             startActivity(intent)
         }
         binding.btnBackMain.setOnClickListener {
-            var intent = Intent()
-            intent.putExtra("isAgain", false)
-            setResult(RESULT_OK, intent)
+            val intent = Intent(this, FlashCardLearnActivity::class.java)
+            intent.putExtra("idTopic", idTopic)
             finish()
+            startActivity(intent)
         }
 
     }

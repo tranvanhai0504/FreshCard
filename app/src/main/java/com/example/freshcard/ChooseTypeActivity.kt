@@ -66,6 +66,7 @@ class ChooseTypeActivity : AppCompatActivity() {
                     startActivityForResult(intent, 100)
                 }else {
                     val intent = Intent(this, WordTypingActivity::class.java)
+                    intent.putExtra("selectedButton", "btnVntoeng") // Gửi thông điệp về nút được chọn
                     intent.putExtra("idTopicTest", idTopic)
                     startActivity(intent)
                 }
