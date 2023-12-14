@@ -35,7 +35,6 @@ class HistoryDAO {
                     Log.e("history", "...${usId} == $userId")
                     dates.add(date)
                     isSet = true
-                    break
                 }
             }
 

@@ -153,6 +153,9 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
             confirmExit()
         }
 
+        binding.btnHome.setOnClickListener{
+            confirmExit()
+        }
 
     }
     private fun confirmExit() {

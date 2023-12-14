@@ -206,9 +206,9 @@
 
         <TextView
             android:id="@+id/txtFirstPlaceName"
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:textSize="8dp"
+            android:textSize="10dp"
             android:textStyle="bold"
             android:text="Phu Qui"
             app:layout_constraintTop_toTopOf="@id/goldRing"
@@ -220,9 +220,9 @@
 
         <TextView
             android:id="@+id/txtSecPlaceName"
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:textSize="8dp"
+            android:textSize="10dp"
             android:textStyle="bold"
             android:text="Nguyen Quang Trung"
             app:layout_constraintTop_toTopOf="@id/silverRing"
@@ -234,9 +234,9 @@
 
         <TextView
             android:id="@+id/txtThirdPlaceName"
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:textSize="8dp"
+            android:textSize="10dp"
             android:textStyle="bold"
             android:text="Van Loi"
             app:layout_constraintTop_toTopOf="@id/bronzeRing"
@@ -250,7 +250,7 @@
             android:id="@+id/txtFirstPlaceLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="8dp"
+            android:textSize="10dp"
             android:textStyle="bold"
             android:text="1st"
             app:layout_constraintTop_toTopOf="@id/goldRing"
@@ -266,7 +266,7 @@
             android:id="@+id/txtSecPlaceLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="8dp"
+            android:textSize="10dp"
             android:textStyle="bold"
             android:text="2nd"
             app:layout_constraintTop_toTopOf="@id/silverRing"
@@ -280,7 +280,7 @@
             android:id="@+id/txtThirdPlaceLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="8dp"
+            android:textSize="10dp"
             android:textStyle="bold"
             android:text="3rd"
             app:layout_constraintTop_toTopOf="@id/bronzeRing"
@@ -297,7 +297,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:src="@drawable/rank"
-            android:layout_marginLeft="32dp"
             android:layout_marginTop="12dp"
             android:alpha="0.4"/>
 
