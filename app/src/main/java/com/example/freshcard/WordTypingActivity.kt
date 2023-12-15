@@ -363,6 +363,7 @@ class WordTypingActivity : AppCompatActivity() {
         TestResultDAO().pushTestResult(ResultTest(userId,idTopic!!,amountCorrect,duration,(DateTime.getDefaultInstance()).toString(), "Enter word"))
         UserDAO().pushLearnedTopic(idLearned, userId, idTopic)
 
+
         var result: ResultTest = ResultTest(userId,idTopic,amountCorrect,duration, (DateTime.getDefaultInstance()).toString(), "Enter word")
 
         val idTopics = intent.getStringExtra("idTopicTest")

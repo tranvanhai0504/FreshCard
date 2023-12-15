@@ -147,7 +147,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnAgain"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_marginStart="5dp"
             android:background="@drawable/active_solid_corner_btn"
@@ -161,7 +161,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnDetail"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:background="@drawable/active_solid_corner_btn"
             android:text="Detail"
@@ -174,12 +174,12 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnBack"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_marginLeft="34dp"
             android:layout_marginEnd="5dp"
             android:background="@drawable/active_solid_corner_btn"
-            android:text="Back to main"
+            android:text="Back main"
             android:textAllCaps="false"
             android:textColor="@color/mediumLightGreen"
             android:textStyle="bold" />
