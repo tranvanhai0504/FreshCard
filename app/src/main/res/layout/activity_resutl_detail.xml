@@ -6,17 +6,32 @@
     android:layout_height="match_parent"
     tools:context=".ResutlDetailActivity">
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_back_detail"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/back_button"
+        android:drawableLeft="@drawable/round_arrow_back_24"
+        android:paddingHorizontal="7dp"
+        android:gravity="center"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.032"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/txtTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_back_detail"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:text="Detail"
         android:textColor="@color/strongGreen"
         android:textSize="14pt"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:textStyle="bold"
         />
 
@@ -54,6 +69,7 @@
             android:id="@+id/recyclerViewList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            tools:listitem="@layout/result_card"
             />
     </ScrollView>
 

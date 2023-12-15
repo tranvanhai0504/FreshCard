@@ -29,7 +29,6 @@ class ShowResultActivity : AppCompatActivity() {
         setContentView(view)
         result = intent.getSerializableExtra("result") as ResultTest
         testData = (intent.getSerializableExtra("testResult") as? ArrayList<ArrayList<String>>)!!
-        Log.e("result", "!!!${testData}")
         totalItems = intent.getIntExtra("totalItems", 0)
         if(result!=null) {
             setUpResultView()
@@ -47,6 +46,12 @@ class ShowResultActivity : AppCompatActivity() {
             intent.putExtra("isAgain", true)
             setResult(RESULT_OK, intent)
             finish()
+        }
+
+        binding.btnDetail.setOnClickListener {
+            var intent = Intent(this, ResutlDetailActivity::class.java)
+            intent.putExtra("list", testData)
+            startActivity(intent)
         }
 
         binding.txtMessage2.setOnClickListener{
