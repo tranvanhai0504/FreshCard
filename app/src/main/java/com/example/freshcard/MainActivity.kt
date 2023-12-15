@@ -15,7 +15,10 @@ import com.example.freshcard.fragments.FolderFragment
 import com.example.freshcard.fragments.HomeFragment
 import com.example.freshcard.fragments.ProfileFragment
 import com.example.freshcard.fragments.RankFragment
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.GenericTypeIndicator
+import com.google.firebase.database.ValueEventListener
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
@@ -87,41 +90,48 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun getUser(id : String){
-        UserDAO().getDbUser().child(id).get().addOnSuccessListener {
-            Log.e("user", "${it}")
-            var pass = it.child("password").getValue(String::class.java)
-            var phoneNumber = it.child("phoneNumber").getValue(String::class.java)
-            var fullName = it.child("fullName").getValue(String::class.java)
-            var lastAccess = it.child("lastAccess").getValue(Long::class.java)
-            var avatar = it.child("avatar").getValue(String::class.java)
-            var email = it.child("email").getValue(String::class.java)
-            var bookMarks = it.child("bookmarkedTopics").getValue() as MutableMap<String, Boolean>?
-            if(bookMarks == null){
-                bookMarks = HashMap()
-            }
-            var learningTopics = ArrayList(emptyList<LearningTopic>())
-            for( item in it.child("learningTopics").children) {
-                var idTopic = item.child("idTopic").getValue(String::class.java)
-                var idLearned1 = item.child("idLearned").getValue()
-                var idLearned:ArrayList<String>? = idLearned1 as? ArrayList<String>
-                var idLearning1 = item.child("idLearning").getValue()
-                var idLearning:ArrayList<String>? = idLearning1  as? ArrayList<String>
-                var idChecked1 = item.child("idChecked").getValue()
-                var idChecked:ArrayList<String>?  = idChecked1  as? ArrayList<String>
-                if(idLearned==null) {
-                    idLearned = ArrayList(emptyList<String>())
+        UserDAO().getDbUser().child(id).addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                Log.i("user", snapshot.toString())
+                var pass = snapshot.child("password").getValue(String::class.java)
+                var phoneNumber = snapshot.child("phoneNumber").getValue(String::class.java)
+                var fullName = snapshot.child("fullName").getValue(String::class.java)
+                var lastAccess = snapshot.child("lastAccess").getValue(Long::class.java)
+                var avatar = snapshot.child("avatar").getValue(String::class.java)
+                var email = snapshot.child("email").getValue(String::class.java)
+                var bookMarks = snapshot.child("bookmarkedTopics").getValue() as MutableMap<String, Boolean>?
+                if(bookMarks == null){
+                    bookMarks = HashMap()
                 }
-                if(idLearning==null) {
-                    idLearning = ArrayList(emptyList<String>())
-                }
-                if(idChecked==null) {
-                    idChecked = ArrayList(emptyList<String>())
-                }
+                var learningTopics = ArrayList(emptyList<LearningTopic>())
+                for( item in snapshot.child("learningTopics").children) {
+                    var idTopic = item.child("idTopic").getValue(String::class.java)
+                    var idLearned1 = item.child("idLearned").getValue()
+                    var idLearned:ArrayList<String>? = idLearned1 as? ArrayList<String>
+                    var idLearning1 = item.child("idLearning").getValue()
+                    var idLearning:ArrayList<String>? = idLearning1  as? ArrayList<String>
+                    var idChecked1 = item.child("idChecked").getValue()
+                    var idChecked:ArrayList<String>?  = idChecked1  as? ArrayList<String>
+                    if(idLearned==null) {
+                        idLearned = ArrayList(emptyList<String>())
+                    }
+                    if(idLearning==null) {
+                        idLearning = ArrayList(emptyList<String>())
+                    }
+                    if(idChecked==null) {
+                        idChecked = ArrayList(emptyList<String>())
+                    }
 
-                learningTopics.add(LearningTopic(idTopic!!, idChecked, idLearning, idLearned))
+                    learningTopics.add(LearningTopic(idTopic!!, idChecked, idLearning, idLearned))
+                }
+                user = User(pass, fullName,avatar,email,phoneNumber,bookMarks,lastAccess, learningTopics)
             }
-            user = User(pass, fullName,avatar,email,phoneNumber,bookMarks,lastAccess, learningTopics)
-        }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
     }
 
     private fun setCurrentFragment(fragment : Fragment){
@@ -130,32 +140,4 @@ class MainActivity : AppCompatActivity() {
             commit()
         }
     }
-
-//    override fun onInit(status: Int) {
-//        if (status == TextToSpeech.SUCCESS) {
-//            val result = tts!!.setLanguage(Locale.US)
-//
-//            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-//                Log.e("TTS","The Language not supported!")
-//            } else {
-//                btnSpeak!!.isEnabled = true
-//            }
-//        }
-//    }
-//    private fun speakOut() {
-//        val text = etSpeak!!.text.toString()
-//        tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null,"")
-//    }
-//
-//    public override fun onDestroy() {
-//        // Shutdown TTS when
-//        // activity is destroyed
-//        if (tts != null) {
-//            tts!!.stop()
-//            tts!!.shutdown()
-//        }
-//        super.onDestroy()
-//    }
-
-
 }

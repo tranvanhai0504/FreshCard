@@ -151,69 +151,55 @@ public class TopicDAO() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+
             }
         })
-
-    }
-
-
-    suspend fun  getListTopics(idList: ArrayList<String>, myF: (ArrayList<Topic>)-> Unit): ArrayList<Topic> {
-        return withContext(Dispatchers.IO) {
-            var topics: ArrayList<Topic> = ArrayList(emptyList<Topic>())
-            for(id in idList) {
-                getTopicById(id) {
-                    topics.add(it)
-                }
-            }
-            return@withContext topics
-        }
     }
 
     fun getTopicLearningByUser(myF: (ArrayList<TopicInfoView>) -> Unit){
-        var user = MainActivity.Companion.user
-        var idLearningList : List<String>? = user.learningTopics?.map {
-            it.idTopic
-        }
 
-        topicRef.addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                //create a empty list
-                var topicInfoList = ArrayList(emptyList<TopicInfoView>())
+        UserDAO().getLearningTopicsById(MainActivity.idUser){
+            var user = MainActivity.user
+            var idLearningList : List<String>? = it.map {
+                it.idTopic
+            }
 
-                for(topicSnapshot in snapshot.children){
-                    if(idLearningList?.contains(topicSnapshot.key) == true){
-                        var idTopic = topicSnapshot.child("id").getValue(String::class.java)!!
-                        var title = topicSnapshot.child("title").getValue(String::class.java)!!
-                        var size = 0
-                        var amountLearned = 0
-                        user.learningTopics?.forEach { it ->
-                            if(it.idTopic == idTopic){
-                                size = it.idLearning.size
-                                amountLearned = it.idLearned.size
+            topicRef.addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    //create a empty list
+                    var topicInfoList = ArrayList(emptyList<TopicInfoView>())
+
+                    for(topicSnapshot in snapshot.children){
+                        if(idLearningList?.contains(topicSnapshot.key) == true){
+                            var idTopic = topicSnapshot.child("id").getValue(String::class.java)!!
+                            var title = topicSnapshot.child("title").getValue(String::class.java)!!
+                            var size = 0
+                            var amountLearned = 0
+                            user.learningTopics?.forEach { it ->
+                                if(it.idTopic == idTopic){
+                                    size = it.idLearning.size
+                                    amountLearned = it.idLearned.size
+                                }
                             }
+                            var status = topicSnapshot.child("public").getValue(Boolean::class.java)!!
+
+                            var newTopicView = TopicInfoView(idTopic, title,
+                                size , amountLearned,"",
+                                status, MainActivity.idUser)
+
+                            topicInfoList.add(newTopicView)
+
                         }
-//                        Log.i("item progress", )
-                        var status = topicSnapshot.child("public").getValue(Boolean::class.java)!!
-
-
-                        var newTopicView = TopicInfoView(idTopic, title,
-                            size , amountLearned,"",
-                            status, MainActivity.idUser)
-
-                        topicInfoList.add(newTopicView)
-
                     }
+                    myF(topicInfoList)
                 }
 
-                myF(topicInfoList)
-            }
+                override fun onCancelled(error: DatabaseError) {
 
-            override fun onCancelled(error: DatabaseError) {
+                }
 
-            }
-
-        })
+            })
+        }
     }
 
     fun getTopicInfoViewByOwner(owner: String, ls: ArrayList<TopicInfoView>, myF: (ArrayList<TopicInfoView>)-> Unit) {

@@ -70,7 +70,6 @@ class ChooseTypeActivity : AppCompatActivity() {
                     intent.putExtra("idTopicTest", idTopic)
                     startActivity(intent)
                 }
-
             }else if (isBtnEngtovnSelected){
                 if(testType == "multipleChoices"){
                     val intent = Intent(this, MultipleChoicesTestActivity::class.java)
@@ -85,6 +84,7 @@ class ChooseTypeActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
             }
+            finish()
         }
     }
 

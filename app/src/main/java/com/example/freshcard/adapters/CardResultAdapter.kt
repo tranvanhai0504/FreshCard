@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.compose.ui.text.toLowerCase
 import androidx.recyclerview.widget.RecyclerView
 import com.example.freshcard.R
+import java.util.Locale
 
 class CardResultAdapter(var mList: ArrayList<ArrayList<String>>) : RecyclerView.Adapter<CardResultAdapter.ViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,7 +29,7 @@ class CardResultAdapter(var mList: ArrayList<ArrayList<String>>) : RecyclerView.
         holder.userAnswer.text = item[1]
         holder.answer.text = item[2]
 
-        if(item[1].equals(item[2])){
+        if(item[1].equals(item[2], ignoreCase = true)){
 
             holder.itemView.backgroundTintList =  ColorStateList.valueOf(Color.parseColor("#54B435"))
         }else{

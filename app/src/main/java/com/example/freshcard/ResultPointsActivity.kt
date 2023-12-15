@@ -23,9 +23,6 @@ class ResultPointsActivity : AppCompatActivity() {
         result = intent.getSerializableExtra("result") as ResultTest
         totalItems = intent.getStringExtra("textEndQues")?.toInt()!!
 
-
-
-
         val textEndQues = intent.getStringExtra("textEndQues")
         val amountCorrect = intent.getIntExtra("amountCorrect", 0)
         val duration = intent.getIntExtra("duration", 0) // corrected duplicate key
@@ -48,9 +45,12 @@ class ResultPointsActivity : AppCompatActivity() {
             startActivity(intent)
         }
         binding.btnBackMain.setOnClickListener {
-            val intent = Intent(this, FlashCardLearnActivity::class.java)
-            intent.putExtra("idTopic", idTopic)
             finish()
+        }
+
+        binding.btnViewDetail.setOnClickListener {
+            val intent = Intent(this, ResutlDetailActivity::class.java)
+            intent.putExtra("list", testData)
             startActivity(intent)
         }
 

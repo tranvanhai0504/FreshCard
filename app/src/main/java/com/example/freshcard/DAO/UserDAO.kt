@@ -542,4 +542,38 @@ public class UserDAO() {
     fun UpdateDateLogin(id: String){
         db.child(id).child("lastAccess").setValue(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC))
     }
+
+    fun getLearningTopicsById(id : String, myF: (ArrayList<LearningTopic>) -> Unit){
+        db.child(id).addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var learningTopics = ArrayList(emptyList<LearningTopic>())
+                for( item in snapshot.child("learningTopics").children) {
+                    var idTopic = item.child("idTopic").getValue(String::class.java)
+                    var idLearned1 = item.child("idLearned").getValue()
+                    var idLearned:ArrayList<String>? = idLearned1 as? ArrayList<String>
+                    var idLearning1 = item.child("idLearning").getValue()
+                    var idLearning:ArrayList<String>? = idLearning1  as? ArrayList<String>
+                    var idChecked1 = item.child("idChecked").getValue()
+                    var idChecked:ArrayList<String>?  = idChecked1  as? ArrayList<String>
+                    if(idLearned==null) {
+                        idLearned = ArrayList(emptyList<String>())
+                    }
+                    if(idLearning==null) {
+                        idLearning = ArrayList(emptyList<String>())
+                    }
+                    if(idChecked==null) {
+                        idChecked = ArrayList(emptyList<String>())
+                    }
+
+                    learningTopics.add(LearningTopic(idTopic!!, idChecked, idLearning, idLearned))
+                }
+                myF(learningTopics)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
 }
