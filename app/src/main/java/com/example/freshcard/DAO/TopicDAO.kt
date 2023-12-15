@@ -22,7 +22,7 @@ public class TopicDAO() {
     var learningTopicRef: DatabaseReference = Database().getReference("learningtopics")
 
     fun getNewTopics(list : ArrayList<Topic>, adapter: TopicNewHomeAdapter){
-        val query = topicRef.orderByChild("public").equalTo(true).limitToFirst(10)
+        val query = topicRef.orderByChild("public").equalTo(true).limitToFirst(50)
 
         val valueEventListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
