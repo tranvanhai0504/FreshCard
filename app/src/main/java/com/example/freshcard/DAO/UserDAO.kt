@@ -104,6 +104,16 @@ public class UserDAO() {
         }
     }
 
+    fun listenUpdate(myF: ()-> Unit) {
+        db.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+               myF()
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+    }
+
     fun getName(usname: String, myF: (String)-> Unit) {
         db.child(usname).child("fullName").get().addOnSuccessListener {
             myF(it.getValue(String::class.java)!!)
@@ -423,6 +433,43 @@ public class UserDAO() {
 
 
                 learningTopics.add(learningTopic)
+                db.child(usId).child("learningTopics").setValue(learningTopics)
+            }
+        }.addOnFailureListener{
+            Log.e("firebase", "Error getting data", it)
+        }
+    }
+    fun pushLearnedTopic(idLearnedInput: ArrayList<String>, usId: String, topicId: String) {
+        db.child(usId).get().addOnSuccessListener {
+            var items = it.child("learningTopics")
+            var learningTopics  = ArrayList(emptyList<LearningTopic>())
+            if(items!=null) {
+                for( item in items.children) {
+                    var idTopic = item.child("idTopic").getValue(String::class.java)
+                    var idLearned1 = item.child("idLearned").getValue()
+                    var idLearned:ArrayList<String>? = idLearned1 as? ArrayList<String>
+                    var idLearning1 = item.child("idLearning").getValue()
+                    var idLearning:ArrayList<String>? = idLearning1  as? ArrayList<String>
+                    var idChecked1 = item.child("idChecked").getValue()
+                    var idChecked:ArrayList<String>?  = idChecked1  as? ArrayList<String>
+                    if(idLearned==null) {
+                        idLearned = ArrayList(emptyList<String>())
+                    }
+                    if(idLearning==null) {
+                        idLearning = ArrayList(emptyList<String>())
+                    }
+                    if(idChecked==null) {
+                        idChecked = ArrayList(emptyList<String>())
+                    }
+
+                    if(idTopic == topicId) {
+                        idLearned = idLearnedInput
+                    }
+                    var newLearningTopic: LearningTopic = LearningTopic(idTopic!!, idChecked, idLearning, idLearned)
+
+                    learningTopics.add(newLearningTopic)
+                }
+
                 db.child(usId).child("learningTopics").setValue(learningTopics)
             }
         }.addOnFailureListener{

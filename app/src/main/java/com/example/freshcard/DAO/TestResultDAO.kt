@@ -53,8 +53,20 @@ class TestResultDAO {
                 }
 
                 for(item in hashmap) {
+                    var idArr = ArrayList<String>()
+                    var correctList = ArrayList<ResultTest>()
                     item.value.sortBy { it.duration }
                     item.value.sortByDescending { it.amountCorrect }
+                    Log.e("result", "${item.value}")
+                    item.value.forEach{
+                        if(!idArr.contains(it.idUser)) {
+                            correctList.add(it)
+                            idArr.add(it.idUser)
+                        }
+
+                    }
+                    Log.e("result", "${correctList}")
+                    hashmap[item.key] = correctList
                 }
                 myF(hashmap)
             }
@@ -80,7 +92,15 @@ class TestResultDAO {
 
                 array.sortBy { it.duration }
                 array.sortByDescending { it.amountCorrect }
-                myF(array)
+                var correctList = ArrayList<ResultTest>()
+                var idArr = ArrayList<String>()
+                array.forEach{
+                    if(!idArr.contains(it.idUser)) {
+                        correctList.add(it)
+                        idArr.add(it.idUser)
+                    }
+                }
+                myF(correctList)
             }
             override fun onCancelled(databaseError: DatabaseError) {
                 // Handle errors

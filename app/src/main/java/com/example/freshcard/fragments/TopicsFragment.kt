@@ -34,6 +34,7 @@ class TopicsFragment : Fragment() {
     private lateinit var topicRecyclerView: RecyclerView
     private  lateinit var btnNewTopic: Button
     private var mlist = ArrayList<TopicInfoView>()
+    private var userId = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,18 +52,16 @@ class TopicsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         var adapterData = ArrayList<TopicInfoView>()
         val sharedPreferences = requireContext().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-        val userId = sharedPreferences.getString("idUser", "undefined")!!
+        userId = sharedPreferences.getString("idUser", "undefined")!!
         topicRecyclerView = this.requireView().findViewById(R.id.topicsRecyclerView)
         topicsAdapter = TopicAdapter(mlist, requireContext(), "view")
         topicRecyclerView.layoutManager = LinearLayoutManager(context)
-        TopicDAO().getTopicInfoViewByOwner(userId) {data ->
+        TopicDAO().getTopicInfoViewByOwner(userId, mlist) {data ->
             if(mlist.equals(data)){
                 Log.i("taf", data.toString())
             }
-
             mlist = data
             topicsAdapter.setList(mlist)
             Log.i("taggg", mlist.size.toString())
@@ -78,15 +77,33 @@ class TopicsFragment : Fragment() {
         }
     }
 
-    fun updateAdapter(data: ArrayList<TopicInfoView>) {
-        Log.e("topic-", "${data}")
-        topicsAdapter = TopicAdapter(data, requireContext(), "view")
-        topicRecyclerView.adapter = topicsAdapter
+    fun refeshData() {
+        topicsAdapter.clearList()
+//        TopicDAO().getTopicInfoViewByOwner(userId) {data ->
+//
+//            if(mlist.equals(data)){
+//                Log.i("taf", data.toString())
+//            }
+//            topicsAdapter.setList(data)
+//            Log.i("taggg", data.toString())
+//            topicsAdapter.notifyDataSetChanged()
+//        }
     }
 
-    fun reloadTopicList() {
-        var userId = UserDAO().getUserIdShareRef(requireContext())
-        TopicDAO().getTopicInfoViewByOwner(userId) {data -> updateAdapter(data)}
+    fun updateAdapter(data: ArrayList<TopicInfoView>) {
+//        Log.e("topic-", "${data}")
+//        topicsAdapter = TopicAdapter(data, requireContext(), "view")
+//        topicRecyclerView.adapter = topicsAdapter
+    }
+
+//    fun reloadTopicList() {
+//        var userId = UserDAO().getUserIdShareRef(requireContext())
+//        TopicDAO().getTopicInfoViewByOwner(userId) {data -> updateAdapter(data)}
+//    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.e("result", "receive")
     }
 
 

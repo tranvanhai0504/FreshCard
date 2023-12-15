@@ -13,12 +13,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.example.freshcard.DAO.HistoryDAO
 import com.example.freshcard.DAO.TestResultDAO
+import com.example.freshcard.DAO.TopicDAO
 import com.example.freshcard.DAO.UserDAO
 import com.example.freshcard.Structure.History
 import com.example.freshcard.Structure.ResultTest
 import com.example.freshcard.Structure.Topic
 import com.example.freshcard.Structure.TopicItem
 import com.example.freshcard.databinding.ActivityMultipleChoicesTestBinding
+import com.example.freshcard.fragments.TopicsFragment
 import com.google.type.DateTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,6 +46,8 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
     private var currDurationInt: Int = 0
     private var currAnswer: String = ""
     private var isEntoVie = false
+    private var listTest = ArrayList<ArrayList<String>>()
+    private var idLearned = ArrayList<String>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -142,11 +146,12 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
             var result: ResultTest = ResultTest(userId,topic.id,totalCorrect,currDurationInt, (DateTime.getDefaultInstance()).toString(), "multiple choice")
             var intent = Intent(this, ShowResultActivity::class.java)
             intent.putExtra("totalItems", listItems.size)
+            intent.putExtra("testResult", listTest)
             intent.putExtra("result", result)
-
             HistoryDAO().pushHistory(userId, topic.id, Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
             TestResultDAO().pushTestResult(ResultTest(userId,topic.id,totalCorrect,currDurationInt,(DateTime.getDefaultInstance()).toString(), "Multiple Choices"))
             startActivityForResult(intent, 100)
+            UserDAO().pushLearnedTopic(idLearned, userId, topic.id)
         }
 
         binding.btnback.setOnClickListener{
@@ -224,17 +229,28 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
     }
     private fun checkResult(value: String) {
         var item = listItems[currentIndex]
+
         var word = item.en
+        var learingWord = item.vie
         if(isEntoVie) {
             word = item.vie
+            learingWord = item.en
         }
         if(value == word) {
+            var ls = ArrayList<String>()
             totalCorrect+=1
             binding.txtTotalCorrect.text = "${totalCorrect}"
+            idLearned.add(item.id)
+            ls.add(learingWord)
+            ls.add(value)
+            ls.add(word)
+            listTest.add(ls)
+
         }else {
             totalWrong +=1
             binding.txtTotalWrong.text = "${totalWrong}"
         }
+
     }
 
     private fun setCurrentView(item: TopicItem) {
