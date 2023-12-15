@@ -27,7 +27,7 @@
             android:text="Music"
             android:textStyle="bold"
             android:textSize="12dp"
-            android:textColor="@color/mediumGreen"
+            android:textColor="@color/textCard1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"/>
 
@@ -37,7 +37,7 @@
             android:id="@+id/line"
             app:layout_constraintTop_toBottomOf="@id/txtOwner"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:background="@color/mediumGreen"
+            android:background="@color/textCard1"
             android:layout_marginTop="4dp"/>
 
 
@@ -49,39 +49,69 @@
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginTop="4dp"
             android:textSize="8dp"
+            android:textColor="@color/textCard1"
             android:textStyle="bold"
             android:text="Owner: Qui Vo"
             />
 
-
         <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:src="@drawable/option_icon"
-            app:layout_constraintLeft_toRightOf="@id/bronzeRing"
-            app:layout_constraintTop_toTopOf="@id/bronzeRing"
-            app:layout_constraintBottom_toBottomOf="@id/bronzeRing"
-            android:layout_marginLeft="4dp"
-            android:id="@+id/imgMore"/>
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:src="@drawable/gold_star"
+            app:layout_constraintTop_toBottomOf="@id/goldRing"
+            app:layout_constraintLeft_toLeftOf="@id/goldRing"
+            app:layout_constraintRight_toRightOf="@id/goldRing"
+            android:layout_marginTop="-6dp"
+            android:translationZ="11dp"
+
+            />
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:src="@drawable/silver_star"
+            app:layout_constraintTop_toBottomOf="@id/silverRing"
+            app:layout_constraintLeft_toLeftOf="@id/silverRing"
+            app:layout_constraintRight_toRightOf="@id/silverRing"
+            android:layout_marginTop="-6dp"
+            android:translationZ="11dp"
+
+            />
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:src="@drawable/bronze_start"
+            app:layout_constraintTop_toBottomOf="@id/bronzeRing"
+            app:layout_constraintLeft_toLeftOf="@id/bronzeRing"
+            app:layout_constraintRight_toRightOf="@id/bronzeRing"
+            android:layout_marginTop="-6dp"
+            android:translationZ="11dp"
+
+            />
+
+
+
+
+
 
 
         <androidx.cardview.widget.CardView
             android:id="@+id/bronzeRing"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:background="#FFD700"
-            app:layout_constraintTop_toTopOf="@id/goldRing"
-            app:layout_constraintLeft_toRightOf="@id/silverRing"
+            app:layout_constraintTop_toBottomOf="@id/silverRing"
+            app:layout_constraintRight_toLeftOf="@id/txtThirdPlaceName"
             android:backgroundTint="#CD7F32"
             android:shape="ring"
-            android:layout_marginLeft="-17dp"
+            android:layout_marginTop="8dp"
             app:cardCornerRadius="50dp"
+            android:layout_marginRight="4dp"
             />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/imgtp3Wrapper"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_centerHorizontal="true"
             android:elevation="12dp"
             android:innerRadius="0dp"
@@ -103,21 +133,21 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/silverRing"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:background="#FFD700"
-            app:layout_constraintTop_toTopOf="@id/goldRing"
-            app:layout_constraintLeft_toRightOf="@id/goldRing"
+            app:layout_constraintTop_toBottomOf="@id/goldRing"
+            app:layout_constraintLeft_toLeftOf="@id/bronzeRing"
             android:backgroundTint="#C0C0C0"
             android:shape="ring"
-            android:layout_marginLeft="-17dp"
             app:cardCornerRadius="50dp"
+            android:layout_marginTop="8dp"
             />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/imgtp2Wrapper"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_centerHorizontal="true"
             android:elevation="12dp"
             android:innerRadius="0dp"
@@ -138,21 +168,22 @@
         </androidx.cardview.widget.CardView>
         <androidx.cardview.widget.CardView
             android:id="@+id/goldRing"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:background="#FFD700"
             app:layout_constraintTop_toBottomOf="@id/line"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/bronzeRing"
             android:backgroundTint="#FFD700"
             android:shape="ring"
             app:cardCornerRadius="50dp"
             android:layout_marginTop="20dp"
             />
 
+
         <androidx.cardview.widget.CardView
             android:id="@+id/imgtp1Wrapper"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_centerHorizontal="true"
             android:elevation="12dp"
             android:innerRadius="0dp"
@@ -172,6 +203,106 @@
                 android:id="@+id/imgTop1"/>
 
         </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/txtFirstPlaceName"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            android:textStyle="bold"
+            android:text="Phu Qui"
+            app:layout_constraintTop_toTopOf="@id/goldRing"
+            app:layout_constraintBottom_toBottomOf="@id/goldRing"
+            app:layout_constraintRight_toRightOf="parent"
+            android:textColor="@color/textCard1"
+
+            />
+
+        <TextView
+            android:id="@+id/txtSecPlaceName"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            android:textStyle="bold"
+            android:text="Nguyen Quang Trung"
+            app:layout_constraintTop_toTopOf="@id/silverRing"
+            app:layout_constraintBottom_toBottomOf="@id/silverRing"
+            app:layout_constraintRight_toRightOf="parent"
+            android:textColor="@color/textCard1"
+
+            />
+
+        <TextView
+            android:id="@+id/txtThirdPlaceName"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            android:textStyle="bold"
+            android:text="Van Loi"
+            app:layout_constraintTop_toTopOf="@id/bronzeRing"
+            app:layout_constraintBottom_toBottomOf="@id/bronzeRing"
+            app:layout_constraintRight_toRightOf="parent"
+            android:textColor="@color/textCard1"
+
+            />
+
+        <TextView
+            android:id="@+id/txtFirstPlaceLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            android:textStyle="bold"
+            android:text="1st"
+            app:layout_constraintTop_toTopOf="@id/goldRing"
+            app:layout_constraintBottom_toBottomOf="@id/goldRing"
+            app:layout_constraintRight_toLeftOf="@id/goldRing"
+            android:textColor="@color/textCard1"
+            android:layout_marginRight="4dp"
+
+
+            />
+
+        <TextView
+            android:id="@+id/txtSecPlaceLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            android:textStyle="bold"
+            android:text="2nd"
+            app:layout_constraintTop_toTopOf="@id/silverRing"
+            app:layout_constraintBottom_toBottomOf="@id/silverRing"
+            app:layout_constraintLeft_toLeftOf="@id/txtFirstPlaceLabel"
+            android:textColor="@color/textCard1"
+
+            />
+
+        <TextView
+            android:id="@+id/txtThirdPlaceLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            android:textStyle="bold"
+            android:text="3rd"
+            app:layout_constraintTop_toTopOf="@id/bronzeRing"
+            app:layout_constraintBottom_toBottomOf="@id/bronzeRing"
+            app:layout_constraintLeft_toLeftOf="@id/txtFirstPlaceLabel"
+            android:textColor="@color/textCard1"
+
+            />
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:layout_constraintTop_toBottomOf="@id/line"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@drawable/rank"
+            android:layout_marginTop="12dp"
+            android:alpha="0.4"/>
+
+
+
+
 
 
 

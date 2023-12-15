@@ -139,13 +139,13 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
             timer.cancel()
             var userId = UserDAO().getUserIdShareRef(this)
 
-            var result: ResultTest = ResultTest(userId,totalCorrect,currDurationInt, (DateTime.getDefaultInstance()).toString(), "multiple choice")
+            var result: ResultTest = ResultTest(userId,topic.id,totalCorrect,currDurationInt, (DateTime.getDefaultInstance()).toString(), "multiple choice")
             var intent = Intent(this, ShowResultActivity::class.java)
             intent.putExtra("totalItems", listItems.size)
             intent.putExtra("result", result)
 
             HistoryDAO().pushHistory(userId, topic.id, Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
-            TestResultDAO().pushTestResult(ResultTest(userId,totalCorrect,currDurationInt,(DateTime.getDefaultInstance()).toString(), "Multiple Choices"))
+            TestResultDAO().pushTestResult(ResultTest(userId,topic.id,totalCorrect,currDurationInt,(DateTime.getDefaultInstance()).toString(), "Multiple Choices"))
             startActivityForResult(intent, 100)
         }
 
@@ -153,6 +153,9 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
             confirmExit()
         }
 
+        binding.btnHome.setOnClickListener{
+            confirmExit()
+        }
 
     }
     private fun confirmExit() {

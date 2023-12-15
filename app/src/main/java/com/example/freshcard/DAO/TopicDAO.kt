@@ -106,6 +106,15 @@ public class TopicDAO() {
         return topic!!
     }
 
+    fun getName(topicId: String, myF: (String)-> Unit) {
+        topicRef.child(topicId).child("title").get().addOnSuccessListener {
+            myF(it.getValue(String::class.java)!!)
+        }
+    }
+
+
+
+
 
     fun getTopicViewById(id: String, myF: (TopicInfoView)-> Unit){
         val user = MainActivity.Companion.user

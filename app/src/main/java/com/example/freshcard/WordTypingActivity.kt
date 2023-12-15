@@ -35,6 +35,9 @@ class WordTypingActivity : AppCompatActivity() {
     var scorePlus = 0
     var duration = 0
     var amountCorrect = 0
+    var amountIncorrect = 0
+    private val correctAnswers = mutableListOf<String>()
+    private val incorrectAnswers = mutableListOf<String>()
     var textEndQues: String? = null
     var textFirstQues:String? = null
     var id: String? = null
@@ -55,7 +58,6 @@ class WordTypingActivity : AppCompatActivity() {
 
         binding.btnBack.setOnClickListener {
             confirmExit()
-            finish()
         }
 
         binding.btnBackHome.setOnClickListener {
@@ -196,6 +198,8 @@ class WordTypingActivity : AppCompatActivity() {
                     amountCorrect++
                     binding.score.text = scorePlus.toString()
                     binding.resultname.setTextColor(ContextCompat.getColor(this, R.color.strongGreen))
+                    correctAnswers.add("$desEng - $desVn")
+                    Log.e("correctAnswers", "correctAnswers: $correctAnswers", )
                     binding.btnSubmit.text = if (currentItemIndex == checkcurrentItemIndex) "Finish" else "Next"
                     // Bước 2: Nếu enterKey trùng với cdesEng, thì btnSubmit có text là "Next".
 
@@ -219,11 +223,11 @@ class WordTypingActivity : AppCompatActivity() {
                     binding.btnSubmit.text = if (currentItemIndex == checkcurrentItemIndex) "Finish" else "Next"
                     binding.resultname.text = "Correct answer: $desVn"
                     scorePlus += 0
+                    amountIncorrect++
                     binding.score.text = scorePlus.toString()
                     binding.editResult.isEnabled = false
-
                     binding.resultname.setTextColor(ContextCompat.getColor(this, R.color.warningRed))
-
+                    incorrectAnswers.add("$desEng - $desVn")
 
                     // Bước 2: Nếu enterKey không trùng với cdesEng, thì btnSubmit có text là "Next".
 
@@ -276,6 +280,8 @@ class WordTypingActivity : AppCompatActivity() {
                     amountCorrect++
                     binding.score.text = scorePlus.toString()
                     binding.resultname.setTextColor(ContextCompat.getColor(this, R.color.strongGreen))
+                    correctAnswers.add("$desEng - $desVn")
+                    Log.e("correctAnswers", "correctAnswers: $correctAnswers", )
                     binding.btnSubmit.text = if (currentItemIndex == checkcurrentItemIndex) "Finish" else "Next"
 
                     binding.btnSubmit.setOnClickListener {
@@ -289,14 +295,15 @@ class WordTypingActivity : AppCompatActivity() {
                             performActivityTransfer()
                         }
                     }
-                } else {
+                }else {
                     binding.btnSubmit.text = if (currentItemIndex == checkcurrentItemIndex) "Finish" else "Next"
                     binding.resultname.text = "Correct answer: $desEng"
                     scorePlus += 0
                     binding.score.text = scorePlus.toString()
                     binding.editResult.isEnabled = false
+                    amountIncorrect++
                     binding.resultname.setTextColor(ContextCompat.getColor(this, R.color.warningRed))
-
+                    incorrectAnswers.add("$desEng - $desVn")
                     binding.btnSubmit.setOnClickListener {
                         if (binding.btnSubmit.text == "Next") {
                             binding.editResult.isEnabled = true
@@ -330,7 +337,7 @@ class WordTypingActivity : AppCompatActivity() {
             HistoryDAO().pushHistory(userId, idTopic, Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
         }
 
-        TestResultDAO().pushTestResult(ResultTest(userId,amountCorrect,duration,(DateTime.getDefaultInstance()).toString(), "Enter word"))
+        TestResultDAO().pushTestResult(ResultTest(userId,idTopic!!,amountCorrect,duration,(DateTime.getDefaultInstance()).toString(), "Enter word"))
 
 
         val idTopics = intent.getStringExtra("idTopicTest")
@@ -342,5 +349,19 @@ class WordTypingActivity : AppCompatActivity() {
             intent.putExtra("scorePlus", scorePlus)
             finish()
             startActivity(intent)
+
+        // Truyền mảng incorrectAnswers đến hàm lưu trạng thái
+        saveIncorrectAnswers(incorrectAnswers, correctAnswers)
     }
+
+    private fun saveIncorrectAnswers(incorrectAnswers: List<String>, correctAnswers: List<String>) {
+        // Lưu mảng incorrectAnswers vào SharedPreferences
+        val sharedPreferences = applicationContext.getSharedPreferences("your_prefs_name", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putStringSet("incorrectAnswers", HashSet(incorrectAnswers))
+        editor.putStringSet("correctAnswers", HashSet(correctAnswers))
+        editor.apply()
+    }
+
+
 }

@@ -104,6 +104,12 @@ public class UserDAO() {
         }
     }
 
+    fun getName(usname: String, myF: (String)-> Unit) {
+        db.child(usname).child("fullName").get().addOnSuccessListener {
+            myF(it.getValue(String::class.java)!!)
+        }
+    }
+
     suspend fun getUserInfor(id : String) : DataSnapshot{
         val result = db.child(id).get().await()
         return result
