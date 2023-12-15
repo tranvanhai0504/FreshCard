@@ -144,7 +144,7 @@ class AddTopic : AppCompatActivity() {
 
     }
 
-    fun handleClickEditName() {
+    private fun handleClickEditName() {
         inputTopicName.isEnabled = true
         btnEditName.isVisible = false
         btnSaveTopicName.isVisible = true
@@ -152,14 +152,14 @@ class AddTopic : AppCompatActivity() {
 
     }
 
-    fun handleSaveName() {
+    private fun handleSaveName() {
         inputTopicName.isEnabled = false
         btnEditName.isVisible = true
         btnSaveTopicName.isVisible = false
         inputTopicName.clearFocus()
     }
 
-    fun saveTopic() {
+    private fun saveTopic() {
         var topic = Topic(currTopicId, userId, inputTopicName.text.toString(), adapterData, isPublic, learnedPeoples, LocalDateTime.now().toEpochSecond(
         ZoneOffset.UTC), 0)
         if(!isEditing) {
@@ -170,7 +170,7 @@ class AddTopic : AppCompatActivity() {
         finish()
     }
 
-    fun getCurrentTimeInDecimal(): Int {
+    private fun getCurrentTimeInDecimal(): Int {
         val calendar = Calendar.getInstance()
 
         val hours = calendar.get(Calendar.HOUR_OF_DAY) * 10000 // Convert hours to seconds

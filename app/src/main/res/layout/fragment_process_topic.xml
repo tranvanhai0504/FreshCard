@@ -5,10 +5,19 @@
     android:layout_height="match_parent"
     tools:context=".fragments.ProcessTopicFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
+        android:paddingHorizontal="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="fragment home process topic" />
+        android:paddingBottom="10dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listProcessTopicView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/topic_card"
+            android:paddingBottom="70dp"
+            />
+    </ScrollView>
 
 </FrameLayout>

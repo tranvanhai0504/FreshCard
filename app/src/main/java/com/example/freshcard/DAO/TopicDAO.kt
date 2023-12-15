@@ -32,6 +32,7 @@ public class TopicDAO() {
                         list.add(topic)
                     };
                 }
+                adapter.mList = list
                 adapter.notifyDataSetChanged()
             }
 
@@ -41,6 +42,32 @@ public class TopicDAO() {
         query.addValueEventListener(valueEventListener)
     }
 
+    fun getTopicBySearchText(text : String, myF : (ArrayList<Topic>) -> Unit){
+        var query = topicRef.orderByChild("public").equalTo(true)
+        query.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                var listTopic = ArrayList<Topic>()
+                for (topicSnapshot in dataSnapshot.children) {
+                    var topic: Topic? = topicSnapshot.getValue<Topic>()
+                    if (topic != null && topic.title.lowercase().contains(text.lowercase())) {
+                        listTopic.add(topic)
+                    };
+                }
+                myF(listTopic)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Getting Post failed, log a message
+                Log.w("tag", "loadPost:onCancelled", databaseError.toException())
+                // ...
+            }
+        })
+    }
+
+    fun addLearner(id : String, idTopic : String, learner : ArrayList<String>){
+        learner.add(id)
+        topicRef.child(idTopic).child("learnedPeople").setValue(learner)
+    }
 
     fun getTopicById(id: String, myF: (Topic)-> Unit) : Topic{
         var topic = Topic("","", "", ArrayList(emptyList<TopicItem>()), false, ArrayList(emptyList()))
@@ -137,13 +164,55 @@ public class TopicDAO() {
         }
     }
 
+    fun getTopicLearningByUser(myF: (ArrayList<TopicInfoView>) -> Unit){
+        var user = MainActivity.Companion.user
+        var idLearningList : List<String>? = user.learningTopics?.map {
+            it.idTopic
+        }
 
+        topicRef.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                //create a empty list
+                var topicInfoList = ArrayList(emptyList<TopicInfoView>())
+
+                for(topicSnapshot in snapshot.children){
+                    if(idLearningList?.contains(topicSnapshot.key) == true){
+                        var idTopic = topicSnapshot.child("id").getValue(String::class.java)!!
+                        var title = topicSnapshot.child("title").getValue(String::class.java)!!
+                        var size = 0
+                        var amountLearned = 0
+                        user.learningTopics?.forEach { it ->
+                            if(it.idTopic == idTopic){
+                                size = it.idLearned.size + it.idLearning.size
+                                amountLearned = it.idLearned.size
+                            }
+                        }
+                        var status = topicSnapshot.child("public").getValue(Boolean::class.java)!!
+
+
+                        var newTopicView = TopicInfoView(idTopic, title,
+                            size , amountLearned,"",
+                            status, MainActivity.idUser)
+
+                        topicInfoList.add(newTopicView)
+
+                    }
+                }
+
+                myF(topicInfoList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
 
     fun getTopicInfoViewByOwner(owner: String, myF: (ArrayList<TopicInfoView>)-> Unit) {
         val query = topicRef.orderByChild("owner").equalTo(owner)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                Log.i("log", "hhhh")
                 var topicInfoList = ArrayList(emptyList<TopicInfoView>())
                 for (snapshot in dataSnapshot.children) {
                     var items = ArrayList<TopicItem>()
@@ -157,32 +226,16 @@ public class TopicDAO() {
                         var newItem = TopicItem(id!!, en!!, vie!!, description!!, image!!)
                         items.add(newItem)
                     }
-                    Log.e("topic", "${items}")
                     var learningTopic = MainActivity.Companion.user.learningTopics
-                    Log.i("learning", learningTopic?.size.toString() + learningTopic.toString())
                     learningTopic?.forEach { it ->
                         if(it.idTopic == topicId){
                             var newTopicView = TopicInfoView(it.idTopic, snapshot.child("title").getValue(String::class.java)!!,
                                 items.size , it.idLearned.size,"",
                                 snapshot.child("public").getValue(Boolean::class.java)!!, owner)
-                            Log.e("topicx", "${newTopicView}")
                             topicInfoList.add(newTopicView)
                             myF(topicInfoList)
                         }
                     }
-//                    getTopicById(topicId!!) {tp ->
-//                        UserDAO().getLearnedInfoByUser(owner, tp.id) {size ->
-//                            var newTopicView =
-//                                tp.items?.let {
-//                                    TopicInfoView(tp.id,tp.title,
-//                                        it.size,size,"", tp.isPublic.toString(), owner)
-//                                }
-//                            Log.e("topicx", "${newTopicView}")
-//                            topicInfoList.add(newTopicView)
-//                            myF(topicInfoList)
-//                        }
-//                    }
-
                 }
             }
 
