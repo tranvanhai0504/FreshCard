@@ -44,12 +44,10 @@ class FolderViewActivity : AppCompatActivity() {
         binding.topicsRecyclerView.layoutManager = LinearLayoutManager(this)
         topicAdapter = TopicAdapter(adapterData, this, "folder")
         binding.topicsRecyclerView.adapter = topicAdapter
+        topicAdapter.clearList()
         for(id in folder.idTopics) {
-            Log.e("id111", "$id")
             TopicDAO().getTopicViewById(id) {
-                adapterData.add(it)
-//                topicAdapter.addTopic(it)
-                Log.e("id111", "11$it")
+                topicAdapter.addItem(it)
             }
         }
         binding.title.setText(folder.name)

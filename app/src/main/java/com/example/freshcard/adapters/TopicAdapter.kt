@@ -126,6 +126,12 @@ class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context, va
         notifyDataSetChanged()
     }
 
+    fun addItem(item: TopicInfoView) {
+        mList.add(item)
+        notifyDataSetChanged()
+    }
+
+
     fun clearList() {
         mList.clear()
         Log.e("clear", "clear")
