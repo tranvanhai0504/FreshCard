@@ -12,6 +12,7 @@ import com.google.firebase.database.getValue
 import com.google.type.DateTime
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
+import java.time.Year
 import java.time.ZoneId
 import java.util.Date
 import java.util.Locale
@@ -26,6 +27,7 @@ class HistoryDAO {
         historyRef.get().addOnSuccessListener { ref ->
             var historyList: ArrayList<History> = ArrayList()
             for(item in ref.children) {
+                Log.e("date", "$item")
                 var usId = item.child("idUser").getValue(String::class.java)
                 var tpId = item.child("idTopic").getValue(String::class.java)
                 var d = item.child("date")
@@ -124,7 +126,7 @@ class HistoryDAO {
 
 
     private fun getDate(dateObject: Map<String, Any>): Date? {
-        val year = dateObject["year"].toString().toInt()
+        val year = Year.now().value +1
         val month =
             dateObject["month"].toString().toInt() + 1 // Adjust month since it's zero-indexed
         val day = dateObject["date"].toString().toInt()
