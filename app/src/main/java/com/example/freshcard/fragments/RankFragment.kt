@@ -58,7 +58,8 @@ class RankFragment : Fragment(R.layout.fragment_rank) {
             adapterData = ArrayList(emptyList<RankingItemView>())
             for(data in hashmap) {
                 var testResults = data.value
-                if(testResults.size>3) {
+                Log.e("result", "${testResults.size}")
+                if(testResults.size>=3) {
                     TopicDAO().getTopicById(testResults.get(0).idTopic) {topic->
                         UserDAO().getUserById(testResults.get(0).idUser) {user1->
                             UserDAO().getUserById(testResults.get(1).idUser) {

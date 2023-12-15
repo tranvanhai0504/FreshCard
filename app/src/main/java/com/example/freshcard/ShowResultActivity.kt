@@ -19,6 +19,7 @@ import com.example.freshcard.databinding.ActivityShowResultBinding
 
 class ShowResultActivity : AppCompatActivity() {
     private lateinit var result: ResultTest
+    private  lateinit var testData: ArrayList<ArrayList<String>>
     private lateinit var binding: ActivityShowResultBinding
     private var totalItems: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +28,8 @@ class ShowResultActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
         result = intent.getSerializableExtra("result") as ResultTest
+        testData = (intent.getSerializableExtra("testResult") as? ArrayList<ArrayList<String>>)!!
+        Log.e("result", "!!!${testData}")
         totalItems = intent.getIntExtra("totalItems", 0)
         if(result!=null) {
             setUpResultView()

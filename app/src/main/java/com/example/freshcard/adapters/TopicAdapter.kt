@@ -19,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.freshcard.DAO.FolderDAO
+import com.example.freshcard.DAO.HistoryDAO
 import com.example.freshcard.DAO.TopicDAO
 import com.example.freshcard.FlashCardLearnActivity
 import com.example.freshcard.FolderViewActivity
@@ -48,7 +49,11 @@ class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context, va
         val userId = sharedPreferences.getString("idUser", "undefined")!!
         holder.txtName.text = item.topicName
         holder.txtTotalCards.text = item.totalCards.toString()
-        holder.txtTimeAccess.text = "Last access: ${item.timeAccess}"
+        Log.e("result", "1set time")
+        HistoryDAO().getLastAccess(item.owner,item.topicId) {
+            holder.txtTimeAccess.text = it.substring(IntRange(0, 19))
+            Log.e("result", "set time")
+        }
         holder.progress.max = 100
         holder.txtProgress.text = "${item.totalLearned}/${item.totalCards} cards learned"
         holder.progress.progress = ((item.totalLearned.toFloat()/item.totalCards.toFloat())*100).toInt()
@@ -118,6 +123,12 @@ class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context, va
 
     fun setList(arr : ArrayList<TopicInfoView>) {
         mList = arr
+        notifyDataSetChanged()
+    }
+
+    fun clearList() {
+        mList.clear()
+        Log.e("clear", "clear")
         notifyDataSetChanged()
     }
 

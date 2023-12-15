@@ -104,6 +104,16 @@ public class UserDAO() {
         }
     }
 
+    fun listenUpdate(myF: ()-> Unit) {
+        db.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+               myF()
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+    }
+
     fun getName(usname: String, myF: (String)-> Unit) {
         db.child(usname).child("fullName").get().addOnSuccessListener {
             myF(it.getValue(String::class.java)!!)
@@ -429,6 +439,43 @@ public class UserDAO() {
             Log.e("firebase", "Error getting data", it)
         }
     }
+    fun pushLearnedTopic(idLearnedInput: ArrayList<String>, usId: String, topicId: String) {
+        db.child(usId).get().addOnSuccessListener {
+            var items = it.child("learningTopics")
+            var learningTopics  = ArrayList(emptyList<LearningTopic>())
+            if(items!=null) {
+                for( item in items.children) {
+                    var idTopic = item.child("idTopic").getValue(String::class.java)
+                    var idLearned1 = item.child("idLearned").getValue()
+                    var idLearned:ArrayList<String>? = idLearned1 as? ArrayList<String>
+                    var idLearning1 = item.child("idLearning").getValue()
+                    var idLearning:ArrayList<String>? = idLearning1  as? ArrayList<String>
+                    var idChecked1 = item.child("idChecked").getValue()
+                    var idChecked:ArrayList<String>?  = idChecked1  as? ArrayList<String>
+                    if(idLearned==null) {
+                        idLearned = ArrayList(emptyList<String>())
+                    }
+                    if(idLearning==null) {
+                        idLearning = ArrayList(emptyList<String>())
+                    }
+                    if(idChecked==null) {
+                        idChecked = ArrayList(emptyList<String>())
+                    }
+
+                    if(idTopic == topicId) {
+                        idLearned = idLearnedInput
+                    }
+                    var newLearningTopic: LearningTopic = LearningTopic(idTopic!!, idChecked, idLearning, idLearned)
+
+                    learningTopics.add(newLearningTopic)
+                }
+
+                db.child(usId).child("learningTopics").setValue(learningTopics)
+            }
+        }.addOnFailureListener{
+            Log.e("firebase", "Error getting data", it)
+        }
+    }
 
     fun getUserIdShareRef(context: Context): String {
         val sharedPreferences = context.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
@@ -438,7 +485,6 @@ public class UserDAO() {
 
 
     fun getLearnedInfoByUser(userId: String, topicId: String, myF: (Int)-> Unit) {
-        Log.e("topiccx", "{idLearned.size}")
         db.child(userId).get().addOnSuccessListener {
             var items = it.child("learningTopics")
             var learningTopics  = ArrayList(emptyList<LearningTopic>())
@@ -452,7 +498,6 @@ public class UserDAO() {
                         if(idLearned==null) {
                             idLearned = ArrayList(emptyList<String>())
                         }
-                        Log.e("topiccx", "${idLearned.size}")
                         myF(idLearned.size)
                     }
                 }
