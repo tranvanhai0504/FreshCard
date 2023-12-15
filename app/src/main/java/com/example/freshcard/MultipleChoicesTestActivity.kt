@@ -138,7 +138,6 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
             binding.btnOption3.setTextColor(normalTextColor)
             binding.btnOption4.setTextColor(normalButtonColor)
         }
-        Log.e("result", "3resetTest")
         binding.btnSubmit.setOnClickListener{
             timer.cancel()
             var userId = UserDAO().getUserIdShareRef(this)
@@ -146,7 +145,7 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
             var result: ResultTest = ResultTest(userId,topic.id,totalCorrect,currDurationInt, (DateTime.getDefaultInstance()).toString(), "multiple choice")
             var intent = Intent(this, ShowResultActivity::class.java)
             intent.putExtra("totalItems", listItems.size)
-            intent.putExtra("testResult", listTest)
+            intent.putExtra("testResult",  ArrayList(listTest.map { it.toList() }))
             intent.putExtra("result", result)
             HistoryDAO().pushHistory(userId, topic.id, Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
             TestResultDAO().pushTestResult(ResultTest(userId,topic.id,totalCorrect,currDurationInt,(DateTime.getDefaultInstance()).toString(), "Multiple Choices"))
@@ -203,9 +202,7 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
         if(requestCode == 100) {
             var isAgain = data!!.getBooleanExtra("isAgain", false)
             if(isAgain) {
-                Log.e("result", "data ${data}")
                 resetTest()
-                Log.e("result", "data ${data}")
             }else {
                 var intent = Intent()
                 intent.putExtra("isFinish", true)
@@ -237,19 +234,20 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
             learingWord = item.en
         }
         if(value == word) {
-            var ls = ArrayList<String>()
             totalCorrect+=1
             binding.txtTotalCorrect.text = "${totalCorrect}"
             idLearned.add(item.id)
-            ls.add(learingWord)
-            ls.add(value)
-            ls.add(word)
-            listTest.add(ls)
+
 
         }else {
             totalWrong +=1
             binding.txtTotalWrong.text = "${totalWrong}"
         }
+        var ls = ArrayList<String>()
+        ls.add(learingWord)
+        ls.add(value)
+        ls.add(word)
+        listTest.add(ls)
 
     }
 
@@ -329,19 +327,12 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
     }
 
     fun resetTest() {
-        Log.e("result", "0resetTest")
         val normalButtonColor = Color.parseColor("#FFFFFF")
-        Log.e("result", "1resetTest")
         val normalTextColor = Color.parseColor("#B0B0B0")
         totalCorrect = 0
         totalWrong = 0
         currentIndex = -1
-        Log.e("result", "2resetTest")
-
-//        setCurrentView(listItems[0])
         nextItem()
-        Log.e("result", "3resetTest")
-
         resetButton(normalButtonColor,normalTextColor)
         settingCheckButton(false)
         binding.txtTotalCorrect.text = "0"

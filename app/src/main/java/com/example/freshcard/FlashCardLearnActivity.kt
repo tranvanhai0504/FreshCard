@@ -136,7 +136,6 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
         }
 
         btnCloseDialog.setOnClickListener{
-
             dialog.dismiss()
         }
 
@@ -209,6 +208,9 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
             adapter.setTopicId(it.id)
             updateUi(topic)
             getAllItem()
+            if(topic.learnedPeople?.contains(userId) !== true){
+                topic.learnedPeople?.let { it1 -> TopicDAO().addLearner(userId, topic.id, it1) }
+            }
         }
     }
 

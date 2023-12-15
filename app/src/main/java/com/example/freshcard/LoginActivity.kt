@@ -93,7 +93,7 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 } else {
-
+                    Toast.makeText(this, it["message"].toString(), Toast.LENGTH_SHORT).show()
                 }
             }else{
                 Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()

@@ -485,7 +485,6 @@ public class UserDAO() {
 
 
     fun getLearnedInfoByUser(userId: String, topicId: String, myF: (Int)-> Unit) {
-        Log.e("topiccx", "{idLearned.size}")
         db.child(userId).get().addOnSuccessListener {
             var items = it.child("learningTopics")
             var learningTopics  = ArrayList(emptyList<LearningTopic>())
@@ -499,7 +498,6 @@ public class UserDAO() {
                         if(idLearned==null) {
                             idLearned = ArrayList(emptyList<String>())
                         }
-                        Log.e("topiccx", "${idLearned.size}")
                         myF(idLearned.size)
                     }
                 }

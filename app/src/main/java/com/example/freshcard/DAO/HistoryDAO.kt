@@ -33,18 +33,15 @@ class HistoryDAO {
                 for(i in d.children) {
                     var dateOjb = i.getValue() as Map<String, Any>
                     dates.add(getDate(dateOjb)!!)
-                    Log.e("history", "...${d.children}")
                 }
                 historyList.add(History(idTopic = tpId!!, idUser = usId!!, date = dates))
                 if(usId == userId && tpId == topicId) {
-                    Log.e("history", "...${usId} == $userId")
                     dates.add(date)
                     isSet = true
                 }
             }
 
             if(!isSet) {
-                Log.e("history", "...didnt set")
                 var array = ArrayList<Date>()
                 array.add(date)
                 historyList.add(History(idTopic = topicId!!, idUser = userId!!, date = array))
@@ -69,10 +66,8 @@ class HistoryDAO {
                         for(i in d.children) {
                             var dateOjb = i.getValue() as Map<String, Any>
                             dates.add(getDate(dateOjb)!!)
-                            Log.e("history", "...${d.children}")
                         }
                         myF(dates.get(dates.size-1).toString())
-                        Log.e("result", "date ${dates}")
                     }
                 }
 
