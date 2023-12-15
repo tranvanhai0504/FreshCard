@@ -348,6 +348,8 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
         binding.btnOption3.isVisible = true
         binding.btnOption4.isVisible = true
         binding.contentTitle.isVisible = true
+
+        listTest.clear()
         startTimer()
     }
 

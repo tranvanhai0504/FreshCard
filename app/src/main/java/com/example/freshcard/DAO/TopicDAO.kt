@@ -189,10 +189,11 @@ public class TopicDAO() {
                         var amountLearned = 0
                         user.learningTopics?.forEach { it ->
                             if(it.idTopic == idTopic){
-                                size = it.idLearned.size + it.idLearning.size
+                                size = it.idLearning.size
                                 amountLearned = it.idLearned.size
                             }
                         }
+//                        Log.i("item progress", )
                         var status = topicSnapshot.child("public").getValue(Boolean::class.java)!!
 
 

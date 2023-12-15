@@ -1,5 +1,6 @@
 package com.example.freshcard.adapters
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -27,9 +28,10 @@ class CardResultAdapter(var mList: ArrayList<ArrayList<String>>) : RecyclerView.
         holder.answer.text = item[2]
 
         if(item[1].equals(item[2])){
-            holder.itemView.setBackgroundColor(Color.parseColor("#54B435"))
+
+            holder.itemView.backgroundTintList =  ColorStateList.valueOf(Color.parseColor("#54B435"))
         }else{
-            holder.itemView.setBackgroundColor(Color.parseColor("#E15656"))
+            holder.itemView.backgroundTintList =  ColorStateList.valueOf(Color.parseColor("#E15656"))
         }
     }
 
