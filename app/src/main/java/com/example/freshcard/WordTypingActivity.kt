@@ -209,7 +209,6 @@ class WordTypingActivity : AppCompatActivity() {
                     ls.add(desVn)
                     listTest.add(ls)
                     idLearned.add(id)
-                    Log.e("correctAnswers", "correctAnswers: $correctAnswers", )
                     binding.btnSubmit.text = if (currentItemIndex == checkcurrentItemIndex) "Finish" else "Next"
                     // Bước 2: Nếu enterKey trùng với cdesEng, thì btnSubmit có text là "Next".
 
@@ -237,7 +236,6 @@ class WordTypingActivity : AppCompatActivity() {
                     binding.score.text = scorePlus.toString()
                     binding.editResult.isEnabled = false
                     binding.resultname.setTextColor(ContextCompat.getColor(this, R.color.warningRed))
-                    idLearned.add(id)
                     incorrectAnswers.add("[$desEng, $enterKey, $desVn]")
                     val ls = ArrayList<String>()
                     ls.add(desEng)
@@ -329,7 +327,6 @@ class WordTypingActivity : AppCompatActivity() {
                     ls.add(enterKey)
                     ls.add(desEng)
                     listTest.add(ls)
-                    idLearned.add(id)
                     binding.btnSubmit.setOnClickListener {
                         if (binding.btnSubmit.text == "Next") {
                             binding.editResult.isEnabled = true
