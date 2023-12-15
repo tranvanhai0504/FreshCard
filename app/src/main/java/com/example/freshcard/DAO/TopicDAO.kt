@@ -220,8 +220,8 @@ public class TopicDAO() {
             val query = topicRef.orderByChild("owner").equalTo(owner)
             query.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    ls.clear()
-                    Log.i("clear", "$ls")
+//                    ls.clear()
+//                    Log.i("clear", "$ls")
                     var topicInfoList = ArrayList(emptyList<TopicInfoView>())
                     for (snapshot in dataSnapshot.children) {
                         var items = ArrayList<TopicItem>()
@@ -247,18 +247,7 @@ public class TopicDAO() {
                                 }
                             }
                         }
-//                    getTopicById(topicId!!) {tp ->
-//                        UserDAO().getLearnedInfoByUser(owner, tp.id) {size ->
-//                            var newTopicView =
-//                                tp.items?.let {
-//                                    TopicInfoView(tp.id,tp.title,
-//                                        it.size,size,"", tp.isPublic.toString(), owner)
-//                                }
-//                            Log.e("topicx", "${newTopicView}")
-//                            topicInfoList.add(newTopicView)
-//                            myF(topicInfoList)
-//                        }
-//                    }
+
 
                     }
                 }
