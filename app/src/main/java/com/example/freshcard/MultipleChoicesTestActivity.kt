@@ -150,7 +150,6 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
             HistoryDAO().pushHistory(userId, topic.id, Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
             TestResultDAO().pushTestResult(ResultTest(userId,topic.id,totalCorrect,currDurationInt,(DateTime.getDefaultInstance()).toString(), "Multiple Choices"))
             UserDAO().pushLearnedTopic(idLearned, userId, topic.id)
-
             startActivityForResult(intent, 100)
         }
 
@@ -238,7 +237,6 @@ class MultipleChoicesTestActivity : AppCompatActivity() {
             totalCorrect+=1
             binding.txtTotalCorrect.text = "${totalCorrect}"
             idLearned.add(item.id)
-
 
         }else {
             totalWrong +=1

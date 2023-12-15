@@ -38,6 +38,9 @@ class WordTypingActivity : AppCompatActivity() {
     var amountIncorrect = 0
     private val correctAnswers = mutableListOf<String>()
     private val incorrectAnswers = mutableListOf<String>()
+    private var listTest = ArrayList<ArrayList<String>>()
+
+    private var idLearned = ArrayList<String>()
     var textEndQues: String? = null
     var textFirstQues:String? = null
     var id: String? = null
@@ -123,11 +126,12 @@ class WordTypingActivity : AppCompatActivity() {
                         val itemVie = firstItem.vie
                         val itemDescription = firstItem.description
                         val itemImage = firstItem.image
+                        val id = firstItem.id
                         // Sử dụng giá trị của các trường ở đây, ví dụ:
                         if(selectedButton == "btnEngtovn"){
-                            engToVN(itemEn, itemVie, itemImage)
+                            engToVN(itemEn, itemVie, itemImage, id)
                         }else if (selectedButton == "btnVntoeng"){
-                            vnToEng(itemVie, itemEn, itemImage)
+                            vnToEng(itemVie, itemEn, itemImage, id)
                         }
                         checkcurrentItemIndex = items.indexOf(items.last())
                         binding.resultname.text = null
@@ -169,7 +173,7 @@ class WordTypingActivity : AppCompatActivity() {
         progressBar.progress = progress
     }
 
-    private fun engToVN(desEng: String, desVn: String, img: String){
+    private fun engToVN(desEng: String, desVn: String, img: String, id: String){
         binding.nameTopicItem.text = desEng.toString()
         val cdesVn= desVn.trim()
 
@@ -198,7 +202,13 @@ class WordTypingActivity : AppCompatActivity() {
                     amountCorrect++
                     binding.score.text = scorePlus.toString()
                     binding.resultname.setTextColor(ContextCompat.getColor(this, R.color.strongGreen))
-                    correctAnswers.add("$desEng - $desVn")
+                    correctAnswers.add("[$desEng, $enterKey, $desVn]")
+                    val ls = ArrayList<String>()
+                    ls.add(desEng)
+                    ls.add(enterKey)
+                    ls.add(desVn)
+                    listTest.add(ls)
+                    idLearned.add(id)
                     Log.e("correctAnswers", "correctAnswers: $correctAnswers", )
                     binding.btnSubmit.text = if (currentItemIndex == checkcurrentItemIndex) "Finish" else "Next"
                     // Bước 2: Nếu enterKey trùng với cdesEng, thì btnSubmit có text là "Next".
@@ -227,8 +237,13 @@ class WordTypingActivity : AppCompatActivity() {
                     binding.score.text = scorePlus.toString()
                     binding.editResult.isEnabled = false
                     binding.resultname.setTextColor(ContextCompat.getColor(this, R.color.warningRed))
-                    incorrectAnswers.add("$desEng - $desVn")
-
+                    idLearned.add(id)
+                    incorrectAnswers.add("[$desEng, $enterKey, $desVn]")
+                    val ls = ArrayList<String>()
+                    ls.add(desEng)
+                    ls.add(enterKey)
+                    ls.add(desVn)
+                    listTest.add(ls)
                     // Bước 2: Nếu enterKey không trùng với cdesEng, thì btnSubmit có text là "Next".
 
                     binding.btnSubmit.setOnClickListener {
@@ -250,7 +265,7 @@ class WordTypingActivity : AppCompatActivity() {
         }
     }
 
-    private fun vnToEng(desVn: String, desEng: String, img: String) {
+    private fun vnToEng(desVn: String, desEng: String, img: String, id: String) {
         binding.nameTopicItem.text = desVn.toString().trim()
 
         val cdesEng = desEng.trim()
@@ -280,8 +295,13 @@ class WordTypingActivity : AppCompatActivity() {
                     amountCorrect++
                     binding.score.text = scorePlus.toString()
                     binding.resultname.setTextColor(ContextCompat.getColor(this, R.color.strongGreen))
-                    correctAnswers.add("$desEng - $desVn")
-                    Log.e("correctAnswers", "correctAnswers: $correctAnswers", )
+                    correctAnswers.add("[$desVn, $enterKey, $desEng]")
+                    val ls = ArrayList<String>()
+                    ls.add(desVn)
+                    ls.add(enterKey)
+                    ls.add(desEng)
+                    listTest.add(ls)
+                    idLearned.add(id)
                     binding.btnSubmit.text = if (currentItemIndex == checkcurrentItemIndex) "Finish" else "Next"
 
                     binding.btnSubmit.setOnClickListener {
@@ -303,7 +323,13 @@ class WordTypingActivity : AppCompatActivity() {
                     binding.editResult.isEnabled = false
                     amountIncorrect++
                     binding.resultname.setTextColor(ContextCompat.getColor(this, R.color.warningRed))
-                    incorrectAnswers.add("$desEng - $desVn")
+                    incorrectAnswers.add("[$desVn, $enterKey, $desEng]")
+                    val ls = ArrayList<String>()
+                    ls.add(desVn)
+                    ls.add(enterKey)
+                    ls.add(desEng)
+                    listTest.add(ls)
+                    idLearned.add(id)
                     binding.btnSubmit.setOnClickListener {
                         if (binding.btnSubmit.text == "Next") {
                             binding.editResult.isEnabled = true
@@ -338,7 +364,9 @@ class WordTypingActivity : AppCompatActivity() {
         }
 
         TestResultDAO().pushTestResult(ResultTest(userId,idTopic!!,amountCorrect,duration,(DateTime.getDefaultInstance()).toString(), "Enter word"))
+        UserDAO().pushLearnedTopic(idLearned, userId, idTopic)
 
+        var result: ResultTest = ResultTest(userId,idTopic,amountCorrect,duration, (DateTime.getDefaultInstance()).toString(), "Enter word")
 
         val idTopics = intent.getStringExtra("idTopicTest")
         val intent = Intent(this, ResultPointsActivity::class.java)
@@ -347,8 +375,12 @@ class WordTypingActivity : AppCompatActivity() {
             intent.putExtra("amountCorrect", amountCorrect)
             intent.putExtra("duration", duration) // corrected duplicate key
             intent.putExtra("scorePlus", scorePlus)
+        //
+            intent.putExtra("testResult",  ArrayList(listTest.map { it.toList() }))
+            intent.putExtra("result", result)
             finish()
             startActivity(intent)
+
 
         // Truyền mảng incorrectAnswers đến hàm lưu trạng thái
         saveIncorrectAnswers(incorrectAnswers, correctAnswers)
