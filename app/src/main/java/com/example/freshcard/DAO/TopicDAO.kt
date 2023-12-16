@@ -33,6 +33,7 @@ public class TopicDAO() {
                         list.add(topic)
                     };
                 }
+                list.sortWith(compareByDescending { it.timeCreated })
                 adapter.mList = list
                 adapter.notifyDataSetChanged()
             }
