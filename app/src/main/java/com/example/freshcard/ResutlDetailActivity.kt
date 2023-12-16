@@ -3,11 +3,14 @@ package com.example.freshcard
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
+import androidx.compose.ui.text.toLowerCase
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.freshcard.adapters.CardResultAdapter
+import java.util.Locale
 
 class ResutlDetailActivity : AppCompatActivity() {
     lateinit var adapter : CardResultAdapter
@@ -22,7 +25,8 @@ class ResutlDetailActivity : AppCompatActivity() {
         var amountincorrect = 0
 
         for(item in listResult){
-            if(item[1] == item[2]){
+            Log.i("compare", item.toString())
+            if(item[1].trim().equals(item[2].trim(), ignoreCase = true)){
                 amountCorrect++
             }else{
                 amountincorrect++

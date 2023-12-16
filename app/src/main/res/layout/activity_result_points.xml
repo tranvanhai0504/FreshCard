@@ -144,7 +144,7 @@
                 android:layout_marginBottom="25dp"
                 android:background="@drawable/active_solid_corner_btn"
                 android:backgroundTint="@color/white"
-                android:text="Detail"
+                android:text="Do again"
                 android:textColor="@color/mediumGreen"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/btn_view_detail"
