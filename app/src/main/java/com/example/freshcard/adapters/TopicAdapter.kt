@@ -205,6 +205,8 @@ class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context, va
 
     fun handleRemove(id: String) {
         TopicDAO().removeTopic(id)
+        mList = ArrayList(mList.filter { it.topicId!=id })
+        notifyDataSetChanged()
     }
 
     private fun confirmDelete() {
