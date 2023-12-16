@@ -125,8 +125,9 @@ class EditProfileActivity : AppCompatActivity() {
 
     private fun dispatchTakePictureIntent() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (takePictureIntent.resolveActivity(packageManager) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+        if(intent.resolveActivity(packageManager) != null){
+            Toast.makeText(this, "click", Toast.LENGTH_SHORT).show()
         }
     }
 
