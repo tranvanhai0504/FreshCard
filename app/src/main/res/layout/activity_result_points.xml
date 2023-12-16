@@ -22,7 +22,7 @@
                 android:id="@+id/btn_back"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/back_button"
                 android:drawableLeft="@drawable/round_arrow_back_24"
                 android:paddingHorizontal="7dp"
@@ -137,29 +137,28 @@
 
             <android.widget.Button
                 android:id="@+id/btn_do_again"
-                android:layout_width="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="53dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginBottom="25dp"
-                android:background="@drawable/button"
+                android:background="@drawable/active_solid_corner_btn"
                 android:backgroundTint="@color/white"
-                android:text="Do again"
-                android:textColor="@color/grayDefault"
+                android:text="Detail"
+                android:textColor="@color/mediumGreen"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/btn_view_detail"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/evaluate_result"
-                app:layout_constraintRight_toLeftOf="@+id/btn_view_detail"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="1.0" />
 
             <android.widget.Button
                 android:id="@+id/btn_view_detail"
-                android:layout_width="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="53dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginBottom="25dp"
-                android:background="@drawable/button"
+                android:background="@drawable/active_solid_corner_btn"
                 android:backgroundTint="@color/white"
                 android:text="Detail"
                 android:textColor="@color/mediumGreen"
@@ -171,20 +170,20 @@
 
             <android.widget.Button
                 android:id="@+id/btn_back_main"
-                android:layout_width="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="53dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="25dp"
-                android:background="@drawable/button"
+                android:background="@drawable/active_solid_corner_btn"
                 android:backgroundTint="@color/white"
-                android:text="Back to main"
+                android:text="Back main"
                 android:textColor="@color/mediumGreen"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintHorizontal_bias="0.361"
                 app:layout_constraintStart_toEndOf="@+id/btn_view_detail"
                 app:layout_constraintTop_toBottomOf="@+id/evaluate_result"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="1.0" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
