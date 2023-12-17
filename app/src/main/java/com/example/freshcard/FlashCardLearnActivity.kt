@@ -323,9 +323,9 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
     private fun setupButton() {
         val auto = findViewById<FloatingActionButton>(R.id.btnAuto)
         auto.setOnClickListener{
-            if(adapter.itemCount < 4){
+            var topview = manager.topView
+            if(adapter.itemCount < 4 || topview == null){
                 Toast.makeText(this, "This topic is not enough item to run this feature", Toast.LENGTH_SHORT).show()
-
             }else {
                 if (!isAutoPlay) {
                     startAutoPlay()
@@ -407,41 +407,54 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
 
     private fun startAutoPlay(){
         isAutoPlay = false
+
         val backgroundThread = Thread {
             isAutoPlay = true
+            var topview = manager.topView
             runBlocking {
                 while(isAutoPlay){
-                    if(manager.topView.findViewById<FrameLayout>(R.id.card_container).alpha == 1F){
+                    Log.i("check top", topview.toString())
+                    if(manager.topView != null){
+                        if(manager.topView.findViewById<FrameLayout>(R.id.card_container).alpha == 1F){
+                            Thread.sleep(2000)
+                            if(!isAutoPlay){
+                                break
+                            }
+                            runOnUiThread {
+                                manager.topView?.performClick()
+                            }
+                        }
+
                         Thread.sleep(2000)
                         if(!isAutoPlay){
                             break
                         }
                         runOnUiThread {
-                            manager.topView.performClick()
+                            manager.topView?.performClick()
+                        }
+
+                        Thread.sleep(400)
+                        if(!isAutoPlay){
+                            break
+                        }
+                        runOnUiThread{
+                            val setting = SwipeAnimationSetting.Builder()
+                                .setDirection(Direction.Left)
+                                .setDuration(Duration.Normal.duration)
+                                .setInterpolator(AccelerateInterpolator())
+                                .build()
+                            manager.setSwipeAnimationSetting(setting)
+                            cardStackView.swipe()
+                            topview = manager.topView
+                        }
+                    }else{
+                        isAutoPlay = false
+                        runOnUiThread {
+                            binding.btnAuto.setImageResource(R.drawable.arrow_drop_down_big)
+                            binding.txtPlayShow.text = "Auto play"
                         }
                     }
 
-                    Thread.sleep(2000)
-                    if(!isAutoPlay){
-                        break
-                    }
-                    runOnUiThread {
-                        manager.topView.performClick()
-                    }
-
-                    Thread.sleep(400)
-                    if(!isAutoPlay){
-                        break
-                    }
-                    runOnUiThread{
-                        val setting = SwipeAnimationSetting.Builder()
-                            .setDirection(Direction.Left)
-                            .setDuration(Duration.Normal.duration)
-                            .setInterpolator(AccelerateInterpolator())
-                            .build()
-                        manager.setSwipeAnimationSetting(setting)
-                        cardStackView.swipe()
-                    }
                 }
             }
         }
