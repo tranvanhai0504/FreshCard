@@ -29,7 +29,7 @@ class CardResultAdapter(var mList: ArrayList<ArrayList<String>>) : RecyclerView.
         holder.userAnswer.text = item[1]
         holder.answer.text = item[2]
 
-        if(item[1].equals(item[2], ignoreCase = true)){
+        if(item[1].trim().equals(item[2].trim(), ignoreCase = true)){
 
             holder.itemView.backgroundTintList =  ColorStateList.valueOf(Color.parseColor("#54B435"))
         }else{
