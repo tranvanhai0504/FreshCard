@@ -87,7 +87,6 @@ class AddTopic : AppCompatActivity() {
         if(topicId != "false") {
             TopicDAO().getTopicById(topicId) { topic->
                 adapterData = topic.items!!
-                Log.i("topics", "${adapterData}")
                 currTopicId = topicId
                 isEditing = true
                 learnedPeoples = topic.learnedPeople!!

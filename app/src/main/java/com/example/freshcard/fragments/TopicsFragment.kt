@@ -49,12 +49,8 @@ class TopicsFragment : Fragment() {
         topicsAdapter = TopicAdapter(mlist, requireContext(), "view")
         topicRecyclerView.layoutManager = LinearLayoutManager(context)
         TopicDAO().getTopicInfoViewByOwner(userId, mlist) {data ->
-            if(mlist.equals(data)){
-                Log.i("taf", data.toString())
-            }
             mlist = data
             topicsAdapter.setList(mlist)
-            Log.i("taggg", mlist.size.toString())
             topicsAdapter.notifyDataSetChanged()
         }
         topicRecyclerView.adapter = topicsAdapter
@@ -67,32 +63,7 @@ class TopicsFragment : Fragment() {
         }
     }
 
-    fun refeshData() {
-        topicsAdapter.clearList()
-//        TopicDAO().getTopicInfoViewByOwner(userId) {data ->
-//
-//            if(mlist.equals(data)){
-//                Log.i("taf", data.toString())
-//            }
-//            topicsAdapter.setList(data)
-//            Log.i("taggg", data.toString())
-//            topicsAdapter.notifyDataSetChanged()
-//        }
-    }
-
-    fun updateAdapter(data: ArrayList<TopicInfoView>) {
-//        Log.e("topic-", "${data}")
-//        topicsAdapter = TopicAdapter(data, requireContext(), "view")
-//        topicRecyclerView.adapter = topicsAdapter
-    }
-
-//    fun reloadTopicList() {
-//        var userId = UserDAO().getUserIdShareRef(requireContext())
-//        TopicDAO().getTopicInfoViewByOwner(userId) {data -> updateAdapter(data)}
-//    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.e("result", "receive")
     }
 }

@@ -145,7 +145,6 @@ class EditProfileActivity : AppCompatActivity() {
             binding.avatar.setImageBitmap(imageBitmap)
 
             // Làm điều gì đó với uploadedFileName nếu cần
-            Log.d("ImageFileName", "Tên tệp ảnh đã tải lên: $uploadedFileName")
         }
     }
 

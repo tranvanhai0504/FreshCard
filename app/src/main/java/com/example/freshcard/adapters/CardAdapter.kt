@@ -92,8 +92,6 @@ class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val top
             }
         }
 
-        Log.e("hashmap", "${imagesMap}")
-
         holder.btnCancle.setOnClickListener{
                 v->
             if(!isCreateNew) {
@@ -256,7 +254,6 @@ class CardAdapter(var mList: ArrayList<TopicItem>, val context: Context, val top
         currImageName = name
         currHolder.image.isVisible = true
         imagesMap.set(mList[currHolder.absoluteAdapterPosition].id, imageUri)
-        Log.e("hashmap", (mList[currHolder.absoluteAdapterPosition].id))
     }
 
 

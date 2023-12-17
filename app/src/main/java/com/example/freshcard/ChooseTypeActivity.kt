@@ -2,7 +2,6 @@ package com.example.freshcard
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.freshcard.Structure.Topic
@@ -90,7 +89,6 @@ class ChooseTypeActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.e("result", "return result")
         if(requestCode == 100 && data!!.getBooleanExtra("isFinish", false)) {
             var intent = Intent()
             intent.putExtra("isFinish", true)

@@ -38,7 +38,6 @@ class TopicNewHomeAdapter(var mList: ArrayList<Topic>, val context: NewTopicFrag
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var item = mList[position]
-        Log.i("item", item.toString())
 
         val randomNumber = Random.nextInt(0, 3)
         var bacColors = listOf<String>("#ece3ba","#ccb6b6", "#b9b2cb", "#85a5a7")

@@ -134,7 +134,6 @@ class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context, va
 
     fun clearList() {
         mList.clear()
-        Log.e("clear", "clear")
         notifyDataSetChanged()
     }
 
@@ -150,7 +149,6 @@ class TopicAdapter(var mList: ArrayList<TopicInfoView>, val context: Context, va
          alertDialog.setTitle("Choose a folder")
         var checkedItem = -1
 
-        Log.e("topic", "x${names}, ---${ids}")
         alertDialog.setSingleChoiceItems(names.toTypedArray(),checkedItem) { dialog, which ->
             checkedItem = which
             currId = ids.get(which)

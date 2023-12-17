@@ -54,7 +54,6 @@ private lateinit var currHolder:  FolderItemAdapter.ViewHolder
         holder.btnOption.setOnClickListener{
             v->
             currHolder = holder
-            Log.e("adapter", "setholder: ${holder}, \n${currHolder}")
             showPopupMenu(holder)
         }
 
@@ -67,7 +66,6 @@ private lateinit var currHolder:  FolderItemAdapter.ViewHolder
             val editor = sharedPreferences.edit()
             editor.putString("folderId", item.id)
             editor.apply()
-            Log.e("remove", "${sharedPreferences.all}")
             context.startActivity(intent)
         }
 
@@ -120,7 +118,6 @@ private lateinit var currHolder:  FolderItemAdapter.ViewHolder
 
     private fun handleEdit(name: String) {
         var index = currHolder.position
-        Log.e("adapter", "${currHolder}")
 
         var item = mList[index]
         item.name = name

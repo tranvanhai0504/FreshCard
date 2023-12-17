@@ -149,34 +149,4 @@ class FolderDAO() {
         }
     }
 
-//    fun getFoldersShareRef(myF: (ArrayList<Folder>)-> Unit) {
-//        var query = folderRef.orderByChild("idUser").equalTo(userId)
-//        var folders = ArrayList(emptyList<Folder>())
-//        query.addValueEventListener(object : ValueEventListener {
-//            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                folders = ArrayList(emptyList<Folder>())
-//                Log.e("topic", "reload")
-//                for (snapshot in dataSnapshot.children) {
-//                    val id = snapshot.child("id").getValue(String::class.java)
-//                    val name = snapshot.child("name").getValue(String::class.java)
-//                    val idUser = snapshot.child("idUser").getValue(String::class.java)
-//                    var idTopics = snapshot.child("idTopics").getValue()
-//                    var dataTopics:ArrayList<String>? = idTopics as? ArrayList<String>
-//                    if(dataTopics == null) {
-//                        dataTopics = ArrayList(emptyList<String>())
-//                    }
-//                    folders.add(Folder(id!!, name!!, dataTopics, idUser!!))
-//                }
-//                MainActivity().getContext {
-//                }
-//                currFolders = folders
-//                myF(folders)
-//            }
-//
-//            override fun onCancelled(databaseError: DatabaseError) {
-//                // Handle errors
-//            }
-//        })
-//    }
-
 }

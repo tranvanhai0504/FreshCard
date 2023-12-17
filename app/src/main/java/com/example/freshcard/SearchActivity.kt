@@ -35,7 +35,6 @@ class SearchActivity : AppCompatActivity() {
 
         if (textSearch != null) {
             getListTopicByFilter(textSearch)
-            Log.i("hello", listTopic.toString())
         }
 
         binding.btnBack.setOnClickListener {

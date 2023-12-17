@@ -25,7 +25,6 @@ class ResutlDetailActivity : AppCompatActivity() {
         var amountincorrect = 0
 
         for(item in listResult){
-            Log.i("compare", item.toString())
             if(item[1].trim().equals(item[2].trim(), ignoreCase = true)){
                 amountCorrect++
             }else{

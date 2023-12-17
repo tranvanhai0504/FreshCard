@@ -84,7 +84,6 @@ class FolderViewActivity : AppCompatActivity() {
     fun removeTopicFromFolder(topicId: String, ctx: Context) {
         val sharedPreferences = ctx.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
         var folderId  =sharedPreferences.getString("folderId", "null").toString()
-        Log.e("remove", "@${sharedPreferences.all}")
         if(topicId!="null") {
             FolderDAO().removeTopicFromFolder(topicId, folderId)
         }

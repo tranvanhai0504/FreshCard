@@ -413,7 +413,6 @@ class FlashCardLearnActivity : AppCompatActivity(), CardStackListener {
             var topview = manager.topView
             runBlocking {
                 while(isAutoPlay){
-                    Log.i("check top", topview.toString())
                     if(manager.topView != null){
                         if(manager.topView.findViewById<FrameLayout>(R.id.card_container).alpha == 1F){
                             Thread.sleep(2000)
